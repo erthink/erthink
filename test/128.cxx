@@ -408,7 +408,7 @@ static std::array<unsigned, 128> random_shuffle_0_127() noexcept {
 
 #endif /* ERTHINK_NATIVE_U128_TYPE || ERTHINK_NATIVE_I128_TYPE */
 
-static uint64_t N;
+__maybe_unused static uint64_t N;
 
 template <typename T> static void probe(const T &a, const T &b) {
   using NATIVE = typename T::native;
