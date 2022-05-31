@@ -32,6 +32,12 @@ if(BUILD_TESTING)
     cmake_policy(SET CMP0075 NEW)
   endif()
 
+  if (CMAKE_CROSSCOMPILING AND NOT CMAKE_CROSSCOMPILING_EMULATOR)
+    message(WARNING "No emulator to run cross-compiled tests")
+    add_test(NAME fake_since_no_crosscompiling_emulator COMMAND ${CMAKE_COMMAND} -E
+      echo "No emulator to run cross-compiled tests")
+  endif()
+
   if(NOT GTEST_FOUND AND NOT (DEFINED BUILD_GTEST AND BUILD_GTEST))
     # Expected GTest was already found and/or pointed via ${gtest_root},
     # otherwise will search at ${gtest_paths} locations, if defined or default ones.
@@ -257,7 +263,6 @@ if(BUILD_TESTING)
   endif()
 
   if(GTEST_FOUND)
-    enable_testing()
     set(UT_LIBRARIES GTest::Main GTest::GTest ${CMAKE_THREAD_LIBS_INIT})
     if(MEMORYCHECK_COMMAND OR CMAKE_MEMORYCHECK_COMMAND)
       add_custom_target(test_memcheck
@@ -316,6 +321,10 @@ if(BUILD_TESTING)
         target_link_libraries(${target} ${params_LIBRARY})
       endif()
 
+      if(params_INCLUDE_DIRECTORY)
+        set_target_properties(${target} PROPERTIES INCLUDE_DIRECTORIES ${params_INCLUDE_DIRECTORY})
+      endif()
+
       if(UT_NEED_DLLCRUTCH)
         string(TOUPPER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE_UPPERCASE)
         foreach(dep IN LISTS params_LIBRARY GTEST_BOTH_LIBRARIES)
@@ -365,11 +374,7 @@ if(BUILD_TESTING)
         endforeach(dep)
       endif(UT_NEED_DLLCRUTCH)
 
-      if(params_INCLUDE_DIRECTORY)
-        set_target_properties(${target} PROPERTIES INCLUDE_DIRECTORIES ${params_INCLUDE_DIRECTORY})
-      endif()
-
-      if(NOT params_DISABLED)
+      if(NOT params_DISABLED AND NOT (CMAKE_CROSSCOMPILING AND NOT CMAKE_CROSSCOMPILING_EMULATOR))
         add_test(${name} ${target})
         if(params_TIMEOUT)
           if(MEMORYCHECK_COMMAND OR CMAKE_MEMORYCHECK_COMMAND)
