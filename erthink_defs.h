@@ -48,6 +48,25 @@
 #include <cstdint>
 #endif
 
+#if (defined(WINDOWS) || defined(_WINDOWS) || defined(__WINDOWS__) ||          \
+     defined(__windows__) || defined(_WIN32) || defined(_WIN64) ||             \
+     defined(__MINGW__) || defined(__MINGW32__) || defined(__MINGW64__)) &&    \
+    !defined(_WINNT_)
+/* Fetch Windows/Microsoft macros like `__prefetch()`, etc */
+#ifndef _WIN32_WINNT
+#define _WIN32_WINNT 0x0601 /* Windows 7 */
+#endif
+#if !defined(NOMINMAX) && defined(__cplusplus)
+#define NOMINMAX
+#endif /* NOMINMAX for C++ */
+#if (defined(__MINGW__) || defined(__MINGW32__) || defined(__MINGW64__)) &&    \
+    !defined(__USE_MINGW_ANSI_STDIO)
+#define __USE_MINGW_ANSI_STDIO 1
+#endif /* __USE_MINGW_ANSI_STDIO fo MinGW */
+#include <windows.h>
+#include <winnt.h>
+#endif /* Windows && !_WINNT_ */
+
 #if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) ||     \
     defined(__BSD__) || defined(__NETBSD__) || defined(__bsdi__) ||            \
     defined(__DragonFly__)
