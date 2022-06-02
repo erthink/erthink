@@ -693,6 +693,17 @@
 #endif
 #endif /* __unreachable */
 
+#ifndef __prefetch
+#if defined(__GNUC__) || defined(__clang__) || __has_builtin(__builtin_prefetch)
+#define __prefetch(ptr) __builtin_prefetch(ptr)
+#else
+#define __prefetch(ptr)                                                        \
+  do {                                                                         \
+    (void)(ptr);                                                               \
+  } while (0)
+#endif
+#endif /* __prefetch */
+
 #ifndef likely
 #if (defined(__GNUC__) || defined(__clang__)) && !defined(__COVERITY__)
 #define likely(cond) __builtin_expect(!!(cond), 1)
