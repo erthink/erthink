@@ -648,23 +648,9 @@
 //----------------------------------------------------------------------------
 
 #if !defined(__noop) && !defined(_MSC_VER)
-#ifdef __cplusplus
-static inline void __noop_consume_args() {}
-template <typename First, typename... Rest>
-static inline void __noop_consume_args(const First &first,
-                                       const Rest &...rest) {
-  (void)first;
-  __noop_consume_args(rest...);
-}
-#define __noop(...) __noop_consume_args(__VA_ARGS__)
-#elif defined(__GNUC__) && (!defined(__STRICT_ANSI__) || !__STRICT_ANSI__)
-static __inline void __noop_consume_args(void *anchor, ...) { (void)anchor; }
-#define __noop(...) __noop_consume_args(0, ##__VA_ARGS__)
-#else
-#define __noop(...)                                                            \
+#define __noop                                                                 \
   do {                                                                         \
   } while (0)
-#endif
 #endif /* __noop */
 
 #if defined(_MSC_VER) && !defined(__clang__)
@@ -682,7 +668,9 @@ static __inline void __noop_consume_args(void *anchor, ...) { (void)anchor; }
 #elif defined(_MSC_VER) && !defined(__clang__)
 #define __unreachable() __assume(0)
 #else
-#define __unreachable() __noop()
+#define __unreachable()                                                        \
+  do {                                                                         \
+  } while (1)
 #endif
 #endif /* __unreachable */
 
