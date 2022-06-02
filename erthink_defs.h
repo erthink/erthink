@@ -666,6 +666,27 @@
 
 //----------------------------------------------------------------------------
 
+#ifdef __cplusplus
+namespace erthink {
+static inline void noop_consume_args() {}
+template <typename First, typename... Rest>
+static inline void noop_consume_args(const First &first, const Rest &...rest) {
+  (void)first;
+  noop_consume_args(rest...);
+}
+}
+#define ERTHINK_NOOP(...) ::erthink::noop_consume_args(__VA_ARGS__)
+#elif defined(__GNUC__) && (!defined(__STRICT_ANSI__) || !__STRICT_ANSI__)
+static __inline void __erthink_noop_consume_args(void *anchor, ...) {
+  (void)anchor;
+}
+#define ERTHINK_NOOP(...) __erthink_noop_consume_args(0, ##__VA_ARGS__)
+#else
+#define ERTHINK_NOOP(...)                                                      \
+  do {                                                                         \
+  } while (0)
+#endif /* ERTHINK_NOOP() */
+
 #if !defined(__noop) && !defined(_MSC_VER)
 #define __noop                                                                 \
   do {                                                                         \

@@ -69,7 +69,7 @@
 #if defined(__LCC__) && defined(NDEBUG) && defined(__OPTIMIZE__) &&            \
     !defined(ENABLE_GPROF)
 #undef SCOPED_TRACE
-#define SCOPED_TRACE(message) __noop()
+#define SCOPED_TRACE(message) ERTHINK_NOOP(message)
 #endif /* __LCC__ */
 
 //----------------------------------------------------------------------------
