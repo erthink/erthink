@@ -932,6 +932,8 @@ macro(probe_libcxx_filesystem)
       include(CheckCXXSourceCompiles)
       cmake_push_check_state()
       set(stdfs_probe_save_libraries ${CMAKE_REQUIRED_LIBRARIES})
+      set(stdfs_probe_save_flags ${CMAKE_REQUIRED_FLAGS})
+      set(stdfs_probe_save_link_options ${CMAKE_REQUIRED_LINK_OPTIONS})
       unset(stdfs_probe_clear_cxx_standard)
       if(NOT DEFINED CMAKE_CXX_STANDARD)
         list(FIND CMAKE_CXX_COMPILE_FEATURES cxx_std_14 HAS_CXX14)
@@ -945,6 +947,13 @@ macro(probe_libcxx_filesystem)
           set(CMAKE_CXX_STANDARD 11)
         endif()
         set(stdfs_probe_clear_cxx_standard ON)
+      endif()
+      if(CMAKE_COMPILER_IS_ELBRUSCXX AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 1.25.23)
+        if(CMAKE_VERSION VERSION_LESS 3.14)
+          set(CMAKE_REQUIRED_FLAGS ${stdfs_probe_save_flags} "-Wl,--allow-multiple-definition")
+        else()
+          set(CMAKE_REQUIRED_LINK_OPTIONS ${stdfs_probe_save_link_options} "-Wl,--allow-multiple-definition")
+        endif()
       endif()
 
       set(stdfs_probe_code [[
@@ -975,6 +984,10 @@ macro(probe_libcxx_filesystem)
         namespace fs = ::std::filesystem;
         #elif defined(__cpp_lib_experimental_filesystem) && __cpp_lib_experimental_filesystem >= 201406L
         namespace fs = ::std::experimental::filesystem;
+        #elif (defined(__MAC_OS_X_VERSION_MIN_REQUIRED) && __MAC_OS_X_VERSION_MIN_REQUIRED < 101500) || (defined(__IPHONE_OS_VERSION_MIN_REQUIRED) && __IPHONE_OS_VERSION_MIN_REQUIRED < 130100)
+        #error "Select a newer target OSX/iOS to support C++17 std::filesystem"
+        #else
+        #error "No support for C++17 std::filesystem"
         #endif
 
         int main(int argc, const char*argv[]) {
@@ -1013,11 +1026,15 @@ macro(probe_libcxx_filesystem)
         endif()
       endif()
 
+      set(CMAKE_REQUIRED_LINK_OPTIONS ${stdfs_probe_save_link_options})
+      set(CMAKE_REQUIRED_FLAGS ${stdfs_probe_save_flags})
       set(CMAKE_REQUIRED_LIBRARIES ${stdfs_probe_save_libraries})
       if(stdfs_probe_clear_cxx_standard)
         unset(CMAKE_CXX_STANDARD)
       endif()
       unset(stdfs_probe_clear_cxx_standard)
+      unset(stdfs_probe_save_link_options)
+      unset(stdfs_probe_save_flags)
       unset(stdfs_probe_save_libraries)
       unset(stdfs_probe_code)
       unset(stdfs_probe_rc)
