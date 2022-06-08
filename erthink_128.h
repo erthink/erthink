@@ -946,7 +946,7 @@ constexpr int128_t operator>>(const int128_t &v, unsigned s) noexcept {
 #else
   return CONSTEXPR_ASSERT(s < 128),
          int128_t((s < 64) ? v.h >> s : -long(v.negative()),
-                  (s < 64) ? (s ? v.h << (64 - s) : 0) | (v.lu >> s)
+                  (s < 64) ? (s ? v._hu << (64 - s) : 0) | (v.lu >> s)
                            : v.h >> (s - 64));
 #endif /* ERTHINK_USE_NATIVE_128 */
 }
