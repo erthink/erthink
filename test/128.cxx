@@ -420,14 +420,52 @@ template <typename T> static void probe(const T &a, const T &b) {
   ASSERT_EQ((a < b), (NATIVE(a) < NATIVE(b)));
   ASSERT_EQ((a <= b), (NATIVE(a) <= NATIVE(b)));
 
-  ASSERT_EQ(NATIVE(a + b), NATIVE(a) + NATIVE(b));
-  ASSERT_EQ(NATIVE(a - b), NATIVE(a) - NATIVE(b));
+#if defined(ERTHINK_NATIVE_U128_TYPE) && defined(UBSAN_ENABLED)
+  // avoid signed-integer-overflow UB
+  if (std::is_signed<NATIVE>::value && NATIVE(a) != 0 && NATIVE(b) != 0) {
+    ASSERT_EQ(NATIVE(a + b), NATIVE(ERTHINK_NATIVE_U128_TYPE(a) +
+                                    ERTHINK_NATIVE_U128_TYPE(b)));
+  } else
+#endif
+  {
+    ASSERT_EQ(NATIVE(a + b), NATIVE(a) + NATIVE(b));
+  }
+
+#if defined(ERTHINK_NATIVE_U128_TYPE) && defined(UBSAN_ENABLED)
+  // avoid signed-integer-overflow UB
+  if (std::is_signed<NATIVE>::value && ((NATIVE(a) != 0 && NATIVE(b) != 0) ||
+                                        b == std::numeric_limits<T>::min())) {
+    ASSERT_EQ(NATIVE(a - b), NATIVE(ERTHINK_NATIVE_U128_TYPE(a) -
+                                    ERTHINK_NATIVE_U128_TYPE(b)));
+  } else
+#endif
+  {
+    ASSERT_EQ(NATIVE(a - b), NATIVE(a) - NATIVE(b));
+  }
+
   ASSERT_EQ(NATIVE(a ^ b), NATIVE(a) ^ NATIVE(b));
   ASSERT_EQ(NATIVE(a | b), NATIVE(a) | NATIVE(b));
   ASSERT_EQ(NATIVE(a & b), NATIVE(a) & NATIVE(b));
-  ASSERT_EQ(NATIVE(a * b), NATIVE(a) * NATIVE(b));
+#if defined(ERTHINK_NATIVE_U128_TYPE) && defined(UBSAN_ENABLED)
+  // avoid signed-integer-overflow UB
+  if (std::is_signed<NATIVE>::value && NATIVE(a) != 0 && NATIVE(b) != 0) {
+    ASSERT_EQ(NATIVE(a * b), NATIVE(ERTHINK_NATIVE_U128_TYPE(a) *
+                                    ERTHINK_NATIVE_U128_TYPE(b)));
+  } else
+#endif
+  {
+    ASSERT_EQ(NATIVE(a * b), NATIVE(a) * NATIVE(b));
+  }
 
-  ASSERT_EQ(NATIVE(-a), -NATIVE(a));
+#if defined(ERTHINK_NATIVE_U128_TYPE) && defined(UBSAN_ENABLED)
+  // avoid signed-integer-overflow UB
+  if (std::is_signed<NATIVE>::value && a == std::numeric_limits<T>::min()) {
+    ASSERT_EQ(NATIVE(-a), NATIVE(-ERTHINK_NATIVE_U128_TYPE(a)));
+  } else
+#endif
+  {
+    ASSERT_EQ(NATIVE(-a), -NATIVE(a));
+  }
   ASSERT_EQ(NATIVE(~a), ~NATIVE(a));
   ASSERT_EQ(!NATIVE(!a), !!NATIVE(a));
 
@@ -441,7 +479,16 @@ template <typename T> static void probe(const T &a, const T &b) {
 
   const auto s = unsigned(b) & 127;
   ASSERT_EQ(NATIVE(a >> s), NATIVE(a) >> s);
-  ASSERT_EQ(NATIVE(a << s), NATIVE(a) << s);
+#if defined(ERTHINK_NATIVE_U128_TYPE) && defined(UBSAN_ENABLED)
+  // avoid left-shift-of-negative and left-shift-signed-overflow UB
+  if (std::is_signed<NATIVE>::value &&
+      (NATIVE(a) < 0 || (a && 128 - clz(a) + s > 128))) {
+    ASSERT_EQ(NATIVE(a << s), NATIVE(ERTHINK_NATIVE_U128_TYPE(a) << s));
+  } else
+#endif
+  {
+    ASSERT_EQ(NATIVE(a << s), NATIVE(a) << s);
+  }
 }
 
 template <typename T> static void probe_full(const T &a, const T &b) {
@@ -449,21 +496,60 @@ template <typename T> static void probe_full(const T &a, const T &b) {
   const auto s = unsigned(b) & 127;
 
   ASSERT_NE(NATIVE(a), NATIVE(a) + 1);
-  ASSERT_NE(NATIVE(b), NATIVE(b) - 1);
+#if defined(ERTHINK_NATIVE_U128_TYPE) && defined(UBSAN_ENABLED)
+  // avoid signed-integer-overflow UB
+  if (std::is_signed<NATIVE>::value && a == std::numeric_limits<T>::min()) {
+    ASSERT_NE(NATIVE(a), NATIVE(ERTHINK_NATIVE_U128_TYPE(a) - 1));
+  } else
+#endif
+  {
+    ASSERT_NE(NATIVE(a), NATIVE(a) - 1);
+  }
   probe<T>(a, b);
 
   auto t = a;
-  ASSERT_EQ(NATIVE(t += b), NATIVE(a) + NATIVE(b));
+#if defined(ERTHINK_NATIVE_U128_TYPE) && defined(UBSAN_ENABLED)
+  // avoid signed-integer-overflow UB
+  if (std::is_signed<NATIVE>::value && NATIVE(a) != 0 && NATIVE(b) != 0) {
+    ASSERT_EQ(NATIVE(t += b), NATIVE(ERTHINK_NATIVE_U128_TYPE(a) +
+                                     ERTHINK_NATIVE_U128_TYPE(b)));
+  } else
+#endif
+  {
+    ASSERT_EQ(NATIVE(t += b), NATIVE(a) + NATIVE(b));
+  }
+
   t = a;
-  ASSERT_EQ(NATIVE(t -= b), NATIVE(a) - NATIVE(b));
+#if defined(ERTHINK_NATIVE_U128_TYPE) && defined(UBSAN_ENABLED)
+  // avoid signed-integer-overflow UB
+  if (std::is_signed<NATIVE>::value && ((NATIVE(a) != 0 && NATIVE(b) != 0) ||
+                                        b == std::numeric_limits<T>::min())) {
+    ASSERT_EQ(NATIVE(t -= b), NATIVE(ERTHINK_NATIVE_U128_TYPE(a) -
+                                     ERTHINK_NATIVE_U128_TYPE(b)));
+  } else
+#endif
+  {
+    ASSERT_EQ(NATIVE(t -= b), NATIVE(a) - NATIVE(b));
+  }
+
   t = a;
   ASSERT_EQ(NATIVE(t ^= b), NATIVE(a) ^ NATIVE(b));
   t = a;
   ASSERT_EQ(NATIVE(t |= b), NATIVE(a) | NATIVE(b));
   t = a;
   ASSERT_EQ(NATIVE(t &= b), NATIVE(a) & NATIVE(b));
+
   t = a;
-  ASSERT_EQ(NATIVE(t *= b), NATIVE(a) * NATIVE(b));
+#if defined(ERTHINK_NATIVE_U128_TYPE) && defined(UBSAN_ENABLED)
+  // avoid signed-integer-overflow UB
+  if (std::is_signed<NATIVE>::value && NATIVE(a) != 0 && NATIVE(b) != 0) {
+    ASSERT_EQ(NATIVE(t *= b), NATIVE(ERTHINK_NATIVE_U128_TYPE(a) *
+                                     ERTHINK_NATIVE_U128_TYPE(b)));
+  } else
+#endif
+  {
+    ASSERT_EQ(NATIVE(t *= b), NATIVE(a) * NATIVE(b));
+  }
 
   if (b) {
     t = a;
@@ -475,23 +561,72 @@ template <typename T> static void probe_full(const T &a, const T &b) {
   t = a;
   ASSERT_EQ(NATIVE(t >>= s), NATIVE(a) >> s);
   t = a;
-  ASSERT_EQ(NATIVE(t <<= s), NATIVE(a) << s);
+#if defined(ERTHINK_NATIVE_U128_TYPE) && defined(UBSAN_ENABLED)
+  // avoid left-shift-of-negative UB
+  if (std::is_signed<NATIVE>::value &&
+      (NATIVE(a) < 0 || (a && 128 - clz(a) + s > 128))) {
+    ASSERT_EQ(NATIVE(t <<= s), NATIVE(ERTHINK_NATIVE_U128_TYPE(a) << s));
+  } else
+#endif
+  {
+    ASSERT_EQ(NATIVE(t <<= s), NATIVE(a) << s);
+  }
 
   ASSERT_EQ(NATIVE(ror(a, s)), erthink::ror(NATIVE(a), s));
   ASSERT_EQ(NATIVE(rol(a, s)), erthink::rol(NATIVE(a), s));
 
   t = a;
   ASSERT_EQ(NATIVE(t++), NATIVE(a));
-  ASSERT_EQ(NATIVE(t), NATIVE(a) + 1);
+#if defined(ERTHINK_NATIVE_U128_TYPE) && defined(UBSAN_ENABLED)
+  // avoid signed-integer-overflow UB
+  if (std::is_signed<NATIVE>::value &&
+      ((a == std::numeric_limits<T>::min() && NATIVE(b) < 0) ||
+       (NATIVE(a) < 0 && b == std::numeric_limits<T>::min()))) {
+    ASSERT_EQ(NATIVE(t), NATIVE(ERTHINK_NATIVE_U128_TYPE(a) + 1));
+  } else
+#endif
+  {
+    ASSERT_EQ(NATIVE(t), NATIVE(a) + 1);
+  }
+
   t = a;
   ASSERT_EQ(NATIVE(t--), NATIVE(a));
-  ASSERT_EQ(NATIVE(t), NATIVE(a) - 1);
+#if defined(ERTHINK_NATIVE_U128_TYPE) && defined(UBSAN_ENABLED)
+  // avoid signed-integer-overflow UB
+  if (std::is_signed<NATIVE>::value && a == std::numeric_limits<T>::min()) {
+    ASSERT_EQ(NATIVE(t), NATIVE(ERTHINK_NATIVE_U128_TYPE(a) - 1));
+  } else
+#endif
+  {
+    ASSERT_EQ(NATIVE(t), NATIVE(a) - 1);
+  }
+
   t = a;
   ASSERT_EQ(NATIVE(++t), NATIVE(a) + 1);
-  ASSERT_EQ(NATIVE(t), NATIVE(a) + 1);
+#if defined(ERTHINK_NATIVE_U128_TYPE) && defined(UBSAN_ENABLED)
+  // avoid signed-integer-overflow UB
+  if (std::is_signed<NATIVE>::value &&
+      ((a == std::numeric_limits<T>::min() && NATIVE(b) < 0) ||
+       (NATIVE(a) < 0 && b == std::numeric_limits<T>::min()))) {
+    ASSERT_EQ(NATIVE(t), NATIVE(ERTHINK_NATIVE_U128_TYPE(a) + 1));
+  } else
+#endif
+  {
+    ASSERT_EQ(NATIVE(t), NATIVE(a) + 1);
+  }
+
   t = a;
-  ASSERT_EQ(NATIVE(--t), NATIVE(a) - 1);
-  ASSERT_EQ(NATIVE(t), NATIVE(a) - 1);
+#if defined(ERTHINK_NATIVE_U128_TYPE) && defined(UBSAN_ENABLED)
+  // avoid signed-integer-overflow UB
+  if (std::is_signed<NATIVE>::value && a == std::numeric_limits<T>::min()) {
+    ASSERT_EQ(NATIVE(--t), NATIVE(ERTHINK_NATIVE_U128_TYPE(a) - 1));
+    ASSERT_EQ(NATIVE(t), NATIVE(ERTHINK_NATIVE_U128_TYPE(a) - 1));
+  } else
+#endif
+  {
+    ASSERT_EQ(NATIVE(--t), NATIVE(a) - 1);
+    ASSERT_EQ(NATIVE(t), NATIVE(a) - 1);
+  }
 }
 
 #ifdef DO_GENERATE_BASIC
