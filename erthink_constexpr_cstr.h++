@@ -32,6 +32,17 @@
 
 namespace erthink {
 
+#if defined(__LCC__) && __LCC__ >= 126
+#pragma diagnostic push
+#if __LCC__ < 127
+#pragma diag_suppress 3058 /* workaround: call to is_constant_evaluated()      \
+                              appearing in a constant expression `true` */
+#pragma diag_suppress 3060 /* workaround: call to is_constant_evaluated()      \
+                              appearing in a constant expression `false` */
+#pragma diag_suppress 2416 /* constexpr function return is non-constant */
+#endif
+#endif /* E2K LCC (warnings) */
+
 static cxx14_constexpr size_t strlen_constexpr(const char *c_str) noexcept {
   for (size_t i = 0; c_str; ++i)
     if (!c_str[i])
@@ -82,5 +93,9 @@ static inline int memcmp_dynamic(const void *a, const void *b,
 ERTHINK_DYNAMIC_CONSTEXPR(
     int, memcmp, (const void *a, const void *b, size_t bytes), (a, b, bytes),
     (static_cast<const char *>(a)[0] + static_cast<const char *>(b)[0] + bytes))
+
+#if defined(__LCC__) && __LCC__ >= 126
+#pragma diagnostic pop
+#endif
 
 } // namespace erthink

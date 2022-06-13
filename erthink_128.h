@@ -573,6 +573,17 @@ constexpr bool operator!=(const int128_t &x, const int128_t &y) noexcept {
   return x.u != y.u;
 }
 
+#if defined(__LCC__) && __LCC__ >= 126
+#pragma diagnostic push
+#if __LCC__ < 127
+#pragma diag_suppress 3058 /* workaround: call to is_constant_evaluated()      \
+                              appearing in a constant expression `true` */
+#pragma diag_suppress 3060 /* workaround: call to is_constant_evaluated()      \
+                              appearing in a constant expression `false` */
+#pragma diag_suppress 2416 /* constexpr function return is non-constant */
+#endif
+#endif /* E2K LCC (warnings) */
+
 #if !ERTHINK_USE_NATIVE_128
 namespace details {
 
@@ -1285,6 +1296,10 @@ inline std::ostream &output(std::ostream &out, uint128_t v, const bool neg) {
 
   return out;
 }
+
+#if defined(__LCC__) && __LCC__ >= 126
+#pragma diagnostic pop
+#endif
 
 } // namespace details
 

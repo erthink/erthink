@@ -27,6 +27,17 @@
 
 namespace erthink {
 
+#if defined(__LCC__) && __LCC__ >= 126
+#pragma diagnostic push
+#if __LCC__ < 127
+#pragma diag_suppress 3058 /* workaround: call to is_constant_evaluated()      \
+                              appearing in a constant expression `true` */
+#pragma diag_suppress 3060 /* workaround: call to is_constant_evaluated()      \
+                              appearing in a constant expression `false` */
+#pragma diag_suppress 2416 /* constexpr function return is non-constant */
+#endif
+#endif /* E2K LCC (warnings) */
+
 cxx11_constexpr bool is_constant_evaluated() cxx11_noexcept {
 #if defined(__cpp_lib_is_constant_evaluated)
   return std::is_constant_evaluated();
@@ -38,6 +49,12 @@ cxx11_constexpr bool is_constant_evaluated() cxx11_noexcept {
   return false;
 #endif
 }
+
+#if defined(__LCC__) && __LCC__ >= 126
+#pragma diagnostic pop
+#endif
+
+//------------------------------------------------------------------------------
 
 #if defined(__cpp_lib_is_constant_evaluated) &&                                \
     __cpp_lib_is_constant_evaluated >= 201811L
