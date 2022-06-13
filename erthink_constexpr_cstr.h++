@@ -45,34 +45,42 @@ static inline size_t strlen_dynamic(const char *c_str) noexcept {
 
 ERTHINK_DYNAMIC_CONSTEXPR(size_t, strlen, (const char *c_str), (c_str), c_str)
 
-static cxx20_constexpr void *memcpy(void *dest, const void *src,
-                                    size_t bytes) noexcept {
-#if defined(__cpp_lib_is_constant_evaluated) &&                                \
-    __cpp_lib_is_constant_evaluated >= 201811L
-  if (::std::is_constant_evaluated()) {
-    for (size_t i = 0; i < bytes; ++i)
-      static_cast<char *>(dest)[i] = static_cast<const char *>(src)[i];
-    return dest;
-  } else
-#endif /* __cpp_lib_is_constant_evaluated >= 201811 */
-    return ::std::memcpy(dest, src, bytes);
+static cxx14_constexpr void *memcpy_constexpr(void *dest, const void *src,
+                                              size_t bytes) noexcept {
+  for (size_t i = 0; i < bytes; ++i)
+    static_cast<char *>(dest)[i] = static_cast<const char *>(src)[i];
+  return dest;
 }
 
-static cxx20_constexpr int memcmp(const void *a, const void *b,
-                                  size_t bytes) noexcept {
-#if defined(__cpp_lib_is_constant_evaluated) &&                                \
-    __cpp_lib_is_constant_evaluated >= 201811L
-  if (::std::is_constant_evaluated()) {
-    for (size_t i = 0; i < bytes; ++i) {
-      const int diff = static_cast<const unsigned char *>(a)[i] -
-                       static_cast<const unsigned char *>(b)[i];
-      if (diff)
-        return diff;
-    }
-    return 0;
-  } else
-#endif /* __cpp_lib_is_constant_evaluated >= 201811 */
-    return ::std::memcmp(a, b, bytes);
+static inline void *memcpy_dynamic(void *dest, const void *src,
+                                   size_t bytes) noexcept {
+  return ::std::memcpy(dest, src, bytes);
 }
+
+ERTHINK_DYNAMIC_CONSTEXPR(void *, memcpy,
+                          (void *dest, const void *src, size_t bytes),
+                          (dest, src, bytes),
+                          (static_cast<char *>(dest) +
+                           static_cast<const char *>(src)[0] + bytes))
+
+static cxx14_constexpr int memcmp_constexpr(const void *a, const void *b,
+                                            size_t bytes) noexcept {
+  for (size_t i = 0; i < bytes; ++i) {
+    const int diff = static_cast<const unsigned char *>(a)[i] -
+                     static_cast<const unsigned char *>(b)[i];
+    if (diff)
+      return diff;
+  }
+  return 0;
+}
+
+static inline int memcmp_dynamic(const void *a, const void *b,
+                                 size_t bytes) noexcept {
+  return ::std::memcmp(a, b, bytes);
+}
+
+ERTHINK_DYNAMIC_CONSTEXPR(
+    int, memcmp, (const void *a, const void *b, size_t bytes), (a, b, bytes),
+    (static_cast<const char *>(a)[0] + static_cast<const char *>(b)[0] + bytes))
 
 } // namespace erthink
