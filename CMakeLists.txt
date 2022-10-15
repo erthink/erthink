@@ -15,7 +15,7 @@
 
 ##
 ##  This CMakeLists.txt required for testing, but most things are header-only.
-##  https://github.com/erthink/erthink
+##  https://gitflic.ru/project/erthink/erthink
 ##
 
 if(CMAKE_VERSION VERSION_LESS 3.12)
