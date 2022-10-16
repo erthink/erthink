@@ -23,6 +23,8 @@
 #endif
 
 /* C and C++ */
+#include "erthink_api.h"
+
 #include "erthink_128.h"
 #include "erthink_arch.h"
 #include "erthink_bswap.h"

@@ -257,6 +257,7 @@ endif(NOT SUBPROJECT)
 
 set(erthink_HEADERS
   erthink.h
+  erthink_api.h
   erthink_128.h
   erthink_arch.h
   erthink_bswap.h
@@ -267,6 +268,7 @@ set(erthink_HEADERS
   erthink_ifunc.h
   erthink_endian.h
   erthink_mul.h
+  erthink_rot.h
   erthink_optimize4size.h
   erthink_optimize4speed.h
 
@@ -277,11 +279,14 @@ set(erthink_HEADERS
   erthink_d2a.h++
   erthink_dynamic_constexpr.h++
   erthink_misc.h++
-  erthink_rot.h++
   erthink_u2a.h++
   erthink_short_alloc.h++
 )
-add_library(erthink INTERFACE)
+if(CMAKE_VERSION VERSION_LESS 3.19)
+  add_library(erthink INTERFACE)
+else()
+  add_library(erthink INTERFACE ${erthink_HEADERS})
+endif()
 
 if(ERTHINK_CXX_STANDARD)
   target_compile_features(erthink INTERFACE "cxx_std_${ERTHINK_CXX_STANDARD}")

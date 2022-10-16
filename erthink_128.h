@@ -17,6 +17,7 @@
 
 #pragma once
 
+#include "erthink_api.h"
 #include "erthink_arch.h"
 #include "erthink_bswap.h"
 #include "erthink_byteorder.h"
@@ -63,7 +64,7 @@
 #endif /* __cpp_lib_string_view */
 
 namespace erthink {
-union int128_t;
+union LIBERTHINK_API_TYPE int128_t;
 #endif /* __cplusplus */
 
 #ifndef ERTHINK_USE_NATIVE_128
@@ -83,7 +84,7 @@ union int128_t;
 #define erthink_u128_constexpr14 erthink_dynamic_constexpr
 #endif /* ERTHINK_USE_NATIVE_128 */
 
-union
+union LIBERTHINK_API_TYPE
 #ifdef __cplusplus
     uint128_t
 #else
@@ -251,7 +252,7 @@ union
 
 // ----------------------------------------------------------------------------
 
-union
+union LIBERTHINK_API_TYPE
 #ifdef __cplusplus
     int128_t
 #else
