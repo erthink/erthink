@@ -31,3 +31,4 @@ add_ut(erthink_u2a TIMEOUT ${u2a_timeout} SOURCE testing.h++ u2a.cxx LIBRARY ert
 add_ut(erthink_d2a TIMEOUT ${d2a_timeout} SOURCE testing.h++ d2a.cxx LIBRARY erthink)
 add_ut(erthink_short_alloc TIMEOUT ${d2a_timeout} SOURCE testing.h++ short_alloc.cxx LIBRARY erthink)
 add_ut(erthink_128 TIMEOUT ${128_timeout} SOURCE testing.h++ 128.cxx LIBRARY erthink)
+add_ut(erthink_256 TIMEOUT ${128_timeout} SOURCE testing.h++ 256.cxx LIBRARY erthink)
