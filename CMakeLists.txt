@@ -18,7 +18,9 @@
 ##  https://gitflic.ru/project/erthink/erthink
 ##
 
-if(CMAKE_VERSION VERSION_LESS 3.12)
+if(CMAKE_VERSION VERSION_LESS 3.8.2)
+  cmake_minimum_required(VERSION 3.0.2)
+elseif(CMAKE_VERSION VERSION_LESS 3.12)
   cmake_minimum_required(VERSION 3.8.2)
 else()
   cmake_minimum_required(VERSION 3.12)
@@ -52,12 +54,24 @@ endif()
 
 if(DEFINED PROJECT_NAME)
   set(SUBPROJECT ON)
-  enable_language(CXX)
+  if(CMAKE_VERSION VERSION_LESS 3.8.2)
+    # В старых версиях CMake большинство модулей (CheckFunctionExists, CheckIncludeFiles) не работает без включения C
+    enable_language(C CXX)
+  else()
+    enable_language(CXX)
+  endif()
 else()
   set(SUBPROJECT OFF)
-  project(erthink
-    VERSION 0.1
-    LANGUAGES CXX)
+  if(CMAKE_VERSION VERSION_LESS 3.8.2)
+    # В старых версиях CMake большинство модулей (CheckFunctionExists, CheckIncludeFiles) не работает без включения C
+    project(erthink
+      VERSION 0.1
+      LANGUAGES C CXX)
+  else()
+    project(erthink
+      VERSION 0.1
+      LANGUAGES CXX)
+  endif()
 endif()
 
 if(NOT "$ENV{TEAMCITY_PROCESS_FLOW_ID}" STREQUAL "")
@@ -125,7 +139,7 @@ if(NOT DEFINED ERTHINK_CXX_STANDARD)
     set(ERTHINK_CXX_STANDARD 17)
   elseif(NOT HAS_CXX14 LESS 0)
     set(ERTHINK_CXX_STANDARD 14)
-  elseif(NOT HAS_CXX11 LESS 0)
+  elseif(NOT HAS_CXX11 LESS 0 OR CXX_FALLBACK_GNU11 OR CXX_FALLBACK_11)
     set(ERTHINK_CXX_STANDARD 11)
   endif()
 endif()
@@ -141,16 +155,16 @@ if(NOT SUBPROJECT)
   option(CMAKE_POSITION_INDEPENDENT_CODE "Generate position independed (PIC)." ON)
   option(BUILD_SHARED_LIBS "Build shared libraries (DLLs)." OFF)
 
-  if((CMAKE_CONFIGURATION_TYPES OR NOT CMAKE_BUILD_TYPE_UPPERCASE STREQUAL "DEBUG")
-      AND (NOT CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 6.0)
-      AND (NOT CMAKE_COMPILER_IS_CLANG OR CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.0))
-    set(INTERPROCEDURAL_OPTIMIZATION_DEFAULT ON)
-  else()
-    set(INTERPROCEDURAL_OPTIMIZATION_DEFAULT OFF)
-  endif()
-
   if(CMAKE_INTERPROCEDURAL_OPTIMIZATION_AVAILABLE
       OR GCC_LTO_AVAILABLE OR MSVC_LTO_AVAILABLE OR CLANG_LTO_AVAILABLE)
+    if((CMAKE_CONFIGURATION_TYPES OR NOT CMAKE_BUILD_TYPE_UPPERCASE STREQUAL "DEBUG") AND
+        ((MSVC_LTO_AVAILABLE AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 19.0) OR
+        (GCC_LTO_AVAILABLE AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 7.1) OR
+        (CLANG_LTO_AVAILABLE AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 4.0)))
+      set(INTERPROCEDURAL_OPTIMIZATION_DEFAULT ON)
+    else()
+      set(INTERPROCEDURAL_OPTIMIZATION_DEFAULT OFF)
+    endif()
     option(INTERPROCEDURAL_OPTIMIZATION "Enable interprocedural/LTO optimization." ${INTERPROCEDURAL_OPTIMIZATION_DEFAULT})
   endif()
 
@@ -289,7 +303,15 @@ else()
 endif()
 
 if(ERTHINK_CXX_STANDARD)
-  target_compile_features(erthink INTERFACE "cxx_std_${ERTHINK_CXX_STANDARD}")
+  if(CMAKE_VERSION VERSION_LESS 3.1)
+    if(CXX_FALLBACK_GNU11)
+      target_compile_options(erthink INTERFACE "-std=gnu++${ERTHINK_CXX_STANDARD}")
+    else()
+      target_compile_options(erthink INTERFACE "-std=c++${ERTHINK_CXX_STANDARD}")
+    endif()
+  else()
+    target_compile_features(erthink INTERFACE "cxx_std_${ERTHINK_CXX_STANDARD}")
+  endif()
 endif()
 
 target_include_directories(erthink INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}")
