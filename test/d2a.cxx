@@ -249,6 +249,11 @@ TYPED_TEST_CASE_P(d2a);
 
 //------------------------------------------------------------------------------
 
+/* Костыль для ошибки в MSVC */
+#if defined(_MSC_VER) && defined(_M_ARM64) && _MSC_VER < 1933
+#pragma warning(disable : 4756) /* overflow in constant arithmetic */
+#endif /* _MSC_VER && _M_ARM64 */
+
 TYPED_TEST_P(d2a, trivia) {
   char buffer[erthink::d2a_max_chars + 1];
   char *end = TestFixture::convert(0, buffer);
