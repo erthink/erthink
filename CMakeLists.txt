@@ -316,9 +316,11 @@ endif()
 
 target_include_directories(erthink INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}")
 
-option(ERTHINK_ENABLE_TESTS "Build erthink tests." ${BUILD_TESTING})
-if(ERTHINK_ENABLE_TESTS AND BUILD_TESTING)
-  add_subdirectory(test)
+if(GTEST_FOUND)
+  option(ERTHINK_ENABLE_TESTS "Build erthink tests." ${BUILD_TESTING})
+  if(ERTHINK_ENABLE_TESTS AND BUILD_TESTING)
+    add_subdirectory(test)
+  endif()
 endif()
 
 cmake_policy(POP)

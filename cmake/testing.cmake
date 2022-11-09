@@ -90,6 +90,8 @@ if(BUILD_TESTING)
 
     if(gtest_root)
       message(STATUS "Found GoogleTest sources at ${gtest_root}")
+    elseif(CMAKE_VERSION VERSION_LESS 3.5)
+      message(STATUS "GoogleTest not found, but to build it from source required CMake >= 3.5")
     else()
       if(NOT DEFINED GTEST_USE_VERSION
           OR GTEST_USE_VERSION STREQUAL "master"
