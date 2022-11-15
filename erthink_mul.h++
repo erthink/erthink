@@ -26,7 +26,7 @@
 #include "erthink_defs.h"
 #include "erthink_intrin.h"
 
-/* TODO: refactoring defines to C++ functions and templateds */
+/* TODO: refactoring defines to C++ functions and templates */
 
 namespace erthink {
 
