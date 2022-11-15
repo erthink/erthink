@@ -27,12 +27,14 @@
 #endif
 
 #include "erthink.h"
+#include "erthink_carryadd.h++"
 #include "erthink_casting.h++"
 #include "erthink_clz.h++"
 #include "erthink_constexpr_cstr.h++"
 #include "erthink_d2a.h++"
 #include "erthink_dynamic_constexpr.h++"
 #include "erthink_misc.h++"
+#include "erthink_mul.h++"
 #include "erthink_short_alloc.h++"
 #include "erthink_u2a.h++"
 #include "erthink_unaligned.h++"

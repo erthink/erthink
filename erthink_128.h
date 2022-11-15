@@ -21,11 +21,8 @@
 #include "erthink_arch.h"
 #include "erthink_bswap.h"
 #include "erthink_byteorder.h"
-#include "erthink_carryadd.h"
-#include "erthink_clz.h++"
 #include "erthink_defs.h"
 #include "erthink_intrin.h"
-#include "erthink_mul.h"
 #include "erthink_rot.h"
 
 #ifdef _MSC_VER
@@ -35,9 +32,12 @@
 #endif                          /* _MSC_VER (warnings) */
 
 #ifdef __cplusplus
+#include "erthink_carryadd.h++"
 #include "erthink_casting.h++" // for erthink::enable_if_t stub
+#include "erthink_clz.h++"
 #include "erthink_constexpr_cstr.h++"
 #include "erthink_dynamic_constexpr.h++"
+#include "erthink_mul.h++"
 #include <algorithm> // for std::reverse
 #include <array>
 #include <limits>

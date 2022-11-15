@@ -276,12 +276,10 @@ set(erthink_HEADERS
   erthink_arch.h
   erthink_bswap.h
   erthink_byteorder.h
-  erthink_carryadd.h
   erthink_defs.h
   erthink_intrin.h
   erthink_ifunc.h
   erthink_endian.h
-  erthink_mul.h
   erthink_rot.h
   erthink_optimize4size.h
   erthink_optimize4speed.h
@@ -289,6 +287,8 @@ set(erthink_HEADERS
   erthink.h++
   erthink_casting.h++
   erthink_clz.h++
+  erthink_carryadd.h++
+  erthink_mul.h++
   erthink_constexpr_cstr.h++
   erthink_d2a.h++
   erthink_dynamic_constexpr.h++

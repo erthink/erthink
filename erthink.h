@@ -29,12 +29,10 @@
 #include "erthink_arch.h"
 #include "erthink_bswap.h"
 #include "erthink_byteorder.h"
-#include "erthink_carryadd.h"
 #include "erthink_defs.h"
 #include "erthink_endian.h"
 #include "erthink_ifunc.h"
 #include "erthink_intrin.h"
-#include "erthink_mul.h"
 #include "erthink_rot.h"
 
 #ifdef _MSC_VER

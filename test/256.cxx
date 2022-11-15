@@ -2,9 +2,6 @@
 
 #include "erthink.h++"
 
-#include "erthink_carryadd.h"
-#include "erthink_mul.h"
-
 #include <ostream>
 
 //------------------------------------------------------------------------------

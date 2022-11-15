@@ -41,12 +41,12 @@
 #error "This source code requires C++11 at least."
 #endif
 
-#include "erthink_carryadd.h"
+#include "erthink_carryadd.h++"
 #include "erthink_casting.h++"
 #include "erthink_clz.h++"
 #include "erthink_defs.h"
 #include "erthink_misc.h++"
-#include "erthink_mul.h"
+#include "erthink_mul.h++"
 #include "erthink_u2a.h++"
 
 #ifdef _MSC_VER

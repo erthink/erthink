@@ -17,15 +17,17 @@
 
 #pragma once
 
+#if !(defined(__cplusplus) && __cplusplus >= 201103L)
+#error "This source code requires C++11 at least."
+#endif
+
 #include "erthink_arch.h"
 #include "erthink_defs.h"
 #include "erthink_intrin.h"
 
 /* TODO: refactoring defines to C++ functions and templateds */
 
-#ifdef __cplusplus
 namespace erthink {
-#endif
 
 #if defined(__e2k__) && __iset__ >= 5
 
@@ -307,6 +309,4 @@ static __maybe_unused __always_inline void sub64borrow_last(unsigned borrow,
 
 //------------------------------------------------------------------------------
 
-#ifdef __cplusplus
 } // namespace erthink
-#endif
