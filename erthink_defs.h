@@ -552,15 +552,13 @@
 
 #ifndef __hot
 #if defined(__OPTIMIZE__)
-#if defined(__e2k__)
-#define __hot __attribute__((__hot__)) __optimize(3)
-#elif defined(__clang__) && !__has_attribute(__hot__) &&                       \
+#if defined(__clang__) && !__has_attribute(__hot__) &&                         \
     __has_attribute(__section__) &&                                            \
     (defined(__linux__) || defined(__gnu_linux__))
 /* just put frequently used functions in separate section */
 #define __hot __attribute__((__section__("text.hot"))) __optimize("O3")
 #elif defined(__GNUC__) || __has_attribute(__hot__)
-#define __hot __attribute__((__hot__)) __optimize("O3")
+#define __hot __attribute__((__hot__))
 #else
 #define __hot __optimize("O3")
 #endif
@@ -571,15 +569,13 @@
 
 #ifndef __cold
 #if defined(__OPTIMIZE__)
-#if defined(__e2k__)
-#define __cold __optimize(1) __attribute__((__cold__))
-#elif defined(__clang__) && !__has_attribute(__cold__) &&                      \
+#if defined(__clang__) && !__has_attribute(__cold__) &&                        \
     __has_attribute(__section__) &&                                            \
     (defined(__linux__) || defined(__gnu_linux__))
 /* just put infrequently used functions in separate section */
 #define __cold __attribute__((__section__("text.unlikely"))) __optimize("Os")
 #elif defined(__GNUC__) || __has_attribute(__cold__)
-#define __cold __attribute__((__cold__)) __optimize("Os")
+#define __cold __attribute__((__cold__))
 #else
 #define __cold __optimize("Os")
 #endif
