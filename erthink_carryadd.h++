@@ -354,7 +354,9 @@ sub_borrow<uint32_t>(const uint32_t base, const uint32_t subtrahend,
 
 //------------------------------------------------------------------------------
 
-#if ERTHINK_ARCH_BITS < 64 && !(__GNUC_PREREQ(5, 0) || __has_builtin(__builtin_add_overflow) || __builtin_addcll)
+#if ERTHINK_ARCH_BITS < 64 &&                                                  \
+    !(__GNUC_PREREQ(5, 0) || __has_builtin(__builtin_add_overflow) ||          \
+      __builtin_addcll)
 template <>
 inline uint_least8_t add_carry<uint64_t>(const uint64_t base,
                                          const uint64_t addend,
@@ -390,7 +392,9 @@ inline uint_least8_t add_carry<uint64_t>(const uint64_t base,
 }
 #endif /* ERTHINK_ARCH_BITS < 64 */
 
-#if ERTHINK_ARCH_BITS < 64 && !(__GNUC_PREREQ(5, 0) || __has_builtin(__builtin_sub_overflow) || __builtin_subcll)
+#if ERTHINK_ARCH_BITS < 64 &&                                                  \
+    !(__GNUC_PREREQ(5, 0) || __has_builtin(__builtin_sub_overflow) ||          \
+      __builtin_subcll)
 template <>
 inline uint_least8_t sub_borrow<uint64_t>(const uint64_t base,
                                           const uint64_t subtrahend,

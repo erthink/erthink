@@ -674,7 +674,7 @@ static inline void noop_consume_args(const First &first, const Rest &...rest) {
   (void)first;
   noop_consume_args(rest...);
 }
-}
+} // namespace erthink
 #define ERTHINK_NOOP(...) ::erthink::noop_consume_args(__VA_ARGS__)
 #elif defined(__GNUC__) && (!defined(__STRICT_ANSI__) || !__STRICT_ANSI__)
 static __inline void __erthink_noop_consume_args(void *anchor, ...) {

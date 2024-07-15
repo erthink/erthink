@@ -136,8 +136,8 @@
   ERTHINK_IFUNC_RESOLVER_API(API_VISIBILITY)                                   \
   RESULT_TYPE(*RESOLVER(void)) DECLARGS_PARENTHESIZED;                         \
                                                                                \
-  static __cold void __attribute__((__constructor__))                          \
-  NAME##_iFunc_init(void) {                                                    \
+  static __cold void                                                           \
+      __attribute__((__constructor__)) NAME##_iFunc_init(void) {               \
     NAME##_iFuncPtr = RESOLVER();                                              \
   }
 
