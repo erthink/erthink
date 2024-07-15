@@ -22,6 +22,7 @@
 #include "erthink.h++"
 #include <algorithm> // for std::random_shuffle
 #include <cfloat>    // for DBL_MAX
+#include <iomanip>   // for std::setw(), etc
 #include <numeric>   // for std::iota
 #include <sstream>
 
