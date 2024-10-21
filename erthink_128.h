@@ -1,5 +1,5 @@
 ﻿/*
- *  Copyright (c) 1994-2022 Leonid Yuriev <leo@yuriev.ru>.
+ *  Copyright (c) 1994-2024 Leonid Yuriev <leo@yuriev.ru>.
  *  https://gitflic.ru/project/erthink/erthink
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -1674,11 +1674,11 @@ erthink_u128_constexpr14 int128_t int128_t::from_string(const char *begin,
                  std::get<1>(tuple)));
 }
 
-erthink_u128_constexpr14 uint128_t operator"" _u128(const char *str) {
+erthink_u128_constexpr14 uint128_t operator""_u128(const char *str) {
   return uint128_t::from_string(str);
 }
 
-erthink_u128_constexpr14 int128_t operator"" _i128(const char *str) {
+erthink_u128_constexpr14 int128_t operator""_i128(const char *str) {
   return int128_t::from_string(str);
 }
 

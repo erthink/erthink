@@ -78,7 +78,7 @@ TEST(i128, to_string) {
 }
 
 TEST(u128, from_string) {
-  using erthink::operator"" _u128;
+  using erthink::operator""_u128;
   ASSERT_EQ(340282366920938463463374607431768211455_u128,
             std::numeric_limits<erthink::uint128_t>::max());
   ASSERT_EQ(0_u128, std::numeric_limits<erthink::uint128_t>::min());
@@ -98,7 +98,7 @@ TEST(u128, from_string) {
 }
 
 TEST(i128, from_string) {
-  using erthink::operator"" _i128;
+  using erthink::operator""_i128;
   ASSERT_EQ(170141183460469231731687303715884105727_i128,
             std::numeric_limits<erthink::int128_t>::max());
   ASSERT_EQ(-/* unary minus is not part of an integer literal */
