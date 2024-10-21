@@ -46,7 +46,7 @@ endif()
 include(CTest)
 if(BUILD_TESTING)
 
-  if (CMAKE_CROSSCOMPILING AND NOT CMAKE_CROSSCOMPILING_EMULATOR)
+  if(CMAKE_CROSSCOMPILING AND NOT CMAKE_CROSSCOMPILING_EMULATOR)
     message(WARNING "No emulator to run cross-compiled tests")
     add_test(NAME fake_since_no_crosscompiling_emulator COMMAND ${CMAKE_COMMAND} -E
       echo "No emulator to run cross-compiled tests")
@@ -55,7 +55,13 @@ if(BUILD_TESTING)
   if(NOT GTEST_FOUND AND NOT (DEFINED BUILD_GTEST AND BUILD_GTEST))
     # Expected GTest was already found and/or pointed via ${gtest_root},
     # otherwise will search at ${gtest_paths} locations, if defined or default ones.
-    find_package(GTest)
+    if(DEFINED CONAN_RUNTIME_LIB_DIRS)
+      message(STATUS "Peek GTest from \"${CONAN_RUNTIME_LIB_DIRS}\"")
+      find_package(GTest REQUIRED)
+      set(GTEST_FOUND TRUE)
+    else()
+      find_package(GTest)
+    endif()
   endif()
 
   if(NOT GTEST_FOUND)
