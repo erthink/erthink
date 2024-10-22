@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 1994-2022 Leonid Yuriev <leo@yuriev.ru>.
+ *  Copyright (c) 1994-2024 Leonid Yuriev <leo@yuriev.ru>.
  *  https://gitflic.ru/project/erthink/erthink
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
@@ -108,9 +108,32 @@
 #define __has_attribute(x) (0)
 #endif /* __has_attribute */
 
+#ifndef __has_c_attribute
+#define __has_c_attribute(x) (0)
+#endif /* __has_c_attribute */
+
 #ifndef __has_cpp_attribute
 #define __has_cpp_attribute(x) 0
 #endif /* __has_cpp_attribute */
+
+#ifndef __has_CXX_attribute
+#if defined(__cplusplus) &&                                                    \
+    (!defined(_MSC_VER) || defined(__clang__) || _MSC_VER >= 1942)
+#define __has_CXX_attribute(x) __has_cpp_attribute(x)
+#else
+#define __has_CXX_attribute(x) 0
+#endif
+#endif /* __has_CXX_attribute */
+
+#ifndef __has_C23_or_CXX_attribute
+#if defined(__cplusplus)
+#define __has_C23_or_CXX_attribute(x) __has_CXX_attribute(x)
+#elif defined(__STDC_VERSION__) && __STDC_VERSION__ > 202311L
+#define __has_C23_or_CXX_attribute(x) __has_c_attribute(x)
+#else
+#define __has_C23_or_CXX_attribute(x) 0
+#endif
+#endif /* __has_C23_or_CXX_attribute */
 
 #ifndef __has_feature
 #define __has_feature(x) (0)
@@ -448,53 +471,46 @@
 #endif
 #endif /* __nothrow */
 
-#ifndef __pure_function
-/* Many functions have no effects except the return value and their
+/** \brief The 'pure' function attribute for optimization.
+ * \details Many functions have no effects except the return value and their
  * return value depends only on the parameters and/or global variables.
  * Such a function can be subject to common subexpression elimination
  * and loop optimization just as an arithmetic operator would be.
  * These functions should be declared with the attribute pure. */
-#if (defined(__GNUC__) || __has_attribute(__pure__)) &&                        \
+#if defined(DOXYGEN)
+#define __pure_function [[gnu::pure]]
+#elif __has_C23_or_CXX_attribute(gnu::pure)
+#define __pure_function [[gnu::pure]]
+#elif (defined(__GNUC__) || __has_attribute(__pure__)) &&                      \
     (!defined(__clang__) /* https://bugs.llvm.org/show_bug.cgi?id=43275 */ ||  \
      !defined(__cplusplus) || !__has_feature(cxx_exceptions))
 #define __pure_function __attribute__((__pure__))
-#elif defined(_MSC_VER) && !defined(__clang__) && _MSC_VER >= 1920
-#define __pure_function
-#elif defined(__cplusplus) && __has_cpp_attribute(gnu::pure) &&                \
-    (!defined(__clang__) || !__has_feature(cxx_exceptions))
-#define __pure_function [[gnu::pure]]
 #else
 #define __pure_function
-#endif
 #endif /* __pure_function */
 
-#ifndef __nothrow_pure_function
-/** Like \ref __pure_function with addition `noexcept` restriction
+/** \brief The 'pure nothrow' function attribute for optimization.
+ * \details Like \ref __pure_function with addition `noexcept` restriction
  * that is compatible to CLANG and proposed [[pure]]. */
-#if defined(__GNUC__) ||                                                       \
-    (__has_attribute(__pure__) && __has_attribute(__nothrow__))
-#define __nothrow_pure_function __attribute__((__pure__, __nothrow__))
-#elif defined(_MSC_VER) && !defined(__clang__) && _MSC_VER >= 1920
-#if __has_cpp_attribute(pure)
-#define __nothrow_pure_function [[pure]]
-#else
-#define __nothrow_pure_function
-#endif
-#elif defined(__cplusplus) && __has_cpp_attribute(gnu::pure)
-#if __has_cpp_attribute(gnu::nothrow)
+#if defined(DOXYGEN)
+#define __nothrow_pure_function [[gnu::pure, gnu::nothrow]]
+#elif __has_C23_or_CXX_attribute(gnu::pure)
+#if __has_C23_or_CXX_attribute(gnu::nothrow)
 #define __nothrow_pure_function [[gnu::pure, gnu::nothrow]]
 #else
 #define __nothrow_pure_function [[gnu::pure]]
 #endif
-#elif defined(__cplusplus) && __has_cpp_attribute(pure)
+#elif defined(__GNUC__) ||                                                     \
+    (__has_attribute(__pure__) && __has_attribute(__nothrow__))
+#define __nothrow_pure_function __attribute__((__pure__, __nothrow__))
+#elif __has_CXX_attribute(pure)
 #define __nothrow_pure_function [[pure]]
 #else
 #define __nothrow_pure_function
-#endif
 #endif /* __nothrow_pure_function */
 
-#ifndef __const_function
-/* Many functions do not examine any values except their arguments,
+/** \brief The 'const' function attribute for optimization.
+ * \details Many functions do not examine any values except their arguments,
  * and have no effects except the return value. Basically this is just
  * slightly more strict class than the PURE attribute, since function
  * is not allowed to read global memory.
@@ -503,39 +519,36 @@
  * data pointed to must not be declared const. Likewise, a function
  * that calls a non-const function usually must not be const.
  * It does not make sense for a const function to return void. */
-#if (defined(__GNUC__) || __has_attribute(__const__)) &&                       \
+#if defined(DOXYGEN)
+#define __const_function [[gnu::const]]
+#elif __has_C23_or_CXX_attribute(gnu::const)
+#define __const_function [[gnu::const]]
+#elif (defined(__GNUC__) || __has_attribute(__const__)) &&                     \
     (!defined(__clang__) /* https://bugs.llvm.org/show_bug.cgi?id=43275 */ ||  \
      !defined(__cplusplus) || !__has_feature(cxx_exceptions))
 #define __const_function __attribute__((__const__))
-#elif defined(_MSC_VER) && !defined(__clang__) && _MSC_VER >= 1920
-#define __const_function __pure_function
-#elif defined(__cplusplus) && __has_cpp_attribute(gnu::const) &&               \
-    (!defined(__clang__) || !__has_feature(cxx_exceptions))
-#define __const_function [[gnu::const]]
 #else
 #define __const_function __pure_function
-#endif
 #endif /* __const_function */
 
-#ifndef __nothrow_const_function
-/** Like \ref __const_function with addition `noexcept` restriction
+/** \brief The 'const nothrow' function attribute for optimization.
+ * \details Like \ref __const_function with addition `noexcept` restriction
  * that is compatible to CLANG and future [[const]]. */
-#if defined(__GNUC__) ||                                                       \
-    (__has_attribute(__const__) && __has_attribute(__nothrow__))
-#define __nothrow_const_function __attribute__((__const__, __nothrow__))
-#elif defined(_MSC_VER) && !defined(__clang__) && _MSC_VER >= 1920
-#define __nothrow_const_function __nothrow_pure_function
-#elif defined(__cplusplus) && __has_cpp_attribute(gnu::const)
-#if __has_cpp_attribute(gnu::nothrow)
+#if defined(DOXYGEN)
+#define __nothrow_const_function [[gnu::const, gnu::nothrow]]
+#elif __has_C23_or_CXX_attribute(gnu::const)
+#if __has_C23_or_CXX_attribute(gnu::nothrow)
 #define __nothrow_const_function [[gnu::const, gnu::nothrow]]
 #else
 #define __nothrow_const_function [[gnu::const]]
 #endif
-#elif defined(__cplusplus) && __has_cpp_attribute(const)
+#elif defined(__GNUC__) ||                                                     \
+    (__has_attribute(__const__) && __has_attribute(__nothrow__))
+#define __nothrow_const_function __attribute__((__const__, __nothrow__))
+#elif __has_CXX_attribute(const)
 #define __nothrow_const_function [[const]]
 #else
 #define __nothrow_const_function __nothrow_pure_function
-#endif
 #endif /* __nothrow_const_function */
 
 #ifndef __optimize
