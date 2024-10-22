@@ -137,10 +137,14 @@
 
 #ifndef __has_feature
 #define __has_feature(x) (0)
+#define __has_exceptions_disabled (0)
+#else
+#define __has_exceptions_disabled                                              \
+  (__has_feature(cxx_noexcept) && !__has_feature(cxx_exceptions))
 #endif /* __has_feature */
 
 #ifndef __has_extension
-#define __has_extension(x) (0)
+#define __has_extension(x) __has_feature(x)
 #endif /* __has_extension */
 
 #ifndef __has_builtin
@@ -479,11 +483,13 @@
  * These functions should be declared with the attribute pure. */
 #if defined(DOXYGEN)
 #define __pure_function [[gnu::pure]]
-#elif __has_C23_or_CXX_attribute(gnu::pure)
+#elif __has_C23_or_CXX_attribute(gnu::pure) &&                                 \
+    (!defined(__apple_build_version__) || !defined(__clang_major__) ||         \
+     __clang_major__ > 17)
 #define __pure_function [[gnu::pure]]
 #elif (defined(__GNUC__) || __has_attribute(__pure__)) &&                      \
     (!defined(__clang__) /* https://bugs.llvm.org/show_bug.cgi?id=43275 */ ||  \
-     !defined(__cplusplus) || !__has_feature(cxx_exceptions))
+     !defined(__cplusplus) || __has_exceptions_disabled)
 #define __pure_function __attribute__((__pure__))
 #else
 #define __pure_function
@@ -521,11 +527,13 @@
  * It does not make sense for a const function to return void. */
 #if defined(DOXYGEN)
 #define __const_function [[gnu::const]]
-#elif __has_C23_or_CXX_attribute(gnu::const)
+#elif __has_C23_or_CXX_attribute(gnu::const) &&                                \
+    (!defined(__apple_build_version__) || !defined(__clang_major__) ||         \
+     __clang_major__ > 17)
 #define __const_function [[gnu::const]]
 #elif (defined(__GNUC__) || __has_attribute(__const__)) &&                     \
     (!defined(__clang__) /* https://bugs.llvm.org/show_bug.cgi?id=43275 */ ||  \
-     !defined(__cplusplus) || !__has_feature(cxx_exceptions))
+     !defined(__cplusplus) || __has_exceptions_disabled)
 #define __const_function __attribute__((__const__))
 #else
 #define __const_function __pure_function
