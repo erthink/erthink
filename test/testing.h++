@@ -22,7 +22,9 @@
 #ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS
 #endif
+#ifndef _STL_WARNING_LEVEL
 #define _STL_WARNING_LEVEL 3
+#endif
 #pragma warning(disable : 4710) /* function not inlined */
 #pragma warning(disable : 4711) /* function selecte for automatic inline */
 #pragma warning(disable : 4571) /* catch(...) semantics changed since          \

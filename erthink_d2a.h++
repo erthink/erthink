@@ -329,6 +329,7 @@ inline void make_digits(PRINTER &printer, const uint64_t top, uint64_t delta,
     default:
       assert(false);
       __unreachable();
+      __fallthrough;
     case 9:
       digit = body / UINT_E9;
       body %= UINT_E9;
@@ -403,6 +404,7 @@ inline void make_digits(PRINTER &printer, const uint64_t top, uint64_t delta,
     default:
       assert(false);
       __unreachable();
+      __fallthrough;
     case 9:
       digit = body / UINT_E9;
       body %= UINT_E9;
