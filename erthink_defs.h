@@ -481,6 +481,7 @@
  * Such a function can be subject to common subexpression elimination
  * and loop optimization just as an arithmetic operator would be.
  * These functions should be declared with the attribute pure. */
+#ifndef __pure_function
 #if defined(DOXYGEN)
 #define __pure_function [[gnu::pure]]
 #elif __has_C23_or_CXX_attribute(gnu::pure) &&                                 \
@@ -493,11 +494,13 @@
 #define __pure_function __attribute__((__pure__))
 #else
 #define __pure_function
+#endif
 #endif /* __pure_function */
 
 /** \brief The 'pure nothrow' function attribute for optimization.
  * \details Like \ref __pure_function with addition `noexcept` restriction
  * that is compatible to CLANG and proposed [[pure]]. */
+#ifndef __nothrow_pure_function
 #if defined(DOXYGEN)
 #define __nothrow_pure_function [[gnu::pure, gnu::nothrow]]
 #elif __has_C23_or_CXX_attribute(gnu::pure)
@@ -513,6 +516,7 @@
 #define __nothrow_pure_function [[pure]]
 #else
 #define __nothrow_pure_function
+#endif
 #endif /* __nothrow_pure_function */
 
 /** \brief The 'const' function attribute for optimization.
@@ -525,6 +529,7 @@
  * data pointed to must not be declared const. Likewise, a function
  * that calls a non-const function usually must not be const.
  * It does not make sense for a const function to return void. */
+#ifndef __const_function
 #if defined(DOXYGEN)
 #define __const_function [[gnu::const]]
 #elif __has_C23_or_CXX_attribute(gnu::const) &&                                \
@@ -537,11 +542,13 @@
 #define __const_function __attribute__((__const__))
 #else
 #define __const_function __pure_function
+#endif
 #endif /* __const_function */
 
 /** \brief The 'const nothrow' function attribute for optimization.
  * \details Like \ref __const_function with addition `noexcept` restriction
  * that is compatible to CLANG and future [[const]]. */
+#ifndef __nothrow_const_function
 #if defined(DOXYGEN)
 #define __nothrow_const_function [[gnu::const, gnu::nothrow]]
 #elif __has_C23_or_CXX_attribute(gnu::const)
@@ -557,6 +564,7 @@
 #define __nothrow_const_function [[const]]
 #else
 #define __nothrow_const_function __nothrow_pure_function
+#endif
 #endif /* __nothrow_const_function */
 
 #ifndef __optimize
