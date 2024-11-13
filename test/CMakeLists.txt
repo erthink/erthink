@@ -6,8 +6,9 @@ endif()
 
 # LY: reduce compilation time (significantly on Elbrus)
 if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug"
-    AND NOT CMAKE_INTERPROCEDURAL_OPTIMIZATION AND NOT LTO_ENABLED)
-  if (CC_HAS_OMINIMAL)
+   AND NOT CMAKE_INTERPROCEDURAL_OPTIMIZATION
+   AND NOT LTO_ENABLED)
+  if(CC_HAS_OMINIMAL)
     add_compile_options("-Ominimal")
   elseif(CMAKE_COMPILER_IS_CLANG OR CMAKE_COMPILER_IS_GNUCC)
     add_compile_options("-O1")
@@ -26,9 +27,57 @@ else()
   set(d2a_timeout 600)
 endif()
 
-add_ut(erthink_ops TIMEOUT ${ops_timeout} SOURCE testing.h++ ops.cxx LIBRARY erthink)
-add_ut(erthink_u2a TIMEOUT ${u2a_timeout} SOURCE testing.h++ u2a.cxx LIBRARY erthink)
-add_ut(erthink_d2a TIMEOUT ${d2a_timeout} SOURCE testing.h++ d2a.cxx LIBRARY erthink)
-add_ut(erthink_short_alloc TIMEOUT ${d2a_timeout} SOURCE testing.h++ short_alloc.cxx LIBRARY erthink)
-add_ut(erthink_128 TIMEOUT ${128_timeout} SOURCE testing.h++ 128.cxx LIBRARY erthink)
-add_ut(erthink_256 TIMEOUT ${128_timeout} SOURCE testing.h++ 256.cxx LIBRARY erthink)
+add_ut(
+  erthink_ops
+  TIMEOUT
+  ${ops_timeout}
+  SOURCE
+  testing.h++
+  ops.cxx
+  LIBRARY
+  erthink)
+add_ut(
+  erthink_u2a
+  TIMEOUT
+  ${u2a_timeout}
+  SOURCE
+  testing.h++
+  u2a.cxx
+  LIBRARY
+  erthink)
+add_ut(
+  erthink_d2a
+  TIMEOUT
+  ${d2a_timeout}
+  SOURCE
+  testing.h++
+  d2a.cxx
+  LIBRARY
+  erthink)
+add_ut(
+  erthink_short_alloc
+  TIMEOUT
+  ${d2a_timeout}
+  SOURCE
+  testing.h++
+  short_alloc.cxx
+  LIBRARY
+  erthink)
+add_ut(
+  erthink_128
+  TIMEOUT
+  ${128_timeout}
+  SOURCE
+  testing.h++
+  128.cxx
+  LIBRARY
+  erthink)
+add_ut(
+  erthink_256
+  TIMEOUT
+  ${128_timeout}
+  SOURCE
+  testing.h++
+  256.cxx
+  LIBRARY
+  erthink)
