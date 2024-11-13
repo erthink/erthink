@@ -23,7 +23,6 @@
 #include <algorithm> // for std::random_shuffle
 #include <cfloat>    // for DBL_MAX
 #include <iomanip>   // for std::setw(), etc
-#include <iomanip>
 #include <numeric>   // for std::iota
 #include <sstream>
 
