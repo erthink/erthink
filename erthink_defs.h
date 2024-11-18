@@ -110,28 +110,31 @@
 
 #ifndef __has_c_attribute
 #define __has_c_attribute(x) (0)
+#define __has_c_attribute_qualified(x) 0
+#elif !defined(__STDC_VERSION__) || __STDC_VERSION__ < 202311L
+#define __has_c_attribute_qualified(x) 0
+#elif defined(_MSC_VER)
+/* MSVC don't support `namespace::attr` syntax */
+#define __has_c_attribute_qualified(x) 0
+#else
+#define __has_c_attribute_qualified(x) __has_c_attribute(x)
 #endif /* __has_c_attribute */
 
 #ifndef __has_cpp_attribute
 #define __has_cpp_attribute(x) 0
-#endif /* __has_cpp_attribute */
-
-#ifndef __has_CXX_attribute
-#if defined(__cplusplus) &&                                                    \
-    (!defined(_MSC_VER) || defined(__clang__) || _MSC_VER >= 1942)
-#define __has_CXX_attribute(x) __has_cpp_attribute(x)
+#define __has_cpp_attribute_qualified(x) 0
+#elif defined(_MSC_VER)
+/* MSVC don't support `namespace::attr` syntax */
+#define __has_cpp_attribute_qualified(x) 0
 #else
-#define __has_CXX_attribute(x) 0
-#endif
-#endif /* __has_CXX_attribute */
+#define __has_cpp_attribute_qualified(x) __has_cpp_attribute(x)
+#endif /* __has_cpp_attribute */
 
 #ifndef __has_C23_or_CXX_attribute
 #if defined(__cplusplus)
-#define __has_C23_or_CXX_attribute(x) __has_CXX_attribute(x)
-#elif defined(__STDC_VERSION__) && __STDC_VERSION__ > 202311L
-#define __has_C23_or_CXX_attribute(x) __has_c_attribute(x)
+#define __has_C23_or_CXX_attribute(x) __has_cpp_attribute_qualified(x)
 #else
-#define __has_C23_or_CXX_attribute(x) 0
+#define __has_C23_or_CXX_attribute(x) __has_c_attribute_qualified(x)
 #endif
 #endif /* __has_C23_or_CXX_attribute */
 
@@ -484,9 +487,7 @@
 #ifndef __pure_function
 #if defined(DOXYGEN)
 #define __pure_function [[gnu::pure]]
-#elif __has_C23_or_CXX_attribute(gnu::pure) &&                                 \
-    (!defined(__apple_build_version__) || !defined(__clang_major__) ||         \
-     __clang_major__ > 17)
+#elif __has_C23_or_CXX_attribute(gnu::pure)
 #define __pure_function [[gnu::pure]]
 #elif (defined(__GNUC__) || __has_attribute(__pure__)) &&                      \
     (!defined(__clang__) /* https://bugs.llvm.org/show_bug.cgi?id=43275 */ ||  \
@@ -512,7 +513,7 @@
 #elif defined(__GNUC__) ||                                                     \
     (__has_attribute(__pure__) && __has_attribute(__nothrow__))
 #define __nothrow_pure_function __attribute__((__pure__, __nothrow__))
-#elif __has_CXX_attribute(pure)
+#elif __has_cpp_attribute(pure)
 #define __nothrow_pure_function [[pure]]
 #else
 #define __nothrow_pure_function
@@ -532,9 +533,7 @@
 #ifndef __const_function
 #if defined(DOXYGEN)
 #define __const_function [[gnu::const]]
-#elif __has_C23_or_CXX_attribute(gnu::const) &&                                \
-    (!defined(__apple_build_version__) || !defined(__clang_major__) ||         \
-     __clang_major__ > 17)
+#elif __has_C23_or_CXX_attribute(gnu::const)
 #define __const_function [[gnu::const]]
 #elif (defined(__GNUC__) || __has_attribute(__const__)) &&                     \
     (!defined(__clang__) /* https://bugs.llvm.org/show_bug.cgi?id=43275 */ ||  \
@@ -560,7 +559,7 @@
 #elif defined(__GNUC__) ||                                                     \
     (__has_attribute(__const__) && __has_attribute(__nothrow__))
 #define __nothrow_const_function __attribute__((__const__, __nothrow__))
-#elif __has_CXX_attribute(const)
+#elif __has_cpp_attribute_qualified(const)
 #define __nothrow_const_function [[const]]
 #else
 #define __nothrow_const_function __nothrow_pure_function
