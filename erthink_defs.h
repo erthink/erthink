@@ -443,14 +443,33 @@
 #endif /* __must_check_result */
 
 #ifndef __deprecated
-#if defined(__GNUC__) || __has_attribute(__deprecated__)
+#if (!defined(__GNUC__) || defined(__clang__) || __GNUC__ > 5) &&              \
+    ((defined(__cplusplus) && __cplusplus >= 201403L &&                        \
+      __has_cpp_attribute(deprecated) &&                                       \
+      __has_cpp_attribute(deprecated) >= 201309L) ||                           \
+     (!defined(__cplusplus) && defined(__STDC_VERSION__) &&                    \
+      __STDC_VERSION__ >= 202304L))
+#define __deprecated [[deprecated]]
+#elif (defined(__GNUC__) && __GNUC__ > 5) ||                                   \
+    (__has_attribute(__deprecated__) &&                                        \
+     (!defined(__GNUC__) || defined(__clang__) || __GNUC__ > 5))
 #define __deprecated __attribute__((__deprecated__))
-#elif defined(_MSC_VER) && !defined(__clang__)
+#elif defined(_MSC_VER)
 #define __deprecated __declspec(deprecated)
 #else
 #define __deprecated
 #endif
 #endif /* __deprecated */
+
+#ifndef __deprecated_enum
+#if !defined(_MSC_VER) || (defined(__cplusplus) && __cplusplus >= 201403L &&   \
+                           __has_cpp_attribute(deprecated) &&                  \
+                           __has_cpp_attribute(deprecated) >= 201309L)
+#define __deprecated_enum __deprecated
+#else
+#define __deprecated_enum /* avoid madness MSVC */
+#endif
+#endif /* __deprecated_enum */
 
 #ifndef __noreturn
 #if defined(__GNUC__) || __has_attribute(__noreturn__)
