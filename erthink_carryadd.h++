@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) 1994-2022 Leonid Yuriev <leo@yuriev.ru>.
+ *  Copyright (c) 1994-2024 Leonid Yuriev <leo@yuriev.ru>.
  *  https://gitflic.ru/project/erthink/erthink
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
