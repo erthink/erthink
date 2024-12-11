@@ -33,8 +33,7 @@
 #define ERTHINK_UNALIGNED_OK 0 /* expecting optimization is well done */
 #elif defined(_MSC_VER)
 #define ERTHINK_UNALIGNED_OK 1 /* avoid MSVC misoptimization */
-#elif (defined(__ia32__) || defined(__ARM_FEATURE_UNALIGNED)) &&               \
-    !defined(__ALIGNED__)
+#elif (defined(__ia32__) || defined(__ARM_FEATURE_UNALIGNED)) && !defined(__ALIGNED__)
 #define ERTHINK_UNALIGNED_OK 1
 #else
 #define ERTHINK_UNALIGNED_OK 0
@@ -51,8 +50,7 @@ using max_align_t = ::max_align_t;
 
 template <typename T, unsigned expected_alignment = 1>
 static T cxx20_constexpr peek_unaligned(const T *source) noexcept {
-  constexpr auto required_alignment =
-      std::min(sizeof(T), std::max(alignof(T), alignof(max_align_t)));
+  constexpr auto required_alignment = std::min(sizeof(T), std::max(alignof(T), alignof(max_align_t)));
   if (ERTHINK_UNALIGNED_OK || expected_alignment >= required_alignment)
     return *source;
   else {
@@ -64,8 +62,7 @@ static T cxx20_constexpr peek_unaligned(const T *source) noexcept {
 
 template <typename T, unsigned expected_alignment = 1>
 static T cxx20_constexpr poke_unaligned(T *target, const T &source) noexcept {
-  constexpr auto required_alignment =
-      std::min(sizeof(T), std::max(alignof(T), alignof(max_align_t)));
+  constexpr auto required_alignment = std::min(sizeof(T), std::max(alignof(T), alignof(max_align_t)));
   if (ERTHINK_UNALIGNED_OK || expected_alignment >= required_alignment)
     return *target = source;
   else {

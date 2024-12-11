@@ -34,15 +34,13 @@
 #pragma warning(pop)
 #endif
 
-#if (UINTPTR_MAX > 0xffffFFFFul || ULONG_MAX > 0xffffFFFFul) ||                \
-    defined(__LP64__)
+#if (UINTPTR_MAX > 0xffffFFFFul || ULONG_MAX > 0xffffFFFFul) || defined(__LP64__)
 #define ERTHINK_ARCH64
 #define ERTHINK_ARCH_BITS 64
 #elif defined(__AVR__)
 #define ERTHINK_ARCH8
 #define ERTHINK_ARCH_BITS 8
-#elif defined(__MSP430__) || defined(__Z8000__) ||                             \
-    (defined(__SIZEOF_INT__) && __SIZEOF_INT__ < 4)
+#elif defined(__MSP430__) || defined(__Z8000__) || (defined(__SIZEOF_INT__) && __SIZEOF_INT__ < 4)
 #define ERTHINK_ARCH16
 #define ERTHINK_ARCH_BITS 16
 #else
@@ -50,37 +48,31 @@
 #define ERTHINK_ARCH_BITS 32
 #endif /* FPT_ARCH64/32 */
 
-#if defined(i386) || defined(__386) || defined(__i386) || defined(__i386__) || \
-    defined(i486) || defined(__i486) || defined(__i486__) ||                   \
-    defined(i586) | defined(__i586) || defined(__i586__) || defined(i686) ||   \
-    defined(__i686) || defined(__i686__) || defined(_M_IX86) ||                \
-    defined(_X86_) || defined(__THW_INTEL__) || defined(__I86__) ||            \
-    defined(__INTEL__) || defined(__x86_64) || defined(__x86_64__) ||          \
-    defined(__amd64__) || defined(__amd64) || defined(_M_X64) ||               \
-    defined(_M_AMD64) || defined(__IA32__) || defined(__INTEL__)
+#if defined(i386) || defined(__386) || defined(__i386) || defined(__i386__) || defined(i486) || defined(__i486) ||     \
+    defined(__i486__) || defined(i586) | defined(__i586) || defined(__i586__) || defined(i686) || defined(__i686) ||   \
+    defined(__i686__) || defined(_M_IX86) || defined(_X86_) || defined(__THW_INTEL__) || defined(__I86__) ||           \
+    defined(__INTEL__) || defined(__x86_64) || defined(__x86_64__) || defined(__amd64__) || defined(__amd64) ||        \
+    defined(_M_X64) || defined(_M_AMD64) || defined(__IA32__) || defined(__INTEL__)
 #ifndef __ia32__
 /* LY: define neutral __ia32__ for x86 and x86-64 archs */
 #define __ia32__ 1
 #endif /* __ia32__ */
 
 /* LY: define neutral __amd64__ for x86-64 */
-#if !defined(__amd64__) && (defined(__x86_64) || defined(__x86_64__) ||        \
-                            defined(__amd64) || defined(_M_X64))
+#if !defined(__amd64__) && (defined(__x86_64) || defined(__x86_64__) || defined(__amd64) || defined(_M_X64))
 /* LY: define trusty __amd64__ for all AMD64/x86-64 arch */
 #define __amd64__ 1
 #endif /* __amd64__ */
 #endif /* all x86 */
 
 #ifndef ERTHINK_NATIVE_U128_TYPE
-#if defined(__SIZEOF_INT128__) ||                                              \
-    (defined(_INTEGRAL_MAX_BITS) && _INTEGRAL_MAX_BITS >= 128)
+#if defined(__SIZEOF_INT128__) || (defined(_INTEGRAL_MAX_BITS) && _INTEGRAL_MAX_BITS >= 128)
 #define ERTHINK_NATIVE_U128_TYPE __uint128_t
 #endif
 #endif /* ERTHINK_NATIVE_U128_TYPE */
 
 #ifndef ERTHINK_NATIVE_I128_TYPE
-#if defined(__SIZEOF_INT128__) ||                                              \
-    (defined(_INTEGRAL_MAX_BITS) && _INTEGRAL_MAX_BITS >= 128)
+#if defined(__SIZEOF_INT128__) || (defined(_INTEGRAL_MAX_BITS) && _INTEGRAL_MAX_BITS >= 128)
 #define ERTHINK_NATIVE_I128_TYPE __int128_t
 #endif
 #endif /* ERTHINK_NATIVE_I128_TYPE */

@@ -90,14 +90,11 @@ TEST(ops, bswap) {
   EXPECT_EQ(UINT16_C(0x3412), erthink::bswap<uint16_t>(UINT16_C(0x1234)));
   EXPECT_EQ(INT16_C(0x7856), erthink::bswap<int16_t>(INT16_C(0x5678)));
 
-  EXPECT_EQ(UINT32_C(0x78563412),
-            erthink::bswap<uint32_t>(UINT32_C(0x12345678)));
+  EXPECT_EQ(UINT32_C(0x78563412), erthink::bswap<uint32_t>(UINT32_C(0x12345678)));
   EXPECT_EQ(INT32_C(0x12345678), erthink::bswap<int32_t>(INT32_C(0x78563412)));
 
-  EXPECT_EQ(UINT64_C(0xf0debc9a78563412),
-            erthink::bswap<uint64_t>(UINT64_C(0x123456789abcdef0)));
-  EXPECT_EQ(INT64_LITERAL(0x123456789abcdef0),
-            erthink::bswap<int64_t>(INT64_C(0xf0debc9a78563412)));
+  EXPECT_EQ(UINT64_C(0xf0debc9a78563412), erthink::bswap<uint64_t>(UINT64_C(0x123456789abcdef0)));
+  EXPECT_EQ(INT64_LITERAL(0x123456789abcdef0), erthink::bswap<int64_t>(INT64_C(0xf0debc9a78563412)));
 }
 
 TEST(ops, endian) {
@@ -106,105 +103,63 @@ TEST(ops, endian) {
   EXPECT_EQ(128, erthink::be2h<uint8_t>(erthink::le2h<uint8_t>(128)));
   EXPECT_EQ(-42, erthink::be2h<int8_t>(erthink::le2h<int8_t>(-42)));
 
-  EXPECT_EQ(UINT16_C(0x3412),
-            erthink::h2be<uint16_t>(erthink::h2le<uint16_t>(UINT16_C(0x1234))));
-  EXPECT_EQ(INT16_C(0x7856),
-            erthink::h2be<int16_t>(erthink::h2le<int16_t>(INT16_C(0x5678))));
-  EXPECT_EQ(UINT16_C(0x3412),
-            erthink::be2h<uint16_t>(erthink::le2h<uint16_t>(UINT16_C(0x1234))));
-  EXPECT_EQ(INT16_C(0x7856),
-            erthink::be2h<int16_t>(erthink::le2h<int16_t>(INT16_C(0x5678))));
+  EXPECT_EQ(UINT16_C(0x3412), erthink::h2be<uint16_t>(erthink::h2le<uint16_t>(UINT16_C(0x1234))));
+  EXPECT_EQ(INT16_C(0x7856), erthink::h2be<int16_t>(erthink::h2le<int16_t>(INT16_C(0x5678))));
+  EXPECT_EQ(UINT16_C(0x3412), erthink::be2h<uint16_t>(erthink::le2h<uint16_t>(UINT16_C(0x1234))));
+  EXPECT_EQ(INT16_C(0x7856), erthink::be2h<int16_t>(erthink::le2h<int16_t>(INT16_C(0x5678))));
 
-  EXPECT_EQ(UINT16_C(0x1234),
-            erthink::le2h<uint16_t>(erthink::h2le<uint16_t>(UINT16_C(0x1234))));
-  EXPECT_EQ(INT16_C(0x5678),
-            erthink::le2h<int16_t>(erthink::h2le<int16_t>(INT16_C(0x5678))));
-  EXPECT_EQ(UINT16_C(0x1234),
-            erthink::le2h<uint16_t>(erthink::h2le<uint16_t>(UINT16_C(0x1234))));
-  EXPECT_EQ(INT16_C(0x5678),
-            erthink::le2h<int16_t>(erthink::h2le<int16_t>(INT16_C(0x5678))));
+  EXPECT_EQ(UINT16_C(0x1234), erthink::le2h<uint16_t>(erthink::h2le<uint16_t>(UINT16_C(0x1234))));
+  EXPECT_EQ(INT16_C(0x5678), erthink::le2h<int16_t>(erthink::h2le<int16_t>(INT16_C(0x5678))));
+  EXPECT_EQ(UINT16_C(0x1234), erthink::le2h<uint16_t>(erthink::h2le<uint16_t>(UINT16_C(0x1234))));
+  EXPECT_EQ(INT16_C(0x5678), erthink::le2h<int16_t>(erthink::h2le<int16_t>(INT16_C(0x5678))));
 
-  EXPECT_EQ(UINT16_C(0x1234),
-            erthink::be2h<uint16_t>(erthink::h2be<uint16_t>(UINT16_C(0x1234))));
-  EXPECT_EQ(INT16_C(0x5678),
-            erthink::be2h<int16_t>(erthink::h2be<int16_t>(INT16_C(0x5678))));
-  EXPECT_EQ(UINT16_C(0x1234),
-            erthink::be2h<uint16_t>(erthink::h2be<uint16_t>(UINT16_C(0x1234))));
-  EXPECT_EQ(INT16_C(0x5678),
-            erthink::be2h<int16_t>(erthink::h2be<int16_t>(INT16_C(0x5678))));
+  EXPECT_EQ(UINT16_C(0x1234), erthink::be2h<uint16_t>(erthink::h2be<uint16_t>(UINT16_C(0x1234))));
+  EXPECT_EQ(INT16_C(0x5678), erthink::be2h<int16_t>(erthink::h2be<int16_t>(INT16_C(0x5678))));
+  EXPECT_EQ(UINT16_C(0x1234), erthink::be2h<uint16_t>(erthink::h2be<uint16_t>(UINT16_C(0x1234))));
+  EXPECT_EQ(INT16_C(0x5678), erthink::be2h<int16_t>(erthink::h2be<int16_t>(INT16_C(0x5678))));
 
-  EXPECT_EQ(
-      UINT32_C(0x78563412),
-      erthink::h2be<uint32_t>(erthink::h2le<uint32_t>(UINT32_C(0x12345678))));
-  EXPECT_EQ(INT32_C(0x12345678), erthink::h2be<int32_t>(erthink::h2le<int32_t>(
-                                     INT32_C(0x78563412))));
-  EXPECT_EQ(
-      UINT32_C(0x78563412),
-      erthink::be2h<uint32_t>(erthink::le2h<uint32_t>(UINT32_C(0x12345678))));
-  EXPECT_EQ(INT32_C(0x12345678), erthink::be2h<int32_t>(erthink::le2h<int32_t>(
-                                     INT32_C(0x78563412))));
+  EXPECT_EQ(UINT32_C(0x78563412), erthink::h2be<uint32_t>(erthink::h2le<uint32_t>(UINT32_C(0x12345678))));
+  EXPECT_EQ(INT32_C(0x12345678), erthink::h2be<int32_t>(erthink::h2le<int32_t>(INT32_C(0x78563412))));
+  EXPECT_EQ(UINT32_C(0x78563412), erthink::be2h<uint32_t>(erthink::le2h<uint32_t>(UINT32_C(0x12345678))));
+  EXPECT_EQ(INT32_C(0x12345678), erthink::be2h<int32_t>(erthink::le2h<int32_t>(INT32_C(0x78563412))));
 
-  EXPECT_EQ(
-      UINT32_C(0x12345678),
-      erthink::le2h<uint32_t>(erthink::h2le<uint32_t>(UINT32_C(0x12345678))));
-  EXPECT_EQ(INT32_C(0x78563412), erthink::le2h<int32_t>(erthink::h2le<int32_t>(
-                                     INT32_C(0x78563412))));
-  EXPECT_EQ(
-      UINT32_C(0x12345678),
-      erthink::le2h<uint32_t>(erthink::h2le<uint32_t>(UINT32_C(0x12345678))));
-  EXPECT_EQ(INT32_C(0x78563412), erthink::le2h<int32_t>(erthink::h2le<int32_t>(
-                                     INT32_C(0x78563412))));
+  EXPECT_EQ(UINT32_C(0x12345678), erthink::le2h<uint32_t>(erthink::h2le<uint32_t>(UINT32_C(0x12345678))));
+  EXPECT_EQ(INT32_C(0x78563412), erthink::le2h<int32_t>(erthink::h2le<int32_t>(INT32_C(0x78563412))));
+  EXPECT_EQ(UINT32_C(0x12345678), erthink::le2h<uint32_t>(erthink::h2le<uint32_t>(UINT32_C(0x12345678))));
+  EXPECT_EQ(INT32_C(0x78563412), erthink::le2h<int32_t>(erthink::h2le<int32_t>(INT32_C(0x78563412))));
 
-  EXPECT_EQ(
-      UINT32_C(0x12345678),
-      erthink::be2h<uint32_t>(erthink::h2be<uint32_t>(UINT32_C(0x12345678))));
-  EXPECT_EQ(INT32_C(0x78563412), erthink::be2h<int32_t>(erthink::h2be<int32_t>(
-                                     INT32_C(0x78563412))));
-  EXPECT_EQ(
-      UINT32_C(0x12345678),
-      erthink::be2h<uint32_t>(erthink::h2be<uint32_t>(UINT32_C(0x12345678))));
-  EXPECT_EQ(INT32_C(0x78563412), erthink::be2h<int32_t>(erthink::h2be<int32_t>(
-                                     INT32_C(0x78563412))));
+  EXPECT_EQ(UINT32_C(0x12345678), erthink::be2h<uint32_t>(erthink::h2be<uint32_t>(UINT32_C(0x12345678))));
+  EXPECT_EQ(INT32_C(0x78563412), erthink::be2h<int32_t>(erthink::h2be<int32_t>(INT32_C(0x78563412))));
+  EXPECT_EQ(UINT32_C(0x12345678), erthink::be2h<uint32_t>(erthink::h2be<uint32_t>(UINT32_C(0x12345678))));
+  EXPECT_EQ(INT32_C(0x78563412), erthink::be2h<int32_t>(erthink::h2be<int32_t>(INT32_C(0x78563412))));
 
   EXPECT_EQ(UINT64_C(0xf0debc9a78563412),
-            erthink::h2be<uint64_t>(
-                erthink::h2le<uint64_t>(UINT64_C(0x123456789abcdef0))));
+            erthink::h2be<uint64_t>(erthink::h2le<uint64_t>(UINT64_C(0x123456789abcdef0))));
   EXPECT_EQ(INT64_LITERAL(0x123456789abcdef0),
-            erthink::h2be<int64_t>(
-                erthink::h2le<int64_t>(INT64_C(0xf0debc9a78563412))));
+            erthink::h2be<int64_t>(erthink::h2le<int64_t>(INT64_C(0xf0debc9a78563412))));
   EXPECT_EQ(UINT64_C(0xf0debc9a78563412),
-            erthink::be2h<uint64_t>(
-                erthink::le2h<uint64_t>(UINT64_C(0x123456789abcdef0))));
+            erthink::be2h<uint64_t>(erthink::le2h<uint64_t>(UINT64_C(0x123456789abcdef0))));
   EXPECT_EQ(INT64_LITERAL(0x123456789abcdef0),
-            erthink::be2h<int64_t>(
-                erthink::le2h<int64_t>(INT64_C(0xf0debc9a78563412))));
+            erthink::be2h<int64_t>(erthink::le2h<int64_t>(INT64_C(0xf0debc9a78563412))));
 
   EXPECT_EQ(UINT64_C(0x123456789abcdef0),
-            erthink::le2h<uint64_t>(
-                erthink::h2le<uint64_t>(UINT64_C(0x123456789abcdef0))));
+            erthink::le2h<uint64_t>(erthink::h2le<uint64_t>(UINT64_C(0x123456789abcdef0))));
 
   EXPECT_EQ(INT64_LITERAL(0xf0debc9a78563412),
-            erthink::le2h<int64_t>(
-                erthink::h2le<int64_t>(INT64_C(0xf0debc9a78563412))));
+            erthink::le2h<int64_t>(erthink::h2le<int64_t>(INT64_C(0xf0debc9a78563412))));
   EXPECT_EQ(UINT64_C(0x123456789abcdef0),
-            erthink::le2h<uint64_t>(
-                erthink::h2le<uint64_t>(UINT64_C(0x123456789abcdef0))));
+            erthink::le2h<uint64_t>(erthink::h2le<uint64_t>(UINT64_C(0x123456789abcdef0))));
   EXPECT_EQ(INT64_LITERAL(0xf0debc9a78563412),
-            erthink::le2h<int64_t>(
-                erthink::h2le<int64_t>(INT64_C(0xf0debc9a78563412))));
+            erthink::le2h<int64_t>(erthink::h2le<int64_t>(INT64_C(0xf0debc9a78563412))));
 
   EXPECT_EQ(UINT64_C(0x123456789abcdef0),
-            erthink::be2h<uint64_t>(
-                erthink::h2be<uint64_t>(UINT64_C(0x123456789abcdef0))));
+            erthink::be2h<uint64_t>(erthink::h2be<uint64_t>(UINT64_C(0x123456789abcdef0))));
   EXPECT_EQ(INT64_LITERAL(0xf0debc9a78563412),
-            erthink::be2h<int64_t>(
-                erthink::h2be<int64_t>(INT64_C(0xf0debc9a78563412))));
+            erthink::be2h<int64_t>(erthink::h2be<int64_t>(INT64_C(0xf0debc9a78563412))));
   EXPECT_EQ(UINT64_C(0x123456789abcdef0),
-            erthink::be2h<uint64_t>(
-                erthink::h2be<uint64_t>(UINT64_C(0x123456789abcdef0))));
+            erthink::be2h<uint64_t>(erthink::h2be<uint64_t>(UINT64_C(0x123456789abcdef0))));
   EXPECT_EQ(INT64_LITERAL(0xf0debc9a78563412),
-            erthink::be2h<int64_t>(
-                erthink::h2be<int64_t>(INT64_C(0xf0debc9a78563412))));
+            erthink::be2h<int64_t>(erthink::h2be<int64_t>(INT64_C(0xf0debc9a78563412))));
 }
 
 //------------------------------------------------------------------------------

@@ -37,8 +37,7 @@ namespace erthink {
 #endif
 
 static constexpr_intrin uint64_t ERTHINK_NAME_PREFIX(bswap64)(uint64_t v) {
-#if __GNUC_PREREQ(4, 4) || __CLANG_PREREQ(4, 0) ||                             \
-    __has_builtin(__builtin_bswap64)
+#if __GNUC_PREREQ(4, 4) || __CLANG_PREREQ(4, 0) || __has_builtin(__builtin_bswap64)
   return __builtin_bswap64(v);
 #elif defined(_MSC_VER) && !defined(__clang__)
   return _byteswap_uint64(v);
@@ -47,18 +46,14 @@ static constexpr_intrin uint64_t ERTHINK_NAME_PREFIX(bswap64)(uint64_t v) {
 #elif defined(bswap_64)
   return bswap_64(v);
 #else
-  return v << 56 | v >> 56 | ((v << 40) & UINT64_C(0x00ff000000000000)) |
-         ((v << 24) & UINT64_C(0x0000ff0000000000)) |
-         ((v << 8) & UINT64_C(0x000000ff00000000)) |
-         ((v >> 8) & UINT64_C(0x00000000ff000000)) |
-         ((v >> 24) & UINT64_C(0x0000000000ff0000)) |
-         ((v >> 40) & UINT64_C(0x000000000000ff00));
+  return v << 56 | v >> 56 | ((v << 40) & UINT64_C(0x00ff000000000000)) | ((v << 24) & UINT64_C(0x0000ff0000000000)) |
+         ((v << 8) & UINT64_C(0x000000ff00000000)) | ((v >> 8) & UINT64_C(0x00000000ff000000)) |
+         ((v >> 24) & UINT64_C(0x0000000000ff0000)) | ((v >> 40) & UINT64_C(0x000000000000ff00));
 #endif
 }
 
 static constexpr_intrin uint32_t ERTHINK_NAME_PREFIX(bswap32)(uint32_t v) {
-#if __GNUC_PREREQ(4, 4) || __CLANG_PREREQ(4, 0) ||                             \
-    __has_builtin(__builtin_bswap32)
+#if __GNUC_PREREQ(4, 4) || __CLANG_PREREQ(4, 0) || __has_builtin(__builtin_bswap32)
   return __builtin_bswap32(v);
 #elif defined(_MSC_VER) && !defined(__clang__)
   return _byteswap_ulong(v);
@@ -67,8 +62,7 @@ static constexpr_intrin uint32_t ERTHINK_NAME_PREFIX(bswap32)(uint32_t v) {
 #elif defined(bswap_32)
   return bswap_32(v);
 #else
-  return v << 24 | v >> 24 | ((v << 8) & UINT32_C(0x00ff0000)) |
-         ((v >> 8) & UINT32_C(0x0000ff00));
+  return v << 24 | v >> 24 | ((v << 8) & UINT32_C(0x00ff0000)) | ((v >> 8) & UINT32_C(0x0000ff00));
 #endif
 }
 
@@ -87,43 +81,25 @@ static constexpr_intrin uint16_t ERTHINK_NAME_PREFIX(bswap16)(uint16_t v) {
 }
 
 #ifdef __cplusplus
-static constexpr_intrin int64_t bswap64(int64_t v) {
-  return bswap64(uint64_t(v));
-}
+static constexpr_intrin int64_t bswap64(int64_t v) { return bswap64(uint64_t(v)); }
 
-static constexpr_intrin int32_t bswap32(int32_t v) {
-  return bswap32(uint32_t(v));
-}
+static constexpr_intrin int32_t bswap32(int32_t v) { return bswap32(uint32_t(v)); }
 
-static constexpr_intrin int16_t bswap16(int16_t v) {
-  return bswap16(uint16_t(v));
-}
+static constexpr_intrin int16_t bswap16(int16_t v) { return bswap16(uint16_t(v)); }
 
 template <typename T> constexpr_intrin T bswap(T v);
 
 template <> constexpr_intrin uint8_t bswap<uint8_t>(uint8_t v) { return v; }
 template <> constexpr_intrin int8_t bswap<int8_t>(int8_t v) { return v; }
 
-template <> constexpr_intrin uint16_t bswap<uint16_t>(uint16_t v) {
-  return bswap16(v);
-}
-template <> constexpr_intrin int16_t bswap<int16_t>(int16_t v) {
-  return bswap16(v);
-}
+template <> constexpr_intrin uint16_t bswap<uint16_t>(uint16_t v) { return bswap16(v); }
+template <> constexpr_intrin int16_t bswap<int16_t>(int16_t v) { return bswap16(v); }
 
-template <> constexpr_intrin uint32_t bswap<uint32_t>(uint32_t v) {
-  return bswap32(v);
-}
-template <> constexpr_intrin int32_t bswap<int32_t>(int32_t v) {
-  return bswap32(v);
-}
+template <> constexpr_intrin uint32_t bswap<uint32_t>(uint32_t v) { return bswap32(v); }
+template <> constexpr_intrin int32_t bswap<int32_t>(int32_t v) { return bswap32(v); }
 
-template <> constexpr_intrin uint64_t bswap<uint64_t>(uint64_t v) {
-  return bswap64(v);
-}
-template <> constexpr_intrin int64_t bswap<int64_t>(int64_t v) {
-  return bswap64(v);
-}
+template <> constexpr_intrin uint64_t bswap<uint64_t>(uint64_t v) { return bswap64(v); }
+template <> constexpr_intrin int64_t bswap<int64_t>(int64_t v) { return bswap64(v); }
 }
 #endif /* __cplusplus */
 

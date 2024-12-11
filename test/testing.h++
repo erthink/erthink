@@ -27,17 +27,17 @@
 #endif
 #pragma warning(disable : 4710) /* function not inlined */
 #pragma warning(disable : 4711) /* function selecte for automatic inline */
-#pragma warning(disable : 4571) /* catch(...) semantics changed since          \
+#pragma warning(disable : 4571) /* catch(...) semantics changed since                                                  \
                                    Visual C++ 7... */
 #pragma warning(push, 1)
-#pragma warning(disable : 4530) /* C++ exception handler used, but             \
-                                   unwind semantics are not enabled.           \
+#pragma warning(disable : 4530) /* C++ exception handler used, but                                                     \
+                                   unwind semantics are not enabled.                                                   \
                                    Specify /EHsc */
-#pragma warning(disable : 4577) /* 'noexcept' used with no exception           \
-                                   handling mode specified; termination on     \
-                                   exception is not guaranteed.                \
+#pragma warning(disable : 4577) /* 'noexcept' used with no exception                                                   \
+                                   handling mode specified; termination on                                             \
+                                   exception is not guaranteed.                                                        \
                                    Specify /EHsc */
-#pragma warning(disable : 4738) /* storing 32-bit float result in memory,      \
+#pragma warning(disable : 4738) /* storing 32-bit float result in memory,                                              \
                                    possible loss of performance */
 #if _MSC_VER > 1800
 #pragma warning(disable : 4464) /* relative include path contains '..' */
@@ -50,8 +50,7 @@
 #endif /* _MSC_VER (warnings) */
 
 /* Workaround for modern libstdc++ with CLANG < 4.x */
-#if defined(__SIZEOF_INT128__) && !defined(__GLIBCXX_TYPE_INT_N_0) &&          \
-    defined(__clang__) && __clang_major__ < 4
+#if defined(__SIZEOF_INT128__) && !defined(__GLIBCXX_TYPE_INT_N_0) && defined(__clang__) && __clang_major__ < 4
 #define __GLIBCXX_BITSIZE_INT_N_0 128
 #define __GLIBCXX_TYPE_INT_N_0 __int128
 #endif /* Workaround for modern libstdc++ with CLANG < 4.x */
@@ -59,8 +58,7 @@
 #include <gtest/gtest.h>
 
 #ifndef GTEST_SKIP
-#define GTEST_SKIP()                                                           \
-  return GTEST_MESSAGE_("Skipped", ::testing::TestPartResult::kSuccess)
+#define GTEST_SKIP() return GTEST_MESSAGE_("Skipped", ::testing::TestPartResult::kSuccess)
 #endif
 
 #ifdef _MSC_VER
@@ -68,8 +66,7 @@
 #endif
 
 /* LY: reduce test runtime (significantly on Elbrus) */
-#if defined(__LCC__) && defined(NDEBUG) && defined(__OPTIMIZE__) &&            \
-    !defined(ENABLE_GPROF)
+#if defined(__LCC__) && defined(NDEBUG) && defined(__OPTIMIZE__) && !defined(ENABLE_GPROF)
 #undef SCOPED_TRACE
 #define SCOPED_TRACE(message) ERTHINK_NOOP(message)
 #endif /* __LCC__ */

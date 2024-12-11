@@ -43,12 +43,9 @@ template <typename T> struct branchless_abs {
   const signed_type expanded_sign;
   const unsigned_type unsigned_abs;
   cxx11_constexpr branchless_abs(const T value)
-      : expanded_sign(signed_type(value) >>
-                      (sizeof(signed_type) * CHAR_BIT - 1)),
-        unsigned_abs((unsigned_type(value) + unsigned_type(expanded_sign)) ^
-                     unsigned_type(expanded_sign)) {
-    static_assert(((INT32_MIN >> 5) >> 29) == -1,
-                  "requires arithmetic shift with sign expansion");
+      : expanded_sign(signed_type(value) >> (sizeof(signed_type) * CHAR_BIT - 1)),
+        unsigned_abs((unsigned_type(value) + unsigned_type(expanded_sign)) ^ unsigned_type(expanded_sign)) {
+    static_assert(((INT32_MIN >> 5) >> 29) == -1, "requires arithmetic shift with sign expansion");
   }
 
   /* MSVC compiler is crazy... */
@@ -59,7 +56,7 @@ template <typename T> struct branchless_abs {
 #ifdef _MSC_VER
 #pragma warning(push)
 #pragma warning(disable : 4100) /* unreferenced formal parameter */
-#pragma warning(disable : 4514) /* unreferenced inline function                \
+#pragma warning(disable : 4514) /* unreferenced inline function                                                        \
                                    has been removed */
 #endif
 template <typename TYPE, std::size_t LENGTH>
@@ -67,20 +64,15 @@ constexpr std::size_t array_length(const TYPE __maybe_unused (&array)[LENGTH]) {
   return LENGTH;
 }
 
-template <typename TYPE, std::size_t LENGTH>
-constexpr TYPE *array_end(TYPE (&array)[LENGTH]) {
-  return array + LENGTH;
-}
+template <typename TYPE, std::size_t LENGTH> constexpr TYPE *array_end(TYPE (&array)[LENGTH]) { return array + LENGTH; }
 
 static cxx11_constexpr bool msb(const uint64_t value) {
-  static_assert(static_cast<int64_t>(UINT64_C(1) << 63) < 0,
-                "2-complement representation required");
+  static_assert(static_cast<int64_t>(UINT64_C(1) << 63) < 0, "2-complement representation required");
   return static_cast<int64_t>(value) < 0;
 }
 
 static cxx11_constexpr bool msb(const uint32_t value) {
-  static_assert(static_cast<int32_t>(UINT32_C(1) << 31) < 0,
-                "2-complement representation required");
+  static_assert(static_cast<int32_t>(UINT32_C(1) << 31) < 0, "2-complement representation required");
   return static_cast<int32_t>(value) < 0;
 }
 

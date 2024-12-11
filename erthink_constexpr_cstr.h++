@@ -35,9 +35,9 @@ namespace erthink {
 #if defined(__LCC__) && __LCC__ >= 126
 #pragma diagnostic push
 #if __LCC__ < 127
-#pragma diag_suppress 3058 /* workaround: call to is_constant_evaluated()      \
+#pragma diag_suppress 3058 /* workaround: call to is_constant_evaluated()                                              \
                               appearing in a constant expression `true` */
-#pragma diag_suppress 3060 /* workaround: call to is_constant_evaluated()      \
+#pragma diag_suppress 3060 /* workaround: call to is_constant_evaluated()                                              \
                               appearing in a constant expression `false` */
 #pragma diag_suppress 2416 /* constexpr function return is non-constant */
 #endif
@@ -50,49 +50,38 @@ static cxx14_constexpr size_t strlen_constexpr(const char *c_str) noexcept {
   return 0;
 }
 
-static inline size_t strlen_dynamic(const char *c_str) noexcept {
-  return c_str ? ::std::strlen(c_str) : 0;
-}
+static inline size_t strlen_dynamic(const char *c_str) noexcept { return c_str ? ::std::strlen(c_str) : 0; }
 
 ERTHINK_DYNAMIC_CONSTEXPR(size_t, strlen, (const char *c_str), (c_str), c_str)
 
-static cxx14_constexpr void *memcpy_constexpr(void *dest, const void *src,
-                                              size_t bytes) noexcept {
+static cxx14_constexpr void *memcpy_constexpr(void *dest, const void *src, size_t bytes) noexcept {
   for (size_t i = 0; i < bytes; ++i)
     static_cast<char *>(dest)[i] = static_cast<const char *>(src)[i];
   return dest;
 }
 
-static inline void *memcpy_dynamic(void *dest, const void *src,
-                                   size_t bytes) noexcept {
+static inline void *memcpy_dynamic(void *dest, const void *src, size_t bytes) noexcept {
   return ::std::memcpy(dest, src, bytes);
 }
 
-ERTHINK_DYNAMIC_CONSTEXPR(void *, memcpy,
-                          (void *dest, const void *src, size_t bytes),
-                          (dest, src, bytes),
-                          (static_cast<char *>(dest) +
-                           static_cast<const char *>(src)[0] + bytes))
+ERTHINK_DYNAMIC_CONSTEXPR(void *, memcpy, (void *dest, const void *src, size_t bytes), (dest, src, bytes),
+                          (static_cast<char *>(dest) + static_cast<const char *>(src)[0] + bytes))
 
-static cxx14_constexpr int memcmp_constexpr(const void *a, const void *b,
-                                            size_t bytes) noexcept {
+static cxx14_constexpr int memcmp_constexpr(const void *a, const void *b, size_t bytes) noexcept {
   for (size_t i = 0; i < bytes; ++i) {
-    const int diff = static_cast<const unsigned char *>(a)[i] -
-                     static_cast<const unsigned char *>(b)[i];
+    const int diff = static_cast<const unsigned char *>(a)[i] - static_cast<const unsigned char *>(b)[i];
     if (diff)
       return diff;
   }
   return 0;
 }
 
-static inline int memcmp_dynamic(const void *a, const void *b,
-                                 size_t bytes) noexcept {
+static inline int memcmp_dynamic(const void *a, const void *b, size_t bytes) noexcept {
   return ::std::memcmp(a, b, bytes);
 }
 
-ERTHINK_DYNAMIC_CONSTEXPR(
-    int, memcmp, (const void *a, const void *b, size_t bytes), (a, b, bytes),
-    (static_cast<const char *>(a)[0] + static_cast<const char *>(b)[0] + bytes))
+ERTHINK_DYNAMIC_CONSTEXPR(int, memcmp, (const void *a, const void *b, size_t bytes), (a, b, bytes),
+                          (static_cast<const char *>(a)[0] + static_cast<const char *>(b)[0] + bytes))
 
 #if defined(__LCC__) && __LCC__ >= 126
 #pragma diagnostic pop

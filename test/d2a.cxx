@@ -31,7 +31,7 @@
 #endif
 
 #if defined(__LCC__)
-#pragma diag_suppress 186 /* pointless comparison of unsigned integer with     \
+#pragma diag_suppress 186 /* pointless comparison of unsigned integer with                                             \
                              zero [-Wtype-limits] */
 #endif
 
@@ -62,12 +62,10 @@ template <typename T> struct d2a : public ::testing::Test {
   static cxx11_constexpr_var bool accurate = T::value;
 
   static __hot __noinline char *convert(const double value, char *ptr) {
-    return erthink::d2a<erthink::grisu::ieee754_default_printer<accurate>>(
-        value, ptr);
+    return erthink::d2a<erthink::grisu::ieee754_default_printer<accurate>>(value, ptr);
   }
 
-  static std::string mantissa_str_map(const char *str,
-                                      const bool strip_tail_0) {
+  static std::string mantissa_str_map(const char *str, const bool strip_tail_0) {
     const size_t len = strlen(str);
     assert(len < 128);
 
@@ -93,9 +91,7 @@ template <typename T> struct d2a : public ::testing::Test {
     return r;
   }
 
-  static std::tuple<bool, int, int> mantissa_str_diff(const char *a,
-                                                      const std::string &ma,
-                                                      const char *b,
+  static std::tuple<bool, int, int> mantissa_str_diff(const char *a, const std::string &ma, const char *b,
                                                       const std::string &mb) {
     size_t i, j;
     for (i = j = 0;;) {
@@ -107,8 +103,7 @@ template <typename T> struct d2a : public ::testing::Test {
       const char a_digit = a_end ? '0' : a[int(ma[i])];
       const char b_digit = b_end ? '0' : b[int(mb[j])];
       if (a_digit != b_digit)
-        return std::make_tuple(true, a_end ? ma.back() : ma[i],
-                               b_end ? mb.back() : mb[j]);
+        return std::make_tuple(true, a_end ? ma.back() : ma[i], b_end ? mb.back() : mb[j]);
 
       i += !a_end;
       j += !b_end;
@@ -162,13 +157,11 @@ template <typename T> struct d2a : public ::testing::Test {
     if (have_dot)
       memmove(str + i - 1, str + i, erthink::d2a_max_chars - i);
     else
-      snprintf(str + i - 1, erthink::d2a_max_chars - i + 1, "e%i",
-               atoi(str + i + 1) + 1);
+      snprintf(str + i - 1, erthink::d2a_max_chars - i + 1, "e%i", atoi(str + i + 1) + 1);
     return true;
   }
 
-  void probe_d2a(char (&buffer)[erthink::d2a_max_chars + 1],
-                 const double value) {
+  void probe_d2a(char (&buffer)[erthink::d2a_max_chars + 1], const double value) {
     char *d2a_end = convert(value, buffer);
     ASSERT_LT(buffer, d2a_end);
     ASSERT_GT(erthink::array_end(buffer), d2a_end);
@@ -182,8 +175,7 @@ template <typename T> struct d2a : public ::testing::Test {
     const std::string ma = mantissa_str_map(buffer, true);
 
     char print_buffer[32];
-    snprintf(print_buffer, sizeof(print_buffer), "%.*e", int(ma.size()) - 1,
-             value);
+    snprintf(print_buffer, sizeof(print_buffer), "%.*e", int(ma.size()) - 1, value);
     const std::string mb = mantissa_str_map(print_buffer, false);
     const auto diff = mantissa_str_diff(buffer, ma, print_buffer, mb);
     if (std::get<0>(diff)) {
@@ -191,14 +183,9 @@ template <typename T> struct d2a : public ::testing::Test {
              "%*c%*c\n"
              "%*c%*.*e\n",
              buffer, print_buffer, std::get<1>(diff) + 5, '^',
-             std::get<2>(diff) + 11 - std::get<1>(diff) + (int)strlen(buffer),
-             '|', std::get<1>(diff) + 5,
-             (buffer[std::get<1>(diff)] < print_buffer[std::get<2>(diff)])
-                 ? '<'
-                 : '>',
-             int(strlen(buffer)) + 12 + int(strlen(print_buffer)) -
-                 std::get<1>(diff),
-             int(mb.size() + 1), value);
+             std::get<2>(diff) + 11 - std::get<1>(diff) + (int)strlen(buffer), '|', std::get<1>(diff) + 5,
+             (buffer[std::get<1>(diff)] < print_buffer[std::get<2>(diff)]) ? '<' : '>',
+             int(strlen(buffer)) + 12 + int(strlen(print_buffer)) - std::get<1>(diff), int(mb.size() + 1), value);
       fflush(nullptr);
       fflush(nullptr);
     }
@@ -222,8 +209,7 @@ template <typename T> struct d2a : public ::testing::Test {
     return true;
   }
 
-  void ensure_shortest(const double value,
-                       char (&buf)[erthink::d2a_max_chars + 1]) {
+  void ensure_shortest(const double value, char (&buf)[erthink::d2a_max_chars + 1]) {
 #ifndef TEST_D2A_SHORTEST_VALIDATION
     (void)value;
     (void)buf;
@@ -348,11 +334,9 @@ TYPED_TEST_P(d2a, trivia) {
 
 TYPED_TEST_P(d2a, DISABLED_stairwell) {
   char buffer[erthink::d2a_max_chars + 1];
-  for (uint64_t mantissa = erthink::grisu::IEEE754_DOUBLE_MANTISSA_MASK;
-       mantissa != 0; mantissa >>= 1) {
+  for (uint64_t mantissa = erthink::grisu::IEEE754_DOUBLE_MANTISSA_MASK; mantissa != 0; mantissa >>= 1) {
     for (uint64_t offset = 1; offset < mantissa; offset <<= 1) {
-      for (uint64_t exp = 0;
-           exp <= erthink::grisu::IEEE754_DOUBLE_EXPONENT_MASK;
+      for (uint64_t exp = 0; exp <= erthink::grisu::IEEE754_DOUBLE_EXPONENT_MASK;
            exp += erthink::grisu::IEEE754_DOUBLE_IMPLICIT_LEAD) {
         for (uint64_t bit = mantissa; bit != 0;) {
           bit >>= 1;
@@ -397,8 +381,7 @@ INSTANTIATE_TYPED_TEST_SUITE_P(fast, d2a, std::false_type);
 
 static void check_shodan(double value, const char *expect) {
   char buffer[erthink::grisu::shodan_printer<>::buffer_size];
-  erthink::grisu::shodan_printer<true> printer(buffer,
-                                               erthink::array_end(buffer));
+  erthink::grisu::shodan_printer<true> printer(buffer, erthink::array_end(buffer));
   erthink::grisu::convert(printer, value);
   const auto pair = printer.finalize_and_get();
   std::string str(pair.first, pair.second - pair.first);
@@ -412,8 +395,7 @@ static void check_shodan(double value, const char *expect) {
 
 static void check_shodan(double value) {
   char buffer[erthink::grisu::shodan_printer<>::buffer_size];
-  erthink::grisu::shodan_printer<true> printer(buffer,
-                                               erthink::array_end(buffer));
+  erthink::grisu::shodan_printer<true> printer(buffer, erthink::array_end(buffer));
   erthink::grisu::convert(printer, value);
   const auto pair = printer.finalize_and_get();
   *pair.second = '\0';
@@ -549,11 +531,9 @@ TEST(d2a, shodan_printer) {
 }
 
 TEST(d2a, DISABLED_shodan_printer_stairwell) {
-  for (uint64_t mantissa = erthink::grisu::IEEE754_DOUBLE_MANTISSA_MASK;
-       mantissa != 0; mantissa >>= 1) {
+  for (uint64_t mantissa = erthink::grisu::IEEE754_DOUBLE_MANTISSA_MASK; mantissa != 0; mantissa >>= 1) {
     for (uint64_t offset = 1; offset < mantissa; offset <<= 1) {
-      for (uint64_t exp = 0;
-           exp <= erthink::grisu::IEEE754_DOUBLE_EXPONENT_MASK;
+      for (uint64_t exp = 0; exp <= erthink::grisu::IEEE754_DOUBLE_EXPONENT_MASK;
            exp += erthink::grisu::IEEE754_DOUBLE_IMPLICIT_LEAD) {
         for (uint64_t bit = mantissa; bit != 0;) {
 #if defined(__MINGW32__) || defined(__MINGW64__)

@@ -22,8 +22,7 @@
 #include "erthink_byteorder.h"
 #include "erthink_defs.h"
 
-#if !defined(__BYTE_ORDER__) || !defined(__ORDER_LITTLE_ENDIAN__) ||           \
-    !defined(__ORDER_BIG_ENDIAN__)
+#if !defined(__BYTE_ORDER__) || !defined(__ORDER_LITTLE_ENDIAN__) || !defined(__ORDER_BIG_ENDIAN__)
 #error __BYTE_ORDER__ should be defined.
 #endif
 
@@ -61,11 +60,7 @@
 
 #ifdef __cplusplus
 namespace erthink {
-enum class endian {
-  little = __ORDER_LITTLE_ENDIAN__,
-  big = __ORDER_BIG_ENDIAN__,
-  native = __BYTE_ORDER__
-};
+enum class endian { little = __ORDER_LITTLE_ENDIAN__, big = __ORDER_BIG_ENDIAN__, native = __BYTE_ORDER__ };
 #endif /* __cplusplus */
 
 /* *INDENT-OFF* */
@@ -117,8 +112,8 @@ template <typename T> constexpr_intrin T h2be(T v);
 template <typename T> constexpr_intrin T le2h(T v);
 template <typename T> constexpr_intrin T be2h(T v);
 
-#define HERE_MAKE(FN)                                                          \
-  template <> constexpr_intrin uint8_t FN<uint8_t>(uint8_t v) { return v; }    \
+#define HERE_MAKE(FN)                                                                                                  \
+  template <> constexpr_intrin uint8_t FN<uint8_t>(uint8_t v) { return v; }                                            \
   template <> constexpr_intrin int8_t FN<int8_t>(int8_t v) { return v; }
 HERE_MAKE(h2le)
 HERE_MAKE(h2be)
@@ -126,25 +121,18 @@ HERE_MAKE(le2h)
 HERE_MAKE(be2h)
 #undef HERE_MAKE
 
-#define HERE_MAKE(CASE, WIDTH)                                                 \
-  template <>                                                                  \
-  constexpr_intrin uint##WIDTH##_t h2##CASE<uint##WIDTH##_t>(                  \
-      uint##WIDTH##_t v) {                                                     \
-    return hto##CASE##WIDTH(v);                                                \
-  }                                                                            \
-  template <>                                                                  \
-  constexpr_intrin int##WIDTH##_t h2##CASE<int##WIDTH##_t>(int##WIDTH##_t v) { \
-    return hto##CASE##WIDTH(v);                                                \
-  }                                                                            \
-  template <>                                                                  \
-      constexpr_intrin uint##WIDTH##_t CASE##2h < uint##WIDTH##_t >            \
-      (uint##WIDTH##_t v) {                                                    \
-    return CASE##WIDTH##toh(v);                                                \
-  }                                                                            \
-  template <>                                                                  \
-      constexpr_intrin int##WIDTH##_t CASE##2h < int##WIDTH##_t >              \
-      (int##WIDTH##_t v) {                                                     \
-    return CASE##WIDTH##toh(v);                                                \
+#define HERE_MAKE(CASE, WIDTH)                                                                                         \
+  template <> constexpr_intrin uint##WIDTH##_t h2##CASE<uint##WIDTH##_t>(uint##WIDTH##_t v) {                          \
+    return hto##CASE##WIDTH(v);                                                                                        \
+  }                                                                                                                    \
+  template <> constexpr_intrin int##WIDTH##_t h2##CASE<int##WIDTH##_t>(int##WIDTH##_t v) {                             \
+    return hto##CASE##WIDTH(v);                                                                                        \
+  }                                                                                                                    \
+  template <> constexpr_intrin uint##WIDTH##_t CASE##2h < uint##WIDTH##_t > (uint##WIDTH##_t v) {                      \
+    return CASE##WIDTH##toh(v);                                                                                        \
+  }                                                                                                                    \
+  template <> constexpr_intrin int##WIDTH##_t CASE##2h < int##WIDTH##_t > (int##WIDTH##_t v) {                         \
+    return CASE##WIDTH##toh(v);                                                                                        \
   }
 
 HERE_MAKE(le, 16)

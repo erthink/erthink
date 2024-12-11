@@ -44,9 +44,8 @@ static cxx14_constexpr int clz32_constexpr(uint32_t v) noexcept {
   v |= v >> 4;
   v |= v >> 8;
   v |= v >> 16;
-  cxx14_constexpr_var int8_t deBruijn_clz32[32] = {
-      31, 22, 30, 21, 18, 10, 29, 2,  20, 17, 15, 13, 9, 6,  28, 1,
-      23, 19, 11, 3,  16, 14, 7,  24, 12, 4,  8,  25, 5, 26, 27, 0};
+  cxx14_constexpr_var int8_t deBruijn_clz32[32] = {31, 22, 30, 21, 18, 10, 29, 2,  20, 17, 15, 13, 9, 6,  28, 1,
+                                                   23, 19, 11, 3,  16, 14, 7,  24, 12, 4,  8,  25, 5, 26, 27, 0};
   return deBruijn_clz32[v * UINT32_C(0x07C4ACDD) >> 27];
 }
 
@@ -57,26 +56,18 @@ static cxx14_constexpr int clz64_constexpr(uint64_t v) noexcept {
   v |= v >> 8;
   v |= v >> 16;
   v |= v >> 32;
-  cxx14_constexpr_var uint8_t deBruijn_clz64[64] = {
-      63, 16, 62, 7,  15, 36, 61, 3,  6,  14, 22, 26, 35, 47, 60, 2,
-      9,  5,  28, 11, 13, 21, 42, 19, 25, 31, 34, 40, 46, 52, 59, 1,
-      17, 8,  37, 4,  23, 27, 48, 10, 29, 12, 43, 20, 32, 41, 53, 18,
-      38, 24, 49, 30, 44, 33, 54, 39, 50, 45, 55, 51, 56, 57, 58, 0};
+  cxx14_constexpr_var uint8_t deBruijn_clz64[64] = {63, 16, 62, 7,  15, 36, 61, 3,  6,  14, 22, 26, 35, 47, 60, 2,
+                                                    9,  5,  28, 11, 13, 21, 42, 19, 25, 31, 34, 40, 46, 52, 59, 1,
+                                                    17, 8,  37, 4,  23, 27, 48, 10, 29, 12, 43, 20, 32, 41, 53, 18,
+                                                    38, 24, 49, 30, 44, 33, 54, 39, 50, 45, 55, 51, 56, 57, 58, 0};
   return deBruijn_clz64[v * UINT64_C(0x03F79D71B4CB0A89) >> 58];
 }
 
 #if defined(__GNUC__) || defined(__clang__)
 
-template <> cxx14_constexpr int clz<unsigned>(unsigned v) noexcept {
-  return __builtin_clz(v);
-}
-template <> cxx14_constexpr int clz<unsigned long>(unsigned long v) noexcept {
-  return __builtin_clzl(v);
-}
-template <>
-cxx14_constexpr int clz<unsigned long long>(unsigned long long v) noexcept {
-  return __builtin_clzll(v);
-}
+template <> cxx14_constexpr int clz<unsigned>(unsigned v) noexcept { return __builtin_clz(v); }
+template <> cxx14_constexpr int clz<unsigned long>(unsigned long v) noexcept { return __builtin_clzl(v); }
+template <> cxx14_constexpr int clz<unsigned long long>(unsigned long long v) noexcept { return __builtin_clzll(v); }
 
 static cxx14_constexpr int clz64(uint64_t v) noexcept { return clz(v); }
 
@@ -115,18 +106,12 @@ static erthink_dynamic_constexpr int clz64(uint64_t v) noexcept {
 
 #endif /* ARCH 32/64 */
 
-template <> erthink_dynamic_constexpr int clz<uint32_t>(uint32_t v) noexcept {
-  return clz32(v);
-}
-template <> erthink_dynamic_constexpr int clz<uint64_t>(uint64_t v) noexcept {
-  return clz64(v);
-}
+template <> erthink_dynamic_constexpr int clz<uint32_t>(uint32_t v) noexcept { return clz32(v); }
+template <> erthink_dynamic_constexpr int clz<uint64_t>(uint64_t v) noexcept { return clz64(v); }
 
 #else /* fallback */
 
-static cxx14_constexpr int clz32(uint32_t v) noexcept {
-  return clz32_constexpr(v);
-}
+static cxx14_constexpr int clz32(uint32_t v) noexcept { return clz32_constexpr(v); }
 
 static cxx14_constexpr int clz64(uint64_t v) noexcept {
 #ifdef ERTHINK_ARCH64
@@ -137,12 +122,8 @@ static cxx14_constexpr int clz64(uint64_t v) noexcept {
 #endif
 }
 
-template <> cxx14_constexpr int clz<uint32_t>(uint32_t v) noexcept {
-  return clz32(v);
-}
-template <> cxx14_constexpr int clz<uint64_t>(uint64_t v) noexcept {
-  return clz64(v);
-}
+template <> cxx14_constexpr int clz<uint32_t>(uint32_t v) noexcept { return clz32(v); }
+template <> cxx14_constexpr int clz<uint64_t>(uint64_t v) noexcept { return clz64(v); }
 
 #endif /* compiler */
 

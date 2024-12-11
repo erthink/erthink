@@ -22,18 +22,17 @@
 #define _STL_WARNING_LEVEL 3
 #endif
 #pragma warning(push, 1)
-#pragma warning(disable : 4548) /* expression before comma has no effect;      \
+#pragma warning(disable : 4548) /* expression before comma has no effect;                                              \
                                    expected expression with side - effect */
-#pragma warning(disable : 4530) /* C++ exception handler used, but unwind      \
+#pragma warning(disable : 4530) /* C++ exception handler used, but unwind                                              \
                                    semantics are not enabled. Specify /EHsc */
-#pragma warning(disable : 4577) /* 'noexcept' used with no exception handling  \
-                                   mode specified; termination on exception    \
+#pragma warning(disable : 4577) /* 'noexcept' used with no exception handling                                          \
+                                   mode specified; termination on exception                                            \
                                    is not guaranteed. Specify /EHsc */
 #endif
 
 /* Workaround for modern libstdc++ with CLANG < 4.x */
-#if defined(__SIZEOF_INT128__) && !defined(__GLIBCXX_TYPE_INT_N_0) &&          \
-    defined(__clang__) && __clang_major__ < 4
+#if defined(__SIZEOF_INT128__) && !defined(__GLIBCXX_TYPE_INT_N_0) && defined(__clang__) && __clang_major__ < 4
 #define __GLIBCXX_BITSIZE_INT_N_0 128
 #define __GLIBCXX_TYPE_INT_N_0 __int128
 #endif /* Workaround for modern libstdc++ with CLANG < 4.x */
@@ -48,9 +47,8 @@
 #include <cstdint>
 #endif
 
-#if (defined(WINDOWS) || defined(_WINDOWS) || defined(__WINDOWS__) ||          \
-     defined(__windows__) || defined(_WIN32) || defined(_WIN64) ||             \
-     defined(__MINGW__) || defined(__MINGW32__) || defined(__MINGW64__)) &&    \
+#if (defined(WINDOWS) || defined(_WINDOWS) || defined(__WINDOWS__) || defined(__windows__) || defined(_WIN32) ||       \
+     defined(_WIN64) || defined(__MINGW__) || defined(__MINGW32__) || defined(__MINGW64__)) &&                         \
     !defined(_WINNT_)
 /* Fetch Windows/Microsoft macros like `__prefetch()`, etc */
 #ifndef _WIN32_WINNT
@@ -59,17 +57,15 @@
 #if !defined(NOMINMAX) && defined(__cplusplus)
 #define NOMINMAX
 #endif /* NOMINMAX for C++ */
-#if (defined(__MINGW__) || defined(__MINGW32__) || defined(__MINGW64__)) &&    \
-    !defined(__USE_MINGW_ANSI_STDIO)
+#if (defined(__MINGW__) || defined(__MINGW32__) || defined(__MINGW64__)) && !defined(__USE_MINGW_ANSI_STDIO)
 #define __USE_MINGW_ANSI_STDIO 1
 #endif /* __USE_MINGW_ANSI_STDIO fo MinGW */
 #include <windows.h>
 #include <winnt.h>
 #endif /* Windows && !_WINNT_ */
 
-#if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) ||     \
-    defined(__BSD__) || defined(__NETBSD__) || defined(__bsdi__) ||            \
-    defined(__DragonFly__)
+#if defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__BSD__) || defined(__NETBSD__) ||  \
+    defined(__bsdi__) || defined(__DragonFly__)
 #include </usr/include/sys/cdefs.h>
 #endif /* BSD */
 
@@ -79,8 +75,7 @@
 
 #ifndef __GNUC_PREREQ
 #if defined(__GNUC__) && defined(__GNUC_MINOR__)
-#define __GNUC_PREREQ(maj, min)                                                \
-  ((__GNUC__ << 16) + __GNUC_MINOR__ >= ((maj) << 16) + (min))
+#define __GNUC_PREREQ(maj, min) ((__GNUC__ << 16) + __GNUC_MINOR__ >= ((maj) << 16) + (min))
 #else
 #define __GNUC_PREREQ(maj, min) (0)
 #endif
@@ -88,8 +83,7 @@
 
 #ifndef __CLANG_PREREQ
 #ifdef __clang__
-#define __CLANG_PREREQ(maj, min)                                               \
-  ((__clang_major__ << 16) + __clang_minor__ >= ((maj) << 16) + (min))
+#define __CLANG_PREREQ(maj, min) ((__clang_major__ << 16) + __clang_minor__ >= ((maj) << 16) + (min))
 #else
 #define __CLANG_PREREQ(maj, min) (0)
 #endif
@@ -97,8 +91,7 @@
 
 #ifndef __GLIBC_PREREQ
 #if defined(__GLIBC__) && defined(__GLIBC_MINOR__)
-#define __GLIBC_PREREQ(maj, min)                                               \
-  ((__GLIBC__ << 16) + __GLIBC_MINOR__ >= ((maj) << 16) + (min))
+#define __GLIBC_PREREQ(maj, min) ((__GLIBC__ << 16) + __GLIBC_MINOR__ >= ((maj) << 16) + (min))
 #else
 #define __GLIBC_PREREQ(maj, min) (0)
 #endif
@@ -142,8 +135,7 @@
 #define __has_feature(x) (0)
 #define __has_exceptions_disabled (0)
 #elif !defined(__has_exceptions_disabled)
-#define __has_exceptions_disabled                                              \
-  (__has_feature(cxx_noexcept) && !__has_feature(cxx_exceptions))
+#define __has_exceptions_disabled (__has_feature(cxx_noexcept) && !__has_feature(cxx_exceptions))
 #endif /* __has_feature */
 
 #ifndef __has_extension
@@ -211,24 +203,21 @@
 #endif
 #endif /* __cplusplus */
 
-#if defined(__fallthrough) &&                                                  \
-    (defined(__MINGW__) || defined(__MINGW32__) || defined(__MINGW64__))
+#if defined(__fallthrough) && (defined(__MINGW__) || defined(__MINGW32__) || defined(__MINGW64__))
 #undef __fallthrough
 #endif /* __fallthrough workaround for MinGW */
 
 #ifndef __fallthrough
-#if defined(__cplusplus) && (__has_cpp_attribute(fallthrough) &&               \
-                             (!defined(__clang__) || __clang__ > 4)) ||        \
+#if defined(__cplusplus) && (__has_cpp_attribute(fallthrough) && (!defined(__clang__) || __clang__ > 4)) ||            \
     __cplusplus >= 201703L
 #define __fallthrough [[fallthrough]]
 #elif __GNUC_PREREQ(8, 0) && defined(__cplusplus) && __cplusplus >= 201103L
 #define __fallthrough [[fallthrough]]
-#elif __GNUC_PREREQ(7, 0) &&                                                   \
-    (!defined(__LCC__) || (__LCC__ == 124 && __LCC_MINOR__ >= 12) ||           \
-     (__LCC__ == 125 && __LCC_MINOR__ >= 5) || (__LCC__ >= 126))
+#elif __GNUC_PREREQ(7, 0) && (!defined(__LCC__) || (__LCC__ == 124 && __LCC_MINOR__ >= 12) ||                          \
+                              (__LCC__ == 125 && __LCC_MINOR__ >= 5) || (__LCC__ >= 126))
 #define __fallthrough __attribute__((__fallthrough__))
-#elif defined(__clang__) && defined(__cplusplus) && __cplusplus >= 201103L &&  \
-    __has_feature(cxx_attributes) && __has_warning("-Wimplicit-fallthrough")
+#elif defined(__clang__) && defined(__cplusplus) && __cplusplus >= 201103L && __has_feature(cxx_attributes) &&         \
+    __has_warning("-Wimplicit-fallthrough")
 #define __fallthrough [[clang::fallthrough]]
 #else
 #define __fallthrough
@@ -250,8 +239,7 @@
 #endif /* cxx11_noexcept */
 
 #if !defined(cxx17_noexcept)
-#if !defined(DOXYGEN) && (!defined(__cpp_noexcept_function_type) ||            \
-                          __cpp_noexcept_function_type < 201510L)
+#if !defined(DOXYGEN) && (!defined(__cpp_noexcept_function_type) || __cpp_noexcept_function_type < 201510L)
 #define cxx17_noexcept
 #else
 #define cxx17_noexcept noexcept
@@ -263,14 +251,11 @@
 #if !defined(__cplusplus)
 #define cxx01_constexpr __inline
 #define cxx01_constexpr_var const
-#elif !defined(DOXYGEN) &&                                                     \
-    ((__cplusplus < 201103L && defined(__cpp_constexpr) &&                     \
-      __cpp_constexpr < 200704L) ||                                            \
-     (defined(__LCC__) && __LCC__ < 124) ||                                    \
-     (defined(__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__ < 407) &&          \
-      !defined(__clang__) && !defined(__LCC__)) ||                             \
-     (defined(_MSC_VER) && _MSC_VER < 1910) ||                                 \
-     (defined(__clang__) && __clang_major__ < 4))
+#elif !defined(DOXYGEN) &&                                                                                             \
+    ((__cplusplus < 201103L && defined(__cpp_constexpr) && __cpp_constexpr < 200704L) ||                               \
+     (defined(__LCC__) && __LCC__ < 124) ||                                                                            \
+     (defined(__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__ < 407) && !defined(__clang__) && !defined(__LCC__)) ||     \
+     (defined(_MSC_VER) && _MSC_VER < 1910) || (defined(__clang__) && __clang_major__ < 4))
 #define cxx01_constexpr inline
 #define cxx01_constexpr_var const
 #else
@@ -283,13 +268,10 @@
 #if !defined(__cplusplus)
 #define cxx11_constexpr __inline
 #define cxx11_constexpr_var const
-#elif !defined(DOXYGEN) &&                                                     \
-    (!defined(__cpp_constexpr) || __cpp_constexpr < 201304L ||                 \
-     (defined(__LCC__) && __LCC__ < 124) ||                                    \
-     (defined(__GNUC__) && __GNUC__ < 6 && !defined(__clang__) &&              \
-      !defined(__LCC__)) ||                                                    \
-     (defined(_MSC_VER) && _MSC_VER < 1910) ||                                 \
-     (defined(__clang__) && __clang_major__ < 5))
+#elif !defined(DOXYGEN) &&                                                                                             \
+    (!defined(__cpp_constexpr) || __cpp_constexpr < 201304L || (defined(__LCC__) && __LCC__ < 124) ||                  \
+     (defined(__GNUC__) && __GNUC__ < 6 && !defined(__clang__) && !defined(__LCC__)) ||                                \
+     (defined(_MSC_VER) && _MSC_VER < 1910) || (defined(__clang__) && __clang_major__ < 5))
 #define cxx11_constexpr inline
 #define cxx11_constexpr_var const
 #else
@@ -302,12 +284,10 @@
 #if !defined(__cplusplus)
 #define cxx14_constexpr __inline
 #define cxx14_constexpr_var const
-#elif defined(DOXYGEN) ||                                                      \
-    (defined(__cpp_constexpr) && __cpp_constexpr >= 201304L &&                 \
-     ((defined(_MSC_VER) && _MSC_VER >= 1910) ||                               \
-      (defined(__clang__) && __clang_major__ > 4) ||                           \
-      (defined(__GNUC__) && __GNUC__ > 6) ||                                   \
-      (!defined(__GNUC__) && !defined(__clang__) && !defined(_MSC_VER))))
+#elif defined(DOXYGEN) ||                                                                                              \
+    (defined(__cpp_constexpr) && __cpp_constexpr >= 201304L &&                                                         \
+     ((defined(_MSC_VER) && _MSC_VER >= 1910) || (defined(__clang__) && __clang_major__ > 4) ||                        \
+      (defined(__GNUC__) && __GNUC__ > 6) || (!defined(__GNUC__) && !defined(__clang__) && !defined(_MSC_VER))))
 #define cxx14_constexpr constexpr
 #define cxx14_constexpr_var constexpr
 #else
@@ -320,12 +300,10 @@
 #if !defined(__cplusplus)
 #define cxx17_constexpr __inline
 #define cxx17_constexpr_var const
-#elif defined(DOXYGEN) ||                                                      \
-    (defined(__cpp_constexpr) && __cpp_constexpr >= 201603L &&                 \
-     ((defined(_MSC_VER) && _MSC_VER >= 1915) ||                               \
-      (defined(__clang__) && __clang_major__ > 5) ||                           \
-      (defined(__GNUC__) && __GNUC__ > 7) ||                                   \
-      (!defined(__GNUC__) && !defined(__clang__) && !defined(_MSC_VER))))
+#elif defined(DOXYGEN) ||                                                                                              \
+    (defined(__cpp_constexpr) && __cpp_constexpr >= 201603L &&                                                         \
+     ((defined(_MSC_VER) && _MSC_VER >= 1915) || (defined(__clang__) && __clang_major__ > 5) ||                        \
+      (defined(__GNUC__) && __GNUC__ > 7) || (!defined(__GNUC__) && !defined(__clang__) && !defined(_MSC_VER))))
 #define cxx17_constexpr constexpr
 #define cxx17_constexpr_var constexpr
 #else
@@ -338,10 +316,8 @@
 #if !defined(__cplusplus)
 #define cxx20_constexpr __inline
 #define cxx20_constexpr_var const
-#elif defined(DOXYGEN) ||                                                      \
-    (defined(__cpp_constexpr) && __cpp_constexpr >= 201907L &&                 \
-     defined(__cpp_lib_constexpr_string) &&                                    \
-     __cpp_lib_constexpr_string >= 201907L)
+#elif defined(DOXYGEN) || (defined(__cpp_constexpr) && __cpp_constexpr >= 201907L &&                                   \
+                           defined(__cpp_lib_constexpr_string) && __cpp_lib_constexpr_string >= 201907L)
 #define cxx20_constexpr constexpr
 #define cxx20_constexpr_var constexpr
 #else
@@ -387,8 +363,7 @@
 /* Crutch for case when OLD GLIBC++ (without std::max_align_t)
  * is coupled with MODERN C++ COMPILER (with __cpp_aligned_new) */
 #ifndef ERTHINK_PROVIDE_ALIGNED_NEW
-#if defined(__cpp_aligned_new) &&                                              \
-    (!defined(__GLIBCXX__) || defined(_GLIBCXX_HAVE_ALIGNED_ALLOC))
+#if defined(__cpp_aligned_new) && (!defined(__GLIBCXX__) || defined(_GLIBCXX_HAVE_ALIGNED_ALLOC))
 #define ERTHINK_PROVIDE_ALIGNED_NEW 1
 #else
 #define ERTHINK_PROVIDE_ALIGNED_NEW 0
@@ -408,19 +383,16 @@
 #ifndef __printf_args
 #if defined(__GNUC__) || __has_attribute(__format__)
 #if defined(__MINGW__) || defined(__MINGW32__) || defined(__MINGW64__)
-#define __printf_args(format_index, first_arg)                                 \
-  __attribute__((__format__(__gnu_printf__, format_index, first_arg)))
+#define __printf_args(format_index, first_arg) __attribute__((__format__(__gnu_printf__, format_index, first_arg)))
 #else
-#define __printf_args(format_index, first_arg)                                 \
-  __attribute__((__format__(__printf__, format_index, first_arg)))
+#define __printf_args(format_index, first_arg) __attribute__((__format__(__printf__, format_index, first_arg)))
 #endif /* MinGW */
 #else
 #define __printf_args(format_index, first_arg)
 #endif
 #endif /* __printf_args */
 
-#if !defined(__thread) &&                                                      \
-    ((defined(_MSC_VER) && !defined(__clang__)) || defined(__DMC__))
+#if !defined(__thread) && ((defined(_MSC_VER) && !defined(__clang__)) || defined(__DMC__))
 #define __thread __declspec(thread)
 #endif /* __thread */
 
@@ -443,16 +415,13 @@
 #endif /* __must_check_result */
 
 #ifndef __deprecated
-#if (!defined(__GNUC__) || defined(__clang__) || __GNUC__ > 5) &&              \
-    ((defined(__cplusplus) && __cplusplus >= 201403L &&                        \
-      __has_cpp_attribute(deprecated) &&                                       \
-      __has_cpp_attribute(deprecated) >= 201309L) ||                           \
-     (!defined(__cplusplus) && defined(__STDC_VERSION__) &&                    \
-      __STDC_VERSION__ >= 202304L))
+#if (!defined(__GNUC__) || defined(__clang__) || __GNUC__ > 5) &&                                                      \
+    ((defined(__cplusplus) && __cplusplus >= 201403L && __has_cpp_attribute(deprecated) &&                             \
+      __has_cpp_attribute(deprecated) >= 201309L) ||                                                                   \
+     (!defined(__cplusplus) && defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202304L))
 #define __deprecated [[deprecated]]
-#elif (defined(__GNUC__) && __GNUC__ > 5) ||                                   \
-    (__has_attribute(__deprecated__) &&                                        \
-     (!defined(__GNUC__) || defined(__clang__) || __GNUC__ > 5))
+#elif (defined(__GNUC__) && __GNUC__ > 5) ||                                                                           \
+    (__has_attribute(__deprecated__) && (!defined(__GNUC__) || defined(__clang__) || __GNUC__ > 5))
 #define __deprecated __attribute__((__deprecated__))
 #elif defined(_MSC_VER)
 #define __deprecated __declspec(deprecated)
@@ -462,8 +431,7 @@
 #endif /* __deprecated */
 
 #ifndef __deprecated_enum
-#if !defined(_MSC_VER) || (defined(__cplusplus) && __cplusplus >= 201403L &&   \
-                           __has_cpp_attribute(deprecated) &&                  \
+#if !defined(_MSC_VER) || (defined(__cplusplus) && __cplusplus >= 201403L && __has_cpp_attribute(deprecated) &&        \
                            __has_cpp_attribute(deprecated) >= 201309L)
 #define __deprecated_enum __deprecated
 #else
@@ -508,9 +476,9 @@
 #define __pure_function [[gnu::pure]]
 #elif __has_C23_or_CXX_attribute(gnu::pure)
 #define __pure_function [[gnu::pure]]
-#elif (defined(__GNUC__) || __has_attribute(__pure__)) &&                      \
-    (!defined(__clang__) /* https://bugs.llvm.org/show_bug.cgi?id=43275 */ ||  \
-     !defined(__cplusplus) || __has_exceptions_disabled)
+#elif (defined(__GNUC__) || __has_attribute(__pure__)) &&                                                              \
+    (!defined(__clang__) /* https://bugs.llvm.org/show_bug.cgi?id=43275 */ || !defined(__cplusplus) ||                 \
+     __has_exceptions_disabled)
 #define __pure_function __attribute__((__pure__))
 #else
 #define __pure_function
@@ -529,8 +497,7 @@
 #else
 #define __nothrow_pure_function [[gnu::pure]]
 #endif
-#elif defined(__GNUC__) ||                                                     \
-    (__has_attribute(__pure__) && __has_attribute(__nothrow__))
+#elif defined(__GNUC__) || (__has_attribute(__pure__) && __has_attribute(__nothrow__))
 #define __nothrow_pure_function __attribute__((__pure__, __nothrow__))
 #elif __has_cpp_attribute(pure)
 #define __nothrow_pure_function [[pure]]
@@ -554,9 +521,9 @@
 #define __const_function [[gnu::const]]
 #elif __has_C23_or_CXX_attribute(gnu::const)
 #define __const_function [[gnu::const]]
-#elif (defined(__GNUC__) || __has_attribute(__const__)) &&                     \
-    (!defined(__clang__) /* https://bugs.llvm.org/show_bug.cgi?id=43275 */ ||  \
-     !defined(__cplusplus) || __has_exceptions_disabled)
+#elif (defined(__GNUC__) || __has_attribute(__const__)) &&                                                             \
+    (!defined(__clang__) /* https://bugs.llvm.org/show_bug.cgi?id=43275 */ || !defined(__cplusplus) ||                 \
+     __has_exceptions_disabled)
 #define __const_function __attribute__((__const__))
 #else
 #define __const_function __pure_function
@@ -575,8 +542,7 @@
 #else
 #define __nothrow_const_function [[gnu::const]]
 #endif
-#elif defined(__GNUC__) ||                                                     \
-    (__has_attribute(__const__) && __has_attribute(__nothrow__))
+#elif defined(__GNUC__) || (__has_attribute(__const__) && __has_attribute(__nothrow__))
 #define __nothrow_const_function __attribute__((__const__, __nothrow__))
 #elif __has_cpp_attribute_qualified(const)
 #define __nothrow_const_function [[const]]
@@ -599,8 +565,7 @@
 
 #ifndef __hot
 #if defined(__OPTIMIZE__)
-#if defined(__clang__) && !__has_attribute(__hot__) &&                         \
-    __has_attribute(__section__) &&                                            \
+#if defined(__clang__) && !__has_attribute(__hot__) && __has_attribute(__section__) &&                                 \
     (defined(__linux__) || defined(__gnu_linux__))
 /* just put frequently used functions in separate section */
 #define __hot __attribute__((__section__("text.hot"))) __optimize("O3")
@@ -616,8 +581,7 @@
 
 #ifndef __cold
 #if defined(__OPTIMIZE__)
-#if defined(__clang__) && !__has_attribute(__cold__) &&                        \
-    __has_attribute(__section__) &&                                            \
+#if defined(__clang__) && !__has_attribute(__cold__) && __has_attribute(__section__) &&                                \
     (defined(__linux__) || defined(__gnu_linux__))
 /* just put infrequently used functions in separate section */
 #define __cold __attribute__((__section__("text.unlikely"))) __optimize("Os")
@@ -668,8 +632,8 @@
 #endif /* __hidden */
 
 #ifndef __dll_export
-#if defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__) ||               \
-    defined(__MINGW__) || defined(__MINGW32__) || defined(__MINGW64__)
+#if defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__) || defined(__MINGW__) || defined(__MINGW32__) ||         \
+    defined(__MINGW64__)
 #if defined(__GNUC__) || __has_attribute(__dllexport__)
 #define __dll_export __attribute__((__dllexport__))
 #elif defined(_MSC_VER)
@@ -685,8 +649,8 @@
 #endif /* __dll_export */
 
 #ifndef __dll_import
-#if defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__) ||               \
-    defined(__MINGW__) || defined(__MINGW32__) || defined(__MINGW64__)
+#if defined(_WIN32) || defined(_WIN64) || defined(__CYGWIN__) || defined(__MINGW__) || defined(__MINGW32__) ||         \
+    defined(__MINGW64__)
 #if defined(__GNUC__) || __has_attribute(__dllimport__)
 #define __dll_import __attribute__((__dllimport__))
 #elif defined(_MSC_VER)
@@ -720,25 +684,22 @@ static inline void noop_consume_args(const First &first, const Rest &...rest) {
 } // namespace erthink
 #define ERTHINK_NOOP(...) ::erthink::noop_consume_args(__VA_ARGS__)
 #elif defined(__GNUC__) && (!defined(__STRICT_ANSI__) || !__STRICT_ANSI__)
-static __inline void __erthink_noop_consume_args(void *anchor, ...) {
-  (void)anchor;
-}
+static __inline void __erthink_noop_consume_args(void *anchor, ...) { (void)anchor; }
 #define ERTHINK_NOOP(...) __erthink_noop_consume_args(0, ##__VA_ARGS__)
 #else
-#define ERTHINK_NOOP(...)                                                      \
-  do {                                                                         \
+#define ERTHINK_NOOP(...)                                                                                              \
+  do {                                                                                                                 \
   } while (0)
 #endif /* ERTHINK_NOOP() */
 
 #if !defined(__noop) && !defined(_MSC_VER)
-#define __noop                                                                 \
-  do {                                                                         \
+#define __noop                                                                                                         \
+  do {                                                                                                                 \
   } while (0)
 #endif /* __noop */
 
 #if defined(_MSC_VER) && !defined(__clang__)
-#define ERTHINK_PACKED_STRUCT(name)                                            \
-  __pragma(pack(push, 1)) struct name __pragma(pack(pop))
+#define ERTHINK_PACKED_STRUCT(name) __pragma(pack(push, 1)) struct name __pragma(pack(pop))
 #elif defined(__GNUC__) || __has_attribute(__packed__)
 #define ERTHINK_PACKED_STRUCT(name) struct __attribute__((__packed__)) name
 #else
@@ -751,8 +712,8 @@ static __inline void __erthink_noop_consume_args(void *anchor, ...) {
 #elif defined(_MSC_VER) && !defined(__clang__)
 #define __unreachable() __assume(0)
 #else
-#define __unreachable()                                                        \
-  do {                                                                         \
+#define __unreachable()                                                                                                \
+  do {                                                                                                                 \
   } while (1)
 #endif
 #endif /* __unreachable */
@@ -761,9 +722,9 @@ static __inline void __erthink_noop_consume_args(void *anchor, ...) {
 #if defined(__GNUC__) || defined(__clang__) || __has_builtin(__builtin_prefetch)
 #define __prefetch(ptr) __builtin_prefetch(ptr)
 #else
-#define __prefetch(ptr)                                                        \
-  do {                                                                         \
-    (void)(ptr);                                                               \
+#define __prefetch(ptr)                                                                                                \
+  do {                                                                                                                 \
+    (void)(ptr);                                                                                                       \
   } while (0)
 #endif
 #endif /* __prefetch */
@@ -785,8 +746,7 @@ static __inline void __erthink_noop_consume_args(void *anchor, ...) {
 #endif /* unlikely */
 
 #ifndef constexpr_likely
-#if defined(__cplusplus) && __cplusplus >= 201103L && defined(__LCC__) &&      \
-    __LCC__ < 125
+#if defined(__cplusplus) && __cplusplus >= 201103L && defined(__LCC__) && __LCC__ < 125
 #define constexpr_likely(cond) (cond)
 #else
 #define constexpr_likely(cond) likely(cond)
@@ -794,8 +754,7 @@ static __inline void __erthink_noop_consume_args(void *anchor, ...) {
 #endif /* constexpr_likely */
 
 #ifndef constexpr_unlikely
-#if defined(__cplusplus) && __cplusplus >= 201103L && defined(__LCC__) &&      \
-    __LCC__ < 125
+#if defined(__cplusplus) && __cplusplus >= 201103L && defined(__LCC__) && __LCC__ < 125
 #define constexpr_unlikely(cond) (cond)
 #else
 #define constexpr_unlikely(cond) unlikely(cond)
@@ -803,8 +762,7 @@ static __inline void __erthink_noop_consume_args(void *anchor, ...) {
 #endif /* constexpr_unlikely */
 
 #ifndef __cxx20_likely
-#if defined(DOXYGEN) || (__has_cpp_attribute(likely) >= 201803L &&             \
-                         (!defined(__GNUC__) || __GNUC__ > 9))
+#if defined(DOXYGEN) || (__has_cpp_attribute(likely) >= 201803L && (!defined(__GNUC__) || __GNUC__ > 9))
 #define __cxx20_likely [[likely]]
 #else
 #define __cxx20_likely
@@ -812,8 +770,7 @@ static __inline void __erthink_noop_consume_args(void *anchor, ...) {
 #endif /* __cxx20_likely */
 
 #ifndef __cxx20_unlikely
-#if defined(DOXYGEN) || (__has_cpp_attribute(unlikely) >= 201803L &&           \
-                         (!defined(__GNUC__) || __GNUC__ > 9))
+#if defined(DOXYGEN) || (__has_cpp_attribute(unlikely) >= 201803L && (!defined(__GNUC__) || __GNUC__ > 9))
 #define __cxx20_unlikely [[unlikely]]
 #else
 #define __cxx20_unlikely
@@ -845,10 +802,10 @@ static __inline void __erthink_noop_consume_args(void *anchor, ...) {
 #endif /* offsetof */
 
 #ifndef container_of
-#define container_of(ptr, type, member)                                        \
-  ({                                                                           \
-    const __typeof(((type *)nullptr)->member) *__ptr = (ptr);                  \
-    (type *)((char *)__ptr - offsetof(type, member));                          \
+#define container_of(ptr, type, member)                                                                                \
+  ({                                                                                                                   \
+    const __typeof(((type *)nullptr)->member) *__ptr = (ptr);                                                          \
+    (type *)((char *)__ptr - offsetof(type, member));                                                                  \
   })
 #endif /* container_of */
 
@@ -875,12 +832,9 @@ static __inline void __erthink_noop_consume_args(void *anchor, ...) {
 #ifndef DEFINE_ENUM_FLAG_OPERATORS
 
 #ifdef __cplusplus
-#if !defined(__cpp_constexpr) || __cpp_constexpr < 200704L ||                  \
-    (defined(__LCC__) && __LCC__ < 124) ||                                     \
-    (defined(__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__ < 407) &&           \
-     !defined(__clang__) && !defined(__LCC__)) ||                              \
-    (defined(_MSC_VER) && _MSC_VER < 1910) ||                                  \
-    (defined(__clang__) && __clang_major__ < 4)
+#if !defined(__cpp_constexpr) || __cpp_constexpr < 200704L || (defined(__LCC__) && __LCC__ < 124) ||                   \
+    (defined(__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__ < 407) && !defined(__clang__) && !defined(__LCC__)) ||      \
+    (defined(_MSC_VER) && _MSC_VER < 1910) || (defined(__clang__) && __clang_major__ < 4)
 /* The constexpr feature is not available or (may be) broken */
 #define CONSTEXPR_ENUM_FLAGS_OPERATIONS 0
 #else
@@ -890,36 +844,18 @@ static __inline void __erthink_noop_consume_args(void *anchor, ...) {
 
 /// Define operator overloads to enable bit operations on enum values that are
 /// used to define flags (based on Microsoft's DEFINE_ENUM_FLAG_OPERATORS).
-#define DEFINE_ENUM_FLAG_OPERATORS(ENUM)                                       \
-  extern "C++" {                                                               \
-  __nosanitize_enum cxx01_constexpr ENUM operator|(ENUM a, ENUM b) {           \
-    return ENUM(unsigned(a) | unsigned(b));                                    \
-  }                                                                            \
-  __nosanitize_enum cxx14_constexpr ENUM &operator|=(ENUM &a, ENUM b) {        \
-    return a = a | b;                                                          \
-  }                                                                            \
-  __nosanitize_enum cxx01_constexpr ENUM operator&(ENUM a, ENUM b) {           \
-    return ENUM(unsigned(a) & unsigned(b));                                    \
-  }                                                                            \
-  __nosanitize_enum cxx01_constexpr ENUM operator&(ENUM a, unsigned b) {       \
-    return ENUM(unsigned(a) & b);                                              \
-  }                                                                            \
-  __nosanitize_enum cxx01_constexpr ENUM operator&(unsigned a, ENUM b) {       \
-    return ENUM(a & unsigned(b));                                              \
-  }                                                                            \
-  __nosanitize_enum cxx14_constexpr ENUM &operator&=(ENUM &a, ENUM b) {        \
-    return a = a & b;                                                          \
-  }                                                                            \
-  __nosanitize_enum cxx14_constexpr ENUM &operator&=(ENUM &a, unsigned b) {    \
-    return a = a & b;                                                          \
-  }                                                                            \
-  cxx01_constexpr unsigned operator~(ENUM a) { return ~unsigned(a); }          \
-  __nosanitize_enum cxx01_constexpr ENUM operator^(ENUM a, ENUM b) {           \
-    return ENUM(unsigned(a) ^ unsigned(b));                                    \
-  }                                                                            \
-  __nosanitize_enum cxx14_constexpr ENUM &operator^=(ENUM &a, ENUM b) {        \
-    return a = a ^ b;                                                          \
-  }                                                                            \
+#define DEFINE_ENUM_FLAG_OPERATORS(ENUM)                                                                               \
+  extern "C++" {                                                                                                       \
+  __nosanitize_enum cxx01_constexpr ENUM operator|(ENUM a, ENUM b) { return ENUM(unsigned(a) | unsigned(b)); }         \
+  __nosanitize_enum cxx14_constexpr ENUM &operator|=(ENUM &a, ENUM b) { return a = a | b; }                            \
+  __nosanitize_enum cxx01_constexpr ENUM operator&(ENUM a, ENUM b) { return ENUM(unsigned(a) & unsigned(b)); }         \
+  __nosanitize_enum cxx01_constexpr ENUM operator&(ENUM a, unsigned b) { return ENUM(unsigned(a) & b); }               \
+  __nosanitize_enum cxx01_constexpr ENUM operator&(unsigned a, ENUM b) { return ENUM(a & unsigned(b)); }               \
+  __nosanitize_enum cxx14_constexpr ENUM &operator&=(ENUM &a, ENUM b) { return a = a & b; }                            \
+  __nosanitize_enum cxx14_constexpr ENUM &operator&=(ENUM &a, unsigned b) { return a = a & b; }                        \
+  cxx01_constexpr unsigned operator~(ENUM a) { return ~unsigned(a); }                                                  \
+  __nosanitize_enum cxx01_constexpr ENUM operator^(ENUM a, ENUM b) { return ENUM(unsigned(a) ^ unsigned(b)); }         \
+  __nosanitize_enum cxx14_constexpr ENUM &operator^=(ENUM &a, ENUM b) { return a = a ^ b; }                            \
   }
 #else /* __cplusplus */
 /* nope for C since it always allows these operators for enums */

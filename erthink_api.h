@@ -12,8 +12,7 @@
 
 #ifdef __cplusplus
 #if defined(__clang__) || __has_attribute(type_visibility)
-#define LIBERTHINK_API_TYPE                                                    \
-  LIBERTHINK_API __attribute__((type_visibility("default")))
+#define LIBERTHINK_API_TYPE LIBERTHINK_API __attribute__((type_visibility("default")))
 #else
 #define LIBERTHINK_API_TYPE LIBERTHINK_API
 #endif

@@ -33,31 +33,23 @@
 //------------------------------------------------------------------------------
 
 TEST(u128, to_string) {
-  ASSERT_EQ(std::to_string(std::numeric_limits<erthink::uint128_t>::max()),
-            "340282366920938463463374607431768211455");
-  ASSERT_EQ(std::to_string(std::numeric_limits<erthink::uint128_t>::min()),
-            "0");
+  ASSERT_EQ(std::to_string(std::numeric_limits<erthink::uint128_t>::max()), "340282366920938463463374607431768211455");
+  ASSERT_EQ(std::to_string(std::numeric_limits<erthink::uint128_t>::min()), "0");
   ASSERT_EQ(std::to_string(erthink::uint128_t(142)), "142");
   ASSERT_EQ(std::to_string(erthink::uint128_t(42), 16), "2a");
   ASSERT_EQ(std::to_string(erthink::uint128_t(57), 8), "71");
-  ASSERT_EQ(std::to_string(erthink::uint128_t(UINT64_C(0x6E10784D412040D),
-                                              UINT64_C(0xFF39F12CF4081907))),
+  ASSERT_EQ(std::to_string(erthink::uint128_t(UINT64_C(0x6E10784D412040D), UINT64_C(0xFF39F12CF4081907))),
             "9143787268497110792970552074639513863");
-  ASSERT_EQ(std::to_string(erthink::uint128_t(~UINT64_C(0))),
-            "18446744073709551615");
-  ASSERT_EQ(std::to_string(erthink::uint128_t(~UINT64_C(0), 0)),
-            "340282366920938463444927863358058659840");
+  ASSERT_EQ(std::to_string(erthink::uint128_t(~UINT64_C(0))), "18446744073709551615");
+  ASSERT_EQ(std::to_string(erthink::uint128_t(~UINT64_C(0), 0)), "340282366920938463444927863358058659840");
   ASSERT_EQ(std::to_string(erthink::uint128_t(UINT64_C(0x90770897eb39d46c), 0)),
             "192026889014721788266898567285392277504");
-  ASSERT_EQ(std::to_string(erthink::uint128_t(UINT64_C(0xb0ec5848ef24a556))),
-            "12748661715452077398");
+  ASSERT_EQ(std::to_string(erthink::uint128_t(UINT64_C(0xb0ec5848ef24a556))), "12748661715452077398");
 }
 
 TEST(i128, to_string) {
-  ASSERT_EQ(std::to_string(std::numeric_limits<erthink::int128_t>::max()),
-            "170141183460469231731687303715884105727");
-  ASSERT_EQ(std::to_string(std::numeric_limits<erthink::int128_t>::min()),
-            "-170141183460469231731687303715884105728");
+  ASSERT_EQ(std::to_string(std::numeric_limits<erthink::int128_t>::max()), "170141183460469231731687303715884105727");
+  ASSERT_EQ(std::to_string(std::numeric_limits<erthink::int128_t>::min()), "-170141183460469231731687303715884105728");
   ASSERT_EQ(std::to_string(erthink::int128_t(142)), "142");
   ASSERT_EQ(std::to_string(erthink::int128_t(-142)), "-142");
   ASSERT_EQ(std::to_string(erthink::int128_t(42), 16), "2a");
@@ -65,42 +57,33 @@ TEST(i128, to_string) {
   ASSERT_EQ(std::to_string(erthink::int128_t(57), 8), "71");
   ASSERT_EQ(std::to_string(erthink::int128_t(-57), 8), "-71");
 
-  ASSERT_EQ(std::to_string(erthink::int128_t(INT64_C(0x3E121E588E3EAFD3),
-                                             UINT64_C(0x4C51BF2CD35A9402))),
+  ASSERT_EQ(std::to_string(erthink::int128_t(INT64_C(0x3E121E588E3EAFD3), UINT64_C(0x4C51BF2CD35A9402))),
             "82506212570507476930068008648333497346");
-  ASSERT_EQ(std::to_string(erthink::int128_t(0, ~UINT64_C(0))),
-            "18446744073709551615");
+  ASSERT_EQ(std::to_string(erthink::int128_t(0, ~UINT64_C(0))), "18446744073709551615");
   ASSERT_EQ(std::to_string(erthink::int128_t(-1, 0)), "-18446744073709551616");
   ASSERT_EQ(std::to_string(erthink::int128_t(UINT64_C(0xD6AA68591879D977), 0)),
             "-54942768927535355213284596552279523328");
-  ASSERT_EQ(std::to_string(erthink::int128_t(-INT64_C(0x4E2D64F136AB6CEB))),
-            "-5633269696077458667");
+  ASSERT_EQ(std::to_string(erthink::int128_t(-INT64_C(0x4E2D64F136AB6CEB))), "-5633269696077458667");
 }
 
 TEST(u128, from_string) {
   using erthink::operator""_u128;
-  ASSERT_EQ(340282366920938463463374607431768211455_u128,
-            std::numeric_limits<erthink::uint128_t>::max());
+  ASSERT_EQ(340282366920938463463374607431768211455_u128, std::numeric_limits<erthink::uint128_t>::max());
   ASSERT_EQ(0_u128, std::numeric_limits<erthink::uint128_t>::min());
   ASSERT_EQ(142_u128, erthink::uint128_t(142));
   ASSERT_EQ(0x2A_u128, erthink::uint128_t(42));
   ASSERT_EQ(071_u128, erthink::uint128_t(57));
   ASSERT_EQ(9143787268497110792970552074639513863_u128,
-            erthink::uint128_t(UINT64_C(0x6E10784D412040D),
-                               UINT64_C(0xFF39F12CF4081907)));
+            erthink::uint128_t(UINT64_C(0x6E10784D412040D), UINT64_C(0xFF39F12CF4081907)));
   ASSERT_EQ(18446744073709551615_u128, erthink::uint128_t(~UINT64_C(0)));
-  ASSERT_EQ(340282366920938463444927863358058659840_u128,
-            erthink::uint128_t(~UINT64_C(0), 0));
-  ASSERT_EQ(192026889014721788266898567285392277504_u128,
-            erthink::uint128_t(UINT64_C(0x90770897eb39d46c), 0));
-  ASSERT_EQ(12748661715452077398_u128,
-            erthink::uint128_t(UINT64_C(0xb0ec5848ef24a556)));
+  ASSERT_EQ(340282366920938463444927863358058659840_u128, erthink::uint128_t(~UINT64_C(0), 0));
+  ASSERT_EQ(192026889014721788266898567285392277504_u128, erthink::uint128_t(UINT64_C(0x90770897eb39d46c), 0));
+  ASSERT_EQ(12748661715452077398_u128, erthink::uint128_t(UINT64_C(0xb0ec5848ef24a556)));
 }
 
 TEST(i128, from_string) {
   using erthink::operator""_i128;
-  ASSERT_EQ(170141183460469231731687303715884105727_i128,
-            std::numeric_limits<erthink::int128_t>::max());
+  ASSERT_EQ(170141183460469231731687303715884105727_i128, std::numeric_limits<erthink::int128_t>::max());
   ASSERT_EQ(-/* unary minus is not part of an integer literal */
                 170141183460469231731687303715884105727_i128 -
                 1_i128,
@@ -112,14 +95,11 @@ TEST(i128, from_string) {
   ASSERT_EQ(071_i128, erthink::int128_t(57));
   ASSERT_EQ(-071_i128, erthink::int128_t(-57));
   ASSERT_EQ(82506212570507476930068008648333497346_i128,
-            erthink::int128_t(INT64_C(0x3E121E588E3EAFD3),
-                              UINT64_C(0x4C51BF2CD35A9402)));
+            erthink::int128_t(INT64_C(0x3E121E588E3EAFD3), UINT64_C(0x4C51BF2CD35A9402)));
   ASSERT_EQ(18446744073709551615_i128, erthink::int128_t(0, ~UINT64_C(0)));
   ASSERT_EQ(-18446744073709551616_i128, erthink::int128_t(-1, 0));
-  ASSERT_EQ(-54942768927535355213284596552279523328_i128,
-            erthink::int128_t(UINT64_C(0xD6AA68591879D977), 0));
-  ASSERT_EQ(-5633269696077458667_i128,
-            erthink::int128_t(-INT64_C(0x4E2D64F136AB6CEB)));
+  ASSERT_EQ(-54942768927535355213284596552279523328_i128, erthink::int128_t(UINT64_C(0xD6AA68591879D977), 0));
+  ASSERT_EQ(-5633269696077458667_i128, erthink::int128_t(-INT64_C(0x4E2D64F136AB6CEB)));
 }
 
 TEST(u128, from_chars) {
@@ -127,8 +107,7 @@ TEST(u128, from_chars) {
   GTEST_SKIP() << "SKIPPEND because of no std::to_chars<>";
 #else
   const char *zero = "000000";
-  const auto from_zero =
-      erthink::uint128_t::from_chars(zero, zero + strlen(zero));
+  const auto from_zero = erthink::uint128_t::from_chars(zero, zero + strlen(zero));
   ASSERT_EQ(std::get<0>(from_zero)[0], '\0');
   ASSERT_EQ(std::get<1>(from_zero), erthink::uint128_t(0));
   ASSERT_EQ(std::get<2>(from_zero), std::errc());
@@ -142,27 +121,23 @@ TEST(u128, from_chars) {
   const char *max = "340282366920938463463374607431768211455";
   const auto from_max = erthink::uint128_t::from_chars(max, max + strlen(max));
   ASSERT_EQ(std::get<0>(from_max)[0], '\0');
-  ASSERT_EQ(std::get<1>(from_max),
-            std::numeric_limits<erthink::uint128_t>::max());
+  ASSERT_EQ(std::get<1>(from_max), std::numeric_limits<erthink::uint128_t>::max());
   ASSERT_EQ(std::get<2>(from_max), std::errc());
 
   const char *overflow = "0x340282366920938463463374607431768211455";
-  const auto from_overflow =
-      erthink::uint128_t::from_chars(overflow, overflow + strlen(overflow));
+  const auto from_overflow = erthink::uint128_t::from_chars(overflow, overflow + strlen(overflow));
   ASSERT_EQ(std::get<0>(from_overflow)[0], '\0');
   ASSERT_EQ(std::get<2>(from_overflow), std::errc::result_out_of_range);
 
   const char *partial = "0123456789"; // octal literal with invalid '89'
-  const auto from_partial =
-      erthink::uint128_t::from_chars(partial, partial + strlen(partial));
+  const auto from_partial = erthink::uint128_t::from_chars(partial, partial + strlen(partial));
   ASSERT_EQ(std::get<0>(from_partial), partial + 8);
   ASSERT_EQ(std::get<0>(from_partial)[0], '8');
   ASSERT_EQ(std::get<1>(from_partial), erthink::uint128_t(01234567));
   ASSERT_EQ(std::get<2>(from_partial), std::errc());
 
   const char *invalid = "invalid";
-  const auto from_invalid =
-      erthink::uint128_t::from_chars(invalid, invalid + strlen(invalid));
+  const auto from_invalid = erthink::uint128_t::from_chars(invalid, invalid + strlen(invalid));
   ASSERT_EQ(std::get<0>(from_invalid), invalid);
   ASSERT_EQ(std::get<2>(from_invalid), std::errc::invalid_argument);
 #endif /* ERTHINK_HAVE_std_to_chars */
@@ -173,22 +148,19 @@ TEST(i128, from_chars) {
   GTEST_SKIP() << "SKIPPEND because of no std::to_chars<>";
 #else
   const char *neg_zero = "-0000";
-  const auto from_neg_zero =
-      erthink::int128_t::from_chars(neg_zero, neg_zero + strlen(neg_zero));
+  const auto from_neg_zero = erthink::int128_t::from_chars(neg_zero, neg_zero + strlen(neg_zero));
   ASSERT_EQ(std::get<0>(from_neg_zero)[0], '\0');
   ASSERT_EQ(std::get<1>(from_neg_zero), erthink::int128_t(0));
   ASSERT_EQ(std::get<2>(from_neg_zero), std::errc());
 
   const char *zero = "000000";
-  const auto from_zero =
-      erthink::int128_t::from_chars(zero, zero + strlen(zero));
+  const auto from_zero = erthink::int128_t::from_chars(zero, zero + strlen(zero));
   ASSERT_EQ(std::get<0>(from_zero)[0], '\0');
   ASSERT_EQ(std::get<1>(from_zero), erthink::int128_t(0));
   ASSERT_EQ(std::get<2>(from_zero), std::errc());
 
   const char *neg_hex = "-0x54321";
-  const auto from_neg_hex =
-      erthink::int128_t::from_chars(neg_hex, neg_hex + strlen(neg_hex));
+  const auto from_neg_hex = erthink::int128_t::from_chars(neg_hex, neg_hex + strlen(neg_hex));
   ASSERT_EQ(std::get<0>(from_neg_hex)[0], '\0');
   ASSERT_EQ(std::get<1>(from_neg_hex), erthink::int128_t(-0x54321));
   ASSERT_EQ(std::get<2>(from_neg_hex), std::errc());
@@ -202,54 +174,46 @@ TEST(i128, from_chars) {
   const char *max = "170141183460469231731687303715884105727";
   const auto from_max = erthink::int128_t::from_chars(max, max + strlen(max));
   ASSERT_EQ(std::get<0>(from_max)[0], '\0');
-  ASSERT_EQ(std::get<1>(from_max),
-            std::numeric_limits<erthink::int128_t>::max());
+  ASSERT_EQ(std::get<1>(from_max), std::numeric_limits<erthink::int128_t>::max());
   ASSERT_EQ(std::get<2>(from_max), std::errc());
 
   const char *min = "-170141183460469231731687303715884105728";
   const auto from_min = erthink::int128_t::from_chars(min, min + strlen(min));
   ASSERT_EQ(std::get<0>(from_min)[0], '\0');
-  ASSERT_EQ(std::get<1>(from_min),
-            std::numeric_limits<erthink::int128_t>::min());
+  ASSERT_EQ(std::get<1>(from_min), std::numeric_limits<erthink::int128_t>::min());
   ASSERT_EQ(std::get<2>(from_min), std::errc());
 
   const char *overflow_posi = "170141183460469231731687303715884105728";
-  const auto from_overflow_posi = erthink::int128_t::from_chars(
-      overflow_posi, overflow_posi + strlen(overflow_posi));
+  const auto from_overflow_posi = erthink::int128_t::from_chars(overflow_posi, overflow_posi + strlen(overflow_posi));
   ASSERT_EQ(std::get<0>(from_overflow_posi)[0], '\0');
   ASSERT_EQ(std::get<2>(from_overflow_posi), std::errc::result_out_of_range);
 
   const char *overflow_nega = "-170141183460469231731687303715884105729";
-  const auto from_overflow_nega = erthink::int128_t::from_chars(
-      overflow_nega, overflow_nega + strlen(overflow_nega));
+  const auto from_overflow_nega = erthink::int128_t::from_chars(overflow_nega, overflow_nega + strlen(overflow_nega));
   ASSERT_EQ(std::get<0>(from_overflow_nega)[0], '\0');
   ASSERT_EQ(std::get<2>(from_overflow_nega), std::errc::result_out_of_range);
 
   const char *neg_partial = "-0123456789"; // octal literal with invalid '89'
-  const auto from_neg_partial = erthink::int128_t::from_chars(
-      neg_partial, neg_partial + strlen(neg_partial));
+  const auto from_neg_partial = erthink::int128_t::from_chars(neg_partial, neg_partial + strlen(neg_partial));
   ASSERT_EQ(std::get<0>(from_neg_partial), neg_partial + 9);
   ASSERT_EQ(std::get<0>(from_neg_partial)[0], '8');
   ASSERT_EQ(std::get<1>(from_neg_partial), erthink::int128_t(-01234567));
   ASSERT_EQ(std::get<2>(from_neg_partial), std::errc());
 
   const char *partial = "0123456789"; // octal literal with invalid '89'
-  const auto from_partial =
-      erthink::int128_t::from_chars(partial, partial + strlen(partial));
+  const auto from_partial = erthink::int128_t::from_chars(partial, partial + strlen(partial));
   ASSERT_EQ(std::get<0>(from_partial), partial + 8);
   ASSERT_EQ(std::get<0>(from_partial)[0], '8');
   ASSERT_EQ(std::get<1>(from_partial), erthink::int128_t(01234567));
   ASSERT_EQ(std::get<2>(from_partial), std::errc());
 
   const char *neg_invalid = "-invalid";
-  const auto from_neg_invalid = erthink::int128_t::from_chars(
-      neg_invalid, neg_invalid + strlen(neg_invalid));
+  const auto from_neg_invalid = erthink::int128_t::from_chars(neg_invalid, neg_invalid + strlen(neg_invalid));
   ASSERT_EQ(std::get<0>(from_neg_invalid), neg_invalid + 1);
   ASSERT_EQ(std::get<2>(from_neg_invalid), std::errc::invalid_argument);
 
   const char *invalid = "invalid";
-  const auto from_invalid =
-      erthink::int128_t::from_chars(invalid, invalid + strlen(invalid));
+  const auto from_invalid = erthink::int128_t::from_chars(invalid, invalid + strlen(invalid));
   ASSERT_EQ(std::get<0>(from_invalid), invalid);
   ASSERT_EQ(std::get<2>(from_invalid), std::errc::invalid_argument);
 #endif /* ERTHINK_HAVE_std_to_chars */
@@ -277,20 +241,20 @@ TEST(u128, into_stream) {
 
   ss.str("");
   ss.flags(default_flags);
-  ss << std::setfill('_') << std::showbase << std::uppercase << std::oct
-     << std::internal << std::setw(5) << erthink::uint128_t(42);
+  ss << std::setfill('_') << std::showbase << std::uppercase << std::oct << std::internal << std::setw(5)
+     << erthink::uint128_t(42);
   ASSERT_EQ(ss.str(), "0__52");
 
   ss.str("");
   ss.flags(default_flags);
-  ss << std::setfill('_') << std::showpos << std::showbase << std::oct
-     << std::left << std::setw(5) << erthink::uint128_t(42);
+  ss << std::setfill('_') << std::showpos << std::showbase << std::oct << std::left << std::setw(5)
+     << erthink::uint128_t(42);
   ASSERT_EQ(ss.str(), "+052_");
 
   ss.str("");
   ss.flags(default_flags);
-  ss << std::setfill('_') << std::showbase << std::uppercase << std::hex
-     << std::internal << std::setw(5) << erthink::uint128_t(42);
+  ss << std::setfill('_') << std::showbase << std::uppercase << std::hex << std::internal << std::setw(5)
+     << erthink::uint128_t(42);
   ASSERT_EQ(ss.str(), "0X_2A");
 }
 
@@ -330,50 +294,49 @@ TEST(i128, into_stream) {
 
   ss.str("");
   ss.flags(default_flags);
-  ss << std::setfill('_') << std::showbase << std::uppercase << std::oct
-     << std::internal << std::setw(5) << erthink::int128_t(-42);
+  ss << std::setfill('_') << std::showbase << std::uppercase << std::oct << std::internal << std::setw(5)
+     << erthink::int128_t(-42);
   ASSERT_EQ(ss.str(), "-0_52");
 
   ss.str("");
   ss.flags(default_flags);
-  ss << std::setfill('_') << std::showbase << std::uppercase << std::oct
-     << std::internal << std::setw(5) << erthink::int128_t(42);
+  ss << std::setfill('_') << std::showbase << std::uppercase << std::oct << std::internal << std::setw(5)
+     << erthink::int128_t(42);
   ASSERT_EQ(ss.str(), "0__52");
 
   ss.str("");
   ss.flags(default_flags);
-  ss << std::setfill('_') << std::showpos << std::showbase << std::oct
-     << std::left << std::setw(5) << erthink::int128_t(-42);
+  ss << std::setfill('_') << std::showpos << std::showbase << std::oct << std::left << std::setw(5)
+     << erthink::int128_t(-42);
   ASSERT_EQ(ss.str(), "-052_");
 
   ss.str("");
   ss.flags(default_flags);
-  ss << std::setfill('_') << std::showpos << std::showbase << std::oct
-     << std::left << std::setw(5) << erthink::int128_t(42);
+  ss << std::setfill('_') << std::showpos << std::showbase << std::oct << std::left << std::setw(5)
+     << erthink::int128_t(42);
   ASSERT_EQ(ss.str(), "+052_");
 
   ss.str("");
   ss.flags(default_flags);
-  ss << std::setfill('_') << std::showbase << std::uppercase << std::hex
-     << std::internal << std::setw(5) << erthink::int128_t(-42);
+  ss << std::setfill('_') << std::showbase << std::uppercase << std::hex << std::internal << std::setw(5)
+     << erthink::int128_t(-42);
   ASSERT_EQ(ss.str(), "-0X2A");
 
   ss.str("");
   ss.flags(default_flags);
-  ss << std::setfill('_') << std::showbase << std::uppercase << std::hex
-     << std::internal << std::setw(6) << erthink::int128_t(-42);
+  ss << std::setfill('_') << std::showbase << std::uppercase << std::hex << std::internal << std::setw(6)
+     << erthink::int128_t(-42);
   ASSERT_EQ(ss.str(), "-0X_2A");
 
   ss.str("");
   ss.flags(default_flags);
-  ss << std::setfill('_') << std::showbase << std::uppercase << std::hex
-     << std::internal << std::setw(1) << erthink::int128_t(-42);
+  ss << std::setfill('_') << std::showbase << std::uppercase << std::hex << std::internal << std::setw(1)
+     << erthink::int128_t(-42);
   ASSERT_EQ(ss.str(), "-0X2A");
 
   ss.str("");
   ss.flags(default_flags);
-  ss << std::setfill('#') << std::showbase << std::hex << std::internal
-     << std::setw(5) << erthink::int128_t(42);
+  ss << std::setfill('#') << std::showbase << std::hex << std::internal << std::setw(5) << erthink::int128_t(42);
   ASSERT_EQ(ss.str(), "0x#2a");
 }
 
@@ -391,9 +354,7 @@ struct uint64_lcg {
     state *= UINT64_C(6364136223846793005);
     return r;
   }
-  cxx14_constexpr result_type operator()(size_t range) {
-    return operator()() % range;
-  }
+  cxx14_constexpr result_type operator()(size_t range) { return operator()() % range; }
 };
 
 static uint64_lcg lcg(uint64_t(time(0)));
@@ -424,8 +385,7 @@ template <typename T> static void probe(const T &a, const T &b) {
 #if defined(ERTHINK_NATIVE_U128_TYPE) && defined(UBSAN_ENABLED)
   // avoid signed-integer-overflow UB
   if (std::is_signed<NATIVE>::value && NATIVE(a) != 0 && NATIVE(b) != 0) {
-    ASSERT_EQ(NATIVE(a + b), NATIVE(ERTHINK_NATIVE_U128_TYPE(a) +
-                                    ERTHINK_NATIVE_U128_TYPE(b)));
+    ASSERT_EQ(NATIVE(a + b), NATIVE(ERTHINK_NATIVE_U128_TYPE(a) + ERTHINK_NATIVE_U128_TYPE(b)));
   } else
 #endif
   {
@@ -434,10 +394,8 @@ template <typename T> static void probe(const T &a, const T &b) {
 
 #if defined(ERTHINK_NATIVE_U128_TYPE) && defined(UBSAN_ENABLED)
   // avoid signed-integer-overflow UB
-  if (std::is_signed<NATIVE>::value && ((NATIVE(a) != 0 && NATIVE(b) != 0) ||
-                                        b == std::numeric_limits<T>::min())) {
-    ASSERT_EQ(NATIVE(a - b), NATIVE(ERTHINK_NATIVE_U128_TYPE(a) -
-                                    ERTHINK_NATIVE_U128_TYPE(b)));
+  if (std::is_signed<NATIVE>::value && ((NATIVE(a) != 0 && NATIVE(b) != 0) || b == std::numeric_limits<T>::min())) {
+    ASSERT_EQ(NATIVE(a - b), NATIVE(ERTHINK_NATIVE_U128_TYPE(a) - ERTHINK_NATIVE_U128_TYPE(b)));
   } else
 #endif
   {
@@ -450,8 +408,7 @@ template <typename T> static void probe(const T &a, const T &b) {
 #if defined(ERTHINK_NATIVE_U128_TYPE) && defined(UBSAN_ENABLED)
   // avoid signed-integer-overflow UB
   if (std::is_signed<NATIVE>::value && NATIVE(a) != 0 && NATIVE(b) != 0) {
-    ASSERT_EQ(NATIVE(a * b), NATIVE(ERTHINK_NATIVE_U128_TYPE(a) *
-                                    ERTHINK_NATIVE_U128_TYPE(b)));
+    ASSERT_EQ(NATIVE(a * b), NATIVE(ERTHINK_NATIVE_U128_TYPE(a) * ERTHINK_NATIVE_U128_TYPE(b)));
   } else
 #endif
   {
@@ -482,8 +439,7 @@ template <typename T> static void probe(const T &a, const T &b) {
   ASSERT_EQ(NATIVE(a >> s), NATIVE(a) >> s);
 #if defined(ERTHINK_NATIVE_U128_TYPE) && defined(UBSAN_ENABLED)
   // avoid left-shift-of-negative and left-shift-signed-overflow UB
-  if (std::is_signed<NATIVE>::value &&
-      (NATIVE(a) < 0 || (a && 128 - clz(a) + s > 128))) {
+  if (std::is_signed<NATIVE>::value && (NATIVE(a) < 0 || (a && 128 - clz(a) + s > 128))) {
     ASSERT_EQ(NATIVE(a << s), NATIVE(ERTHINK_NATIVE_U128_TYPE(a) << s));
   } else
 #endif
@@ -512,8 +468,7 @@ template <typename T> static void probe_full(const T &a, const T &b) {
 #if defined(ERTHINK_NATIVE_U128_TYPE) && defined(UBSAN_ENABLED)
   // avoid signed-integer-overflow UB
   if (std::is_signed<NATIVE>::value && NATIVE(a) != 0 && NATIVE(b) != 0) {
-    ASSERT_EQ(NATIVE(t += b), NATIVE(ERTHINK_NATIVE_U128_TYPE(a) +
-                                     ERTHINK_NATIVE_U128_TYPE(b)));
+    ASSERT_EQ(NATIVE(t += b), NATIVE(ERTHINK_NATIVE_U128_TYPE(a) + ERTHINK_NATIVE_U128_TYPE(b)));
   } else
 #endif
   {
@@ -523,10 +478,8 @@ template <typename T> static void probe_full(const T &a, const T &b) {
   t = a;
 #if defined(ERTHINK_NATIVE_U128_TYPE) && defined(UBSAN_ENABLED)
   // avoid signed-integer-overflow UB
-  if (std::is_signed<NATIVE>::value && ((NATIVE(a) != 0 && NATIVE(b) != 0) ||
-                                        b == std::numeric_limits<T>::min())) {
-    ASSERT_EQ(NATIVE(t -= b), NATIVE(ERTHINK_NATIVE_U128_TYPE(a) -
-                                     ERTHINK_NATIVE_U128_TYPE(b)));
+  if (std::is_signed<NATIVE>::value && ((NATIVE(a) != 0 && NATIVE(b) != 0) || b == std::numeric_limits<T>::min())) {
+    ASSERT_EQ(NATIVE(t -= b), NATIVE(ERTHINK_NATIVE_U128_TYPE(a) - ERTHINK_NATIVE_U128_TYPE(b)));
   } else
 #endif
   {
@@ -544,8 +497,7 @@ template <typename T> static void probe_full(const T &a, const T &b) {
 #if defined(ERTHINK_NATIVE_U128_TYPE) && defined(UBSAN_ENABLED)
   // avoid signed-integer-overflow UB
   if (std::is_signed<NATIVE>::value && NATIVE(a) != 0 && NATIVE(b) != 0) {
-    ASSERT_EQ(NATIVE(t *= b), NATIVE(ERTHINK_NATIVE_U128_TYPE(a) *
-                                     ERTHINK_NATIVE_U128_TYPE(b)));
+    ASSERT_EQ(NATIVE(t *= b), NATIVE(ERTHINK_NATIVE_U128_TYPE(a) * ERTHINK_NATIVE_U128_TYPE(b)));
   } else
 #endif
   {
@@ -564,8 +516,7 @@ template <typename T> static void probe_full(const T &a, const T &b) {
   t = a;
 #if defined(ERTHINK_NATIVE_U128_TYPE) && defined(UBSAN_ENABLED)
   // avoid left-shift-of-negative UB
-  if (std::is_signed<NATIVE>::value &&
-      (NATIVE(a) < 0 || (a && 128 - clz(a) + s > 128))) {
+  if (std::is_signed<NATIVE>::value && (NATIVE(a) < 0 || (a && 128 - clz(a) + s > 128))) {
     ASSERT_EQ(NATIVE(t <<= s), NATIVE(ERTHINK_NATIVE_U128_TYPE(a) << s));
   } else
 #endif
@@ -580,9 +531,8 @@ template <typename T> static void probe_full(const T &a, const T &b) {
   ASSERT_EQ(NATIVE(t++), NATIVE(a));
 #if defined(ERTHINK_NATIVE_U128_TYPE) && defined(UBSAN_ENABLED)
   // avoid signed-integer-overflow UB
-  if (std::is_signed<NATIVE>::value &&
-      ((a == std::numeric_limits<T>::min() && NATIVE(b) < 0) ||
-       (NATIVE(a) < 0 && b == std::numeric_limits<T>::min()))) {
+  if (std::is_signed<NATIVE>::value && ((a == std::numeric_limits<T>::min() && NATIVE(b) < 0) ||
+                                        (NATIVE(a) < 0 && b == std::numeric_limits<T>::min()))) {
     ASSERT_EQ(NATIVE(t), NATIVE(ERTHINK_NATIVE_U128_TYPE(a) + 1));
   } else
 #endif
@@ -606,9 +556,8 @@ template <typename T> static void probe_full(const T &a, const T &b) {
   ASSERT_EQ(NATIVE(++t), NATIVE(a) + 1);
 #if defined(ERTHINK_NATIVE_U128_TYPE) && defined(UBSAN_ENABLED)
   // avoid signed-integer-overflow UB
-  if (std::is_signed<NATIVE>::value &&
-      ((a == std::numeric_limits<T>::min() && NATIVE(b) < 0) ||
-       (NATIVE(a) < 0 && b == std::numeric_limits<T>::min()))) {
+  if (std::is_signed<NATIVE>::value && ((a == std::numeric_limits<T>::min() && NATIVE(b) < 0) ||
+                                        (NATIVE(a) < 0 && b == std::numeric_limits<T>::min()))) {
     ASSERT_EQ(NATIVE(t), NATIVE(ERTHINK_NATIVE_U128_TYPE(a) + 1));
   } else
 #endif
@@ -634,15 +583,13 @@ template <typename T> static void probe_full(const T &a, const T &b) {
 
 #include <fstream>
 
-static void replace(std::string &oper, const std::string &var,
-                    const std::string &val) {
+static void replace(std::string &oper, const std::string &var, const std::string &val) {
   const auto pos = oper.find(var);
   if (pos != std::string::npos)
     oper.replace(pos, var.length(), val);
 }
 
-static void gen_expect(std::ostream &out, const char *_oper, const unsigned s,
-                       const bool x, const bool y) {
+static void gen_expect(std::ostream &out, const char *_oper, const unsigned s, const bool x, const bool y) {
   assert(x == y);
   std::string oper(_oper);
 
@@ -659,9 +606,7 @@ static const char *value(const erthink::uint128_t &v) {
   else if (v.h == UINT64_MAX && v.l > INT64_MAX)
     snprintf(buf, sizeof(buf), "IMP(-INT64_C(%" PRIi64 "))", -int64_t(v));
   else
-    snprintf(buf, sizeof(buf),
-             "IMP(UINT64_C(0x%016" PRIx64 "), UINT64_C(0x%016" PRIx64 "))", v.h,
-             v.l);
+    snprintf(buf, sizeof(buf), "IMP(UINT64_C(0x%016" PRIx64 "), UINT64_C(0x%016" PRIx64 "))", v.h, v.l);
   return buf;
 }
 
@@ -670,15 +615,13 @@ static const char *value(const erthink::int128_t &v) {
   if ((v.h == 0 && v.ls >= 0) || (v.h == -1 && v.ls < 0))
     snprintf(buf, sizeof(buf), "IMP(INT64_C(%" PRIi64 "))", int64_t(v));
   else
-    snprintf(buf, sizeof(buf),
-             "IMP(UINT64_C(0x%016" PRIx64 "), UINT64_C(0x%016" PRIx64 "))", v.h,
-             v.lu);
+    snprintf(buf, sizeof(buf), "IMP(UINT64_C(0x%016" PRIx64 "), UINT64_C(0x%016" PRIx64 "))", v.h, v.lu);
   return buf;
 }
 
 template <typename IMP>
-static void gen_expect(std::ostream &out, const char *_oper, const unsigned s,
-                       const IMP x, const typename IMP::native y) {
+static void gen_expect(std::ostream &out, const char *_oper, const unsigned s, const IMP x,
+                       const typename IMP::native y) {
   assert(typename IMP::native(x) == y);
   std::string oper(_oper);
 
@@ -692,8 +635,7 @@ static void gen_expect(std::ostream &out, const char *_oper, const unsigned s,
   (void)y;
 }
 
-template <typename IMP>
-static void gen_body(std::ostream &out, const IMP &A, const IMP &B) {
+template <typename IMP> static void gen_body(std::ostream &out, const IMP &A, const IMP &B) {
   using NATIVE = typename IMP::native;
   out << "  const IMP A = " << value(A) << ";\n";
   out << "  const IMP B = " << value(B) << ";\n";
@@ -772,8 +714,7 @@ static void gen_body(std::ostream &out, const IMP &A, const IMP &B) {
 #undef OUT
 }
 
-static void gen(std::ostream &out, const erthink::uint128_t &a,
-                const erthink::uint128_t &b) {
+static void gen(std::ostream &out, const erthink::uint128_t &a, const erthink::uint128_t &b) {
   static unsigned n;
 
   out << "\nTEST(u128, autogen_basic_" << n++ << ") {\n";
@@ -807,22 +748,17 @@ TEST(u128, smoke) {
   probe_full<imp>(~0, 421);
   probe_full<imp>(~42, 5);
   probe_full<imp>(~421, INT_MAX);
-  probe_full<imp>(UINT64_C(13632396072180810313),
-                  UINT64_C(4895412794877399892));
+  probe_full<imp>(UINT64_C(13632396072180810313), UINT64_C(4895412794877399892));
   probe_full<imp>(UINT64_C(5008002785836588600), UINT64_C(6364136223846793005));
 
   double a = DBL_MAX, b = DBL_MAX;
   while (a + b > 1) {
     a /= 1.1283791670955125739 /* 2/sqrt(pi) */;
-    probe_full<imp>(native(std::fmod(a, std::ldexp(1.0, 128))),
-                    native(std::fmod(b, std::ldexp(1.0, 128))));
-    probe_full<imp>(native(std::fmod(b, std::ldexp(1.0, 128))),
-                    native(std::fmod(a, std::ldexp(1.0, 128))));
+    probe_full<imp>(native(std::fmod(a, std::ldexp(1.0, 128))), native(std::fmod(b, std::ldexp(1.0, 128))));
+    probe_full<imp>(native(std::fmod(b, std::ldexp(1.0, 128))), native(std::fmod(a, std::ldexp(1.0, 128))));
     b *= 0.91893853320467274178 /* ln(sqrt(2pi)) */;
-    probe_full<imp>(native(std::fmod(a, std::ldexp(1.0, 128))),
-                    native(std::fmod(b, std::ldexp(1.0, 128))));
-    probe_full<imp>(native(std::fmod(b, std::ldexp(1.0, 128))),
-                    native(std::fmod(a, std::ldexp(1.0, 128))));
+    probe_full<imp>(native(std::fmod(a, std::ldexp(1.0, 128))), native(std::fmod(b, std::ldexp(1.0, 128))));
+    probe_full<imp>(native(std::fmod(b, std::ldexp(1.0, 128))), native(std::fmod(a, std::ldexp(1.0, 128))));
   }
 #endif /* ERTHINK_NATIVE_U128_TYPE */
 }
@@ -843,26 +779,21 @@ TEST(i128, smoke) {
   probe_full<imp>(~0, 421);
   probe_full<imp>(~42, 5);
   probe_full<imp>(~421, INT_MAX);
-  probe_full<imp>(UINT64_C(13632396072180810313),
-                  UINT64_C(4895412794877399892));
+  probe_full<imp>(UINT64_C(13632396072180810313), UINT64_C(4895412794877399892));
   probe_full<imp>(UINT64_C(5008002785836588600), UINT64_C(6364136223846793005));
 
   double a = DBL_MAX, b = DBL_MAX;
   while (a + b > 1) {
     a /= 1.1283791670955125739 /* 2/sqrt(pi) */;
-    probe_full<imp>(
-        native(std::fmod(a, std::ldexp(1.0, 128)) - std::ldexp(1.0, 127)),
-        native(std::fmod(b, std::ldexp(1.0, 128)) - std::ldexp(1.0, 127)));
-    probe_full<imp>(
-        native(std::fmod(b, std::ldexp(1.0, 128)) - std::ldexp(1.0, 127)),
-        native(std::fmod(a, std::ldexp(1.0, 128)) - std::ldexp(1.0, 127)));
+    probe_full<imp>(native(std::fmod(a, std::ldexp(1.0, 128)) - std::ldexp(1.0, 127)),
+                    native(std::fmod(b, std::ldexp(1.0, 128)) - std::ldexp(1.0, 127)));
+    probe_full<imp>(native(std::fmod(b, std::ldexp(1.0, 128)) - std::ldexp(1.0, 127)),
+                    native(std::fmod(a, std::ldexp(1.0, 128)) - std::ldexp(1.0, 127)));
     b *= 0.91893853320467274178 /* ln(sqrt(2pi)) */;
-    probe_full<imp>(
-        native(std::fmod(a, std::ldexp(1.0, 128)) - std::ldexp(1.0, 127)),
-        native(std::fmod(b, std::ldexp(1.0, 128)) - std::ldexp(1.0, 127)));
-    probe_full<imp>(
-        native(std::fmod(b, std::ldexp(1.0, 128)) - std::ldexp(1.0, 127)),
-        native(std::fmod(a, std::ldexp(1.0, 128)) - std::ldexp(1.0, 127)));
+    probe_full<imp>(native(std::fmod(a, std::ldexp(1.0, 128)) - std::ldexp(1.0, 127)),
+                    native(std::fmod(b, std::ldexp(1.0, 128)) - std::ldexp(1.0, 127)));
+    probe_full<imp>(native(std::fmod(b, std::ldexp(1.0, 128)) - std::ldexp(1.0, 127)),
+                    native(std::fmod(a, std::ldexp(1.0, 128)) - std::ldexp(1.0, 127)));
   }
 #endif /* ERTHINK_NATIVE_I128_TYPE */
 }
@@ -902,8 +833,7 @@ TEST(u128, random3e6) {
 
     probe_full<imp>({UINT64_C(0x8000000000000000), lcg()}, {lcg(), lcg()});
     probe_full<imp>({lcg(), lcg()}, {UINT64_C(0x8000000000000000), lcg()});
-    probe_full<imp>({UINT64_C(0x8000000000000000), lcg()},
-                    {UINT64_C(0x8000000000000000), lcg()});
+    probe_full<imp>({UINT64_C(0x8000000000000000), lcg()}, {UINT64_C(0x8000000000000000), lcg()});
     probe_full<imp>({UINT64_C(0x8000000000000000), lcg()}, lcg());
     probe_full<imp>(lcg(), {UINT64_C(0x8000000000000000), lcg()});
 

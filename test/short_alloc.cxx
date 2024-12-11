@@ -30,8 +30,7 @@
 #include <stack>
 
 template <std::size_t SIZE> struct Params {
-  static cxx11_constexpr_var std::size_t area_size =
-      SIZE * alignof(erthink::max_align_t);
+  static cxx11_constexpr_var std::size_t area_size = SIZE * alignof(erthink::max_align_t);
   using arena_NOoutlive_type = erthink::allocation_arena<false, area_size>;
   using alloc_NOoutlive_type = erthink::short_alloc<char, arena_NOoutlive_type>;
 
@@ -39,10 +38,9 @@ template <std::size_t SIZE> struct Params {
   using alloc_outlive_type = erthink::short_alloc<char, arena_outlive_type>;
 };
 
-typedef ::testing::Types<
-    Params<1>, Params<2>, Params<4>, Params<8>, Params<16>, Params<32>,
-    Params<64>, Params<81>, Params<128>, Params<256>, Params<512>, Params<777>,
-    Params<1024>, Params<2048>, Params<1024 * 3>, Params<4096>, Params<7777>>
+typedef ::testing::Types<Params<1>, Params<2>, Params<4>, Params<8>, Params<16>, Params<32>, Params<64>, Params<81>,
+                         Params<128>, Params<256>, Params<512>, Params<777>, Params<1024>, Params<2048>,
+                         Params<1024 * 3>, Params<4096>, Params<7777>>
     Sizes;
 
 template <typename TypeParam> class ShortAlloc : public ::testing::Test {};
@@ -61,8 +59,7 @@ TYPED_TEST_P(ShortAlloc, stack_NOoutlive) {
   using alloc_type = typename TypeParam::alloc_NOoutlive_type;
   const auto area_size = TypeParam::area_size;
 
-  for (std::size_t item_size = 1; item_size <= area_size + 1;
-       item_size += 1 + item_size * 8 / 7) {
+  for (std::size_t item_size = 1; item_size <= area_size + 1; item_size += 1 + item_size * 8 / 7) {
 
     std::unique_ptr<arena_type> arena(new arena_type);
     alloc_type short_alloc(*arena);
@@ -78,8 +75,7 @@ TYPED_TEST_P(ShortAlloc, stack_NOoutlive) {
     }
 
     EXPECT_GE(area_size, arena->used());
-    EXPECT_LE(area_size,
-              arena->used() + alignof(erthink::max_align_t) + item_size - 1);
+    EXPECT_LE(area_size, arena->used() + alignof(erthink::max_align_t) + item_size - 1);
 
     while (!stack.empty()) {
       char *ptr = stack.top();
@@ -97,8 +93,7 @@ TYPED_TEST_P(ShortAlloc, fifo_NOoutlive) {
   using alloc_type = typename TypeParam::alloc_NOoutlive_type;
   const auto area_size = TypeParam::area_size;
 
-  for (std::size_t item_size = 1; item_size <= area_size;
-       item_size += 1 + item_size * 3 / 2) {
+  for (std::size_t item_size = 1; item_size <= area_size; item_size += 1 + item_size * 3 / 2) {
 
     std::unique_ptr<arena_type> arena(new arena_type);
     alloc_type short_alloc(*arena);
@@ -114,8 +109,7 @@ TYPED_TEST_P(ShortAlloc, fifo_NOoutlive) {
     }
 
     EXPECT_GE(area_size, arena->used());
-    EXPECT_LE(area_size,
-              arena->used() + alignof(erthink::max_align_t) + item_size - 1);
+    EXPECT_LE(area_size, arena->used() + alignof(erthink::max_align_t) + item_size - 1);
 
     const std::size_t used_while_exhausted = arena->used();
     const bool single_allocation = fifo.size() < 2;
@@ -143,8 +137,7 @@ TYPED_TEST_P(ShortAlloc, stack_outlive) {
   using alloc_type = typename TypeParam::alloc_outlive_type;
   const auto area_size = TypeParam::area_size;
 
-  for (std::size_t item_size = 1; item_size <= area_size;
-       item_size += 1 + item_size * 3 / 2) {
+  for (std::size_t item_size = 1; item_size <= area_size; item_size += 1 + item_size * 3 / 2) {
 
     std::unique_ptr<arena_type> arena(new arena_type);
     alloc_type short_alloc(*arena);
@@ -159,8 +152,7 @@ TYPED_TEST_P(ShortAlloc, stack_outlive) {
     }
 
     EXPECT_GE(area_size, arena->used());
-    EXPECT_LE(area_size,
-              arena->used() + alignof(erthink::max_align_t) + item_size - 1);
+    EXPECT_LE(area_size, arena->used() + alignof(erthink::max_align_t) + item_size - 1);
 
     while (!stack.empty()) {
       char *ptr = stack.top();
@@ -178,8 +170,7 @@ TYPED_TEST_P(ShortAlloc, fifo_outlive) {
   using alloc_type = typename TypeParam::alloc_outlive_type;
   const auto area_size = TypeParam::area_size;
 
-  for (std::size_t item_size = 1; item_size <= area_size;
-       item_size += 1 + item_size * 3 / 2) {
+  for (std::size_t item_size = 1; item_size <= area_size; item_size += 1 + item_size * 3 / 2) {
 
     std::unique_ptr<arena_type> arena(new arena_type);
     alloc_type short_alloc(*arena);
@@ -199,8 +190,7 @@ TYPED_TEST_P(ShortAlloc, fifo_outlive) {
 
     EXPECT_EQ(max_used, arena->used());
     EXPECT_GE(area_size, arena->used());
-    EXPECT_LE(area_size,
-              arena->used() + alignof(erthink::max_align_t) + item_size - 1);
+    EXPECT_LE(area_size, arena->used() + alignof(erthink::max_align_t) + item_size - 1);
 
     const std::size_t n = fifo.size();
     while (!fifo.empty()) {
@@ -223,8 +213,7 @@ TYPED_TEST_P(ShortAlloc, fifo_outlive) {
 //------------------------------------------------------------------------------
 
 #ifdef REGISTER_TYPED_TEST_SUITE_P
-REGISTER_TYPED_TEST_SUITE_P(ShortAlloc, stack_NOoutlive, fifo_NOoutlive,
-                            stack_outlive, fifo_outlive);
+REGISTER_TYPED_TEST_SUITE_P(ShortAlloc, stack_NOoutlive, fifo_NOoutlive, stack_outlive, fifo_outlive);
 
 INSTANTIATE_TYPED_TEST_SUITE_P(Test, ShortAlloc, Sizes);
 #endif

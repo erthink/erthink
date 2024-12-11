@@ -37,21 +37,20 @@
 #elif defined(_MSC_VER) && !defined(__clang__)
 
 #if _MSC_FULL_VER < 191526730
-#pragma message(                                                               \
+#pragma message(                                                                                                       \
     "It is recommended to use \"Microsoft C/C++ Compiler\" version 19.15.26730 (Visual Studio 2017 15.8) or newer.")
 #endif
 #if _MSC_FULL_VER < 190024234
-#pragma message(                                                               \
-    "At least \"Microsoft C/C++ Compiler\" version 19.00.24234 (Visual Studio 2015 Update 3) is required.")
+#pragma message("At least \"Microsoft C/C++ Compiler\" version 19.00.24234 (Visual Studio 2015 Update 3) is required.")
 #endif
 
 #pragma warning(push, 1)
 #include <intrin.h>
 #pragma warning(pop)
-#pragma warning(disable : 4514) /* 'xyz': unreferenced inline function         \
+#pragma warning(disable : 4514) /* 'xyz': unreferenced inline function                                                 \
                                    has been removed */
 #pragma warning(disable : 4710) /* 'xyz': function not inlined */
-#pragma warning(disable : 4711) /* function 'xyz' selected for                 \
+#pragma warning(disable : 4711) /* function 'xyz' selected for                                                         \
                                    automatic inline expansion */
 #pragma warning(disable : 4127) /* conditional expression is constant */
 #pragma warning(disable : 4702) /* unreachable code */

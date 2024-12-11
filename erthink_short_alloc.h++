@@ -67,15 +67,11 @@ using max_align_t = ::max_align_t;
 class allocation_arena_exhausted : public std::bad_alloc {
 public:
   allocation_arena_exhausted() = default;
-  virtual const char *what() const cxx11_noexcept {
-    return "short_alloc has exhausted allocation arena";
-  }
+  virtual const char *what() const cxx11_noexcept { return "short_alloc has exhausted allocation arena"; }
   virtual ~allocation_arena_exhausted() cxx11_noexcept {}
 };
 
-template <bool ALLOW_OUTLIVE, std::size_t N_BYTES,
-          std::size_t ALIGN = alignof(max_align_t)>
-class allocation_arena {
+template <bool ALLOW_OUTLIVE, std::size_t N_BYTES, std::size_t ALIGN = alignof(max_align_t)> class allocation_arena {
 public:
   static cxx11_constexpr_var auto allow_outlive = ALLOW_OUTLIVE;
   static cxx11_constexpr_var auto size = N_BYTES;
@@ -88,18 +84,15 @@ private:
 #pragma warning(disable : 4324) /* structure was padded due to alignment */
 #endif
 #ifndef NDEBUG
-  static cxx11_constexpr_var std::size_t signature_A =
-      std::size_t(2125913479ul) * N_BYTES +
-      std::size_t(ALLOW_OUTLIVE ? 4190596621ul : 3120246733ul) +
-      ALIGN * std::size_t(3366427381ul);
-  static cxx11_constexpr_var std::size_t signature_B =
-      std::size_t(3909341731ul) * N_BYTES +
-      std::size_t(ALLOW_OUTLIVE ? 937226681ul : 2469154943ul) +
-      ALIGN * std::size_t(3752260177ul);
-  static cxx11_constexpr_var std::size_t signature_C =
-      std::size_t(3756481181ul) * N_BYTES +
-      std::size_t(ALLOW_OUTLIVE ? 2595029951ul : 1665577289ul) +
-      ALIGN * std::size_t(2105020861ul);
+  static cxx11_constexpr_var std::size_t signature_A = std::size_t(2125913479ul) * N_BYTES +
+                                                       std::size_t(ALLOW_OUTLIVE ? 4190596621ul : 3120246733ul) +
+                                                       ALIGN * std::size_t(3366427381ul);
+  static cxx11_constexpr_var std::size_t signature_B = std::size_t(3909341731ul) * N_BYTES +
+                                                       std::size_t(ALLOW_OUTLIVE ? 937226681ul : 2469154943ul) +
+                                                       ALIGN * std::size_t(3752260177ul);
+  static cxx11_constexpr_var std::size_t signature_C = std::size_t(3756481181ul) * N_BYTES +
+                                                       std::size_t(ALLOW_OUTLIVE ? 2595029951ul : 1665577289ul) +
+                                                       ALIGN * std::size_t(2105020861ul);
 #endif /* NDEBUG */
 
 #ifndef NDEBUG
@@ -121,11 +114,8 @@ private:
     return (n + (alignment - 1)) & ~(alignment - 1);
   }
 
-  cxx11_constexpr bool
-  pointer_in_buffer(const char *ptr,
-                    bool accepd_end_of_buffer = false) const cxx11_noexcept {
-    return buf_ <= ptr &&
-           (accepd_end_of_buffer ? ptr <= buf_ + size : ptr < buf_ + size);
+  cxx11_constexpr bool pointer_in_buffer(const char *ptr, bool accepd_end_of_buffer = false) const cxx11_noexcept {
+    return buf_ <= ptr && (accepd_end_of_buffer ? ptr <= buf_ + size : ptr < buf_ + size);
   }
 
 public:
@@ -147,8 +137,7 @@ public:
                   "alignof(std::max_align_t), and cannot be guaranteed by "
                   "normal operator new");
 #endif
-    static_assert(size % alignment == 0,
-                  "size N needs to be a multiple of alignment Align");
+    static_assert(size % alignment == 0, "size N needs to be a multiple of alignment Align");
 #ifndef NDEBUG
     checkpoint_A_ = signature_A;
     checkpoint_B_ = signature_B;
@@ -160,10 +149,8 @@ public:
   cxx11_constexpr bool debug_check() const cxx11_noexcept {
     return
 #ifndef NDEBUG
-        CONSTEXPR_ASSERT(checkpoint_A_ == signature_A),
-        CONSTEXPR_ASSERT(checkpoint_B_ == signature_B),
-        CONSTEXPR_ASSERT(checkpoint_C_ == signature_C),
-        CONSTEXPR_ASSERT(ptr_ >= buf_ && ptr_ <= buf_ + sizeof(buf_)),
+        CONSTEXPR_ASSERT(checkpoint_A_ == signature_A), CONSTEXPR_ASSERT(checkpoint_B_ == signature_B),
+        CONSTEXPR_ASSERT(checkpoint_C_ == signature_C), CONSTEXPR_ASSERT(ptr_ >= buf_ && ptr_ <= buf_ + sizeof(buf_)),
 #endif
         true;
   }
@@ -178,22 +165,18 @@ public:
 #endif
         pointer_in_buffer(static_cast<const char *>(ptr));
   }
-  cxx11_constexpr bool chunk_in_bounds(const void *ptr,
-                                       std::size_t bytes) const cxx11_noexcept {
+  cxx11_constexpr bool chunk_in_bounds(const void *ptr, std::size_t bytes) const cxx11_noexcept {
     return pointer_in_buffer(static_cast<const char *>(ptr), true) &&
-           (bytes == 0 ||
-            pointer_in_buffer(static_cast<const char *>(ptr) + bytes, true));
+           (bytes == 0 || pointer_in_buffer(static_cast<const char *>(ptr) + bytes, true));
   }
 
   template <std::size_t ReqAlign> char *allocate(std::size_t n) {
-    static_assert(ReqAlign <= alignment,
-                  "alignment is too large for this arena");
+    static_assert(ReqAlign <= alignment, "alignment is too large for this arena");
     debug_check();
 
     if (likely(pointer_in_buffer(ptr_))) {
       auto const aligned_n = align_up(n);
-      if (likely(static_cast<decltype(aligned_n)>(buf_ + size - ptr_) >=
-                 aligned_n)) {
+      if (likely(static_cast<decltype(aligned_n)>(buf_ + size - ptr_) >= aligned_n)) {
         char *r = ptr_;
 #ifndef NDEBUG
         std::memset(r, 0xCC, aligned_n);
@@ -206,8 +189,7 @@ public:
 
     if (allow_outlive) {
 #if ERTHINK_PROVIDE_ALIGNED_NEW
-      return static_cast<char *>(
-          ::operator new(n, std::align_val_t(alignment)));
+      return static_cast<char *>(::operator new(n, std::align_val_t(alignment)));
 #else
       return static_cast<char *>(::operator new(n));
 #endif
@@ -282,53 +264,36 @@ public:
   cxx11_constexpr short_alloc(/*allocation arena must be provided */) = delete;
   cxx11_constexpr short_alloc(const short_alloc &) cxx11_noexcept = default;
   short_alloc &operator=(const short_alloc &) = delete;
-  cxx11_constexpr short_alloc &
-  select_on_container_copy_construction() const cxx11_noexcept {
-    return *this;
-  }
+  cxx11_constexpr short_alloc &select_on_container_copy_construction() const cxx11_noexcept { return *this; }
 
   cxx11_constexpr short_alloc(arena_type &area) cxx11_noexcept : arena_(area) {}
   template <class U>
-  cxx11_constexpr
-  short_alloc(const short_alloc<U, arena_type> &src) cxx11_noexcept
-      : short_alloc(src.arena_) {}
+  cxx11_constexpr short_alloc(const short_alloc<U, arena_type> &src) cxx11_noexcept : short_alloc(src.arena_) {}
 
   template <class U> struct rebind {
     using other = short_alloc<U, arena_type>;
   };
 
-  T *allocate(std::size_t n) {
-    return reinterpret_cast<T *>(
-        arena_.template allocate<alignof(T)>(n * sizeof(T)));
-  }
-  void deallocate(T *p, std::size_t n) cxx11_noexcept {
-    arena_.deallocate(reinterpret_cast<char *>(p), n * sizeof(T));
-  }
+  T *allocate(std::size_t n) { return reinterpret_cast<T *>(arena_.template allocate<alignof(T)>(n * sizeof(T))); }
+  void deallocate(T *p, std::size_t n) cxx11_noexcept { arena_.deallocate(reinterpret_cast<char *>(p), n * sizeof(T)); }
 
-  template <typename... Args> inline void construct(T *p, Args &&...args) {
-    new (p) T(std::forward<Args>(args)...);
-  }
+  template <typename... Args> inline void construct(T *p, Args &&...args) { new (p) T(std::forward<Args>(args)...); }
 
   inline void destroy(T *p) { p->~T(); }
 
   template <class X, typename X_ARENA, class Y, typename Y_ARENA>
-  friend inline bool
-  operator==(const short_alloc<X, X_ARENA> &x,
-             const short_alloc<Y, Y_ARENA> &y) cxx11_noexcept;
+  friend inline bool operator==(const short_alloc<X, X_ARENA> &x, const short_alloc<Y, Y_ARENA> &y) cxx11_noexcept;
 
   template <class X, typename X_ARENA> friend class short_alloc;
 };
 
 template <class X, typename X_ARENA, class Y, typename Y_ARENA>
-inline bool operator==(const short_alloc<X, X_ARENA> &x,
-                       const short_alloc<Y, Y_ARENA> &y) cxx11_noexcept {
-  return X_ARENA::size == Y_ARENA::size &&
-         X_ARENA::alignment == Y_ARENA::alignment && &x.arena_ == &y.arena_;
+inline bool operator==(const short_alloc<X, X_ARENA> &x, const short_alloc<Y, Y_ARENA> &y) cxx11_noexcept {
+  return X_ARENA::size == Y_ARENA::size && X_ARENA::alignment == Y_ARENA::alignment && &x.arena_ == &y.arena_;
 }
 
 template <class X, typename X_ARENA, class Y, typename Y_ARENA>
-inline bool operator!=(const short_alloc<X, Y_ARENA> &x,
-                       const short_alloc<Y, Y_ARENA> &y) cxx11_noexcept {
+inline bool operator!=(const short_alloc<X, Y_ARENA> &x, const short_alloc<Y, Y_ARENA> &y) cxx11_noexcept {
   return !(x == y);
 }
 

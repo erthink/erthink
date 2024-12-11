@@ -28,14 +28,12 @@
 #if defined(__clang__) && __clang_major__ < 4
 /* Clang 3.9 have a trouble with ifunc, especially when LTO is enabled. */
 #define ERTHINK_USE_ELF_IFUNC 0
-#elif __has_attribute(__ifunc__) &&                                            \
-    defined(__ELF__) /* ifunc is broken on Darwin/OSX */
+#elif __has_attribute(__ifunc__) && defined(__ELF__) /* ifunc is broken on Darwin/OSX */
 /* Use ifunc/gnu_indirect_function if corresponding attribute is available,
  * Assuming compiler will generate properly code even when
  * the -fstack-protector-all and/or the -fsanitize=address are enabled. */
 #define ERTHINK_USE_ELF_IFUNC 1
-#elif defined(__ELF__) && !defined(__SANITIZE_ADDRESS__) &&                    \
-    !defined(__SSP_ALL__)
+#elif defined(__ELF__) && !defined(__SANITIZE_ADDRESS__) && !defined(__SSP_ALL__)
 /* ifunc/gnu_indirect_function will be used on ELF, but only if both
  * -fstack-protector-all and -fsanitize=address are NOT enabled. */
 #define ERTHINK_USE_ELF_IFUNC 1
@@ -49,24 +47,19 @@
 #if ERTHINK_USE_ELF_IFUNC
 #define ERTHINK_IFUNC_RESOLVER_API(API_VISIBILITY) __extern_C
 
-#define ERTHINK_DECLARE_IFUNC(API_VISIBILITY, RESULT_TYPE, NAME,               \
-                              DECLARGS_PARENTHESIZED, CALLARGS_PARENTHESIZED,  \
-                              RESOLVER)                                        \
+#define ERTHINK_DECLARE_IFUNC(API_VISIBILITY, RESULT_TYPE, NAME, DECLARGS_PARENTHESIZED, CALLARGS_PARENTHESIZED,       \
+                              RESOLVER)                                                                                \
   __extern_C API_VISIBILITY RESULT_TYPE NAME DECLARGS_PARENTHESIZED;
 
-#if __has_attribute(__ifunc__) ||                                              \
-    (defined(__ELF__) && __GLIBC_PREREQ(2, 11) && __GNUC_PREREQ(4, 6))
+#if __has_attribute(__ifunc__) || (defined(__ELF__) && __GLIBC_PREREQ(2, 11) && __GNUC_PREREQ(4, 6))
 
-#define ERTHINK_DEFINE_IFUNC(API_VISIBILITY, RESULT_TYPE, NAME,                \
-                             DECLARGS_PARENTHESIZED, CALLARGS_PARENTHESIZED,   \
-                             RESOLVER)                                         \
-                                                                               \
-  ERTHINK_IFUNC_RESOLVER_API(API_VISIBILITY)                                   \
-  __attribute__((__used__)) RESULT_TYPE(*RESOLVER(void))                       \
-      DECLARGS_PARENTHESIZED;                                                  \
-                                                                               \
-  __extern_C API_VISIBILITY RESULT_TYPE NAME DECLARGS_PARENTHESIZED            \
-      __attribute__((__ifunc__(STRINGIFY(RESOLVER))));
+#define ERTHINK_DEFINE_IFUNC(API_VISIBILITY, RESULT_TYPE, NAME, DECLARGS_PARENTHESIZED, CALLARGS_PARENTHESIZED,        \
+                             RESOLVER)                                                                                 \
+                                                                                                                       \
+  ERTHINK_IFUNC_RESOLVER_API(API_VISIBILITY)                                                                           \
+  __attribute__((__used__)) RESULT_TYPE(*RESOLVER(void)) DECLARGS_PARENTHESIZED;                                       \
+                                                                                                                       \
+  __extern_C API_VISIBILITY RESULT_TYPE NAME DECLARGS_PARENTHESIZED __attribute__((__ifunc__(STRINGIFY(RESOLVER))));
 
 #else
 
@@ -92,69 +85,55 @@
 
 #ifdef __cplusplus
 
-#define ERTHINK_DECLARE_IFUNC(API_VISIBILITY, RESULT_TYPE, NAME,               \
-                              DECLARGS_PARENTHESIZED, CALLARGS_PARENTHESIZED,  \
-                              RESOLVER)                                        \
-                                                                               \
-  __extern_C API_VISIBILITY RESULT_TYPE(*const NAME##_iFuncPtr)                \
-      DECLARGS_PARENTHESIZED;                                                  \
-                                                                               \
-  static inline RESULT_TYPE NAME DECLARGS_PARENTHESIZED {                      \
-    return NAME##_iFuncPtr CALLARGS_PARENTHESIZED;                             \
-  }
+#define ERTHINK_DECLARE_IFUNC(API_VISIBILITY, RESULT_TYPE, NAME, DECLARGS_PARENTHESIZED, CALLARGS_PARENTHESIZED,       \
+                              RESOLVER)                                                                                \
+                                                                                                                       \
+  __extern_C API_VISIBILITY RESULT_TYPE(*const NAME##_iFuncPtr) DECLARGS_PARENTHESIZED;                                \
+                                                                                                                       \
+  static inline RESULT_TYPE NAME DECLARGS_PARENTHESIZED { return NAME##_iFuncPtr CALLARGS_PARENTHESIZED; }
 
-#define ERTHINK_DEFINE_IFUNC(API_VISIBILITY, RESULT_TYPE, NAME,                \
-                             DECLARGS_PARENTHESIZED, CALLARGS_PARENTHESIZED,   \
-                             RESOLVER)                                         \
-                                                                               \
-  ERTHINK_IFUNC_RESOLVER_API(API_VISIBILITY)                                   \
-  RESULT_TYPE(*RESOLVER(void)) DECLARGS_PARENTHESIZED;                         \
-                                                                               \
+#define ERTHINK_DEFINE_IFUNC(API_VISIBILITY, RESULT_TYPE, NAME, DECLARGS_PARENTHESIZED, CALLARGS_PARENTHESIZED,        \
+                             RESOLVER)                                                                                 \
+                                                                                                                       \
+  ERTHINK_IFUNC_RESOLVER_API(API_VISIBILITY)                                                                           \
+  RESULT_TYPE(*RESOLVER(void)) DECLARGS_PARENTHESIZED;                                                                 \
+                                                                                                                       \
   RESULT_TYPE(*const NAME##_iFuncPtr) DECLARGS_PARENTHESIZED = RESOLVER();
 
 #else /* __cplusplus */
 
-#define ERTHINK_DECLARE_IFUNC(API_VISIBILITY, RESULT_TYPE, NAME,               \
-                              DECLARGS_PARENTHESIZED, CALLARGS_PARENTHESIZED,  \
-                              RESOLVER)                                        \
-                                                                               \
-  __extern_C API_VISIBILITY RESULT_TYPE(*NAME##_iFuncPtr)                      \
-      DECLARGS_PARENTHESIZED;                                                  \
-                                                                               \
-  static __inline RESULT_TYPE NAME DECLARGS_PARENTHESIZED {                    \
-    return NAME##_iFuncPtr CALLARGS_PARENTHESIZED;                             \
-  }
+#define ERTHINK_DECLARE_IFUNC(API_VISIBILITY, RESULT_TYPE, NAME, DECLARGS_PARENTHESIZED, CALLARGS_PARENTHESIZED,       \
+                              RESOLVER)                                                                                \
+                                                                                                                       \
+  __extern_C API_VISIBILITY RESULT_TYPE(*NAME##_iFuncPtr) DECLARGS_PARENTHESIZED;                                      \
+                                                                                                                       \
+  static __inline RESULT_TYPE NAME DECLARGS_PARENTHESIZED { return NAME##_iFuncPtr CALLARGS_PARENTHESIZED; }
 
 #if __GNUC_PREREQ(4, 0) || __has_attribute(__constructor__)
 
-#define ERTHINK_DEFINE_IFUNC(API_VISIBILITY, RESULT_TYPE, NAME,                \
-                             DECLARGS_PARENTHESIZED, CALLARGS_PARENTHESIZED,   \
-                             RESOLVER)                                         \
-                                                                               \
-  RESULT_TYPE(*NAME##_iFuncPtr) DECLARGS_PARENTHESIZED;                        \
-                                                                               \
-  ERTHINK_IFUNC_RESOLVER_API(API_VISIBILITY)                                   \
-  RESULT_TYPE(*RESOLVER(void)) DECLARGS_PARENTHESIZED;                         \
-                                                                               \
-  static __cold void                                                           \
-      __attribute__((__constructor__)) NAME##_iFunc_init(void) {               \
-    NAME##_iFuncPtr = RESOLVER();                                              \
-  }
+#define ERTHINK_DEFINE_IFUNC(API_VISIBILITY, RESULT_TYPE, NAME, DECLARGS_PARENTHESIZED, CALLARGS_PARENTHESIZED,        \
+                             RESOLVER)                                                                                 \
+                                                                                                                       \
+  RESULT_TYPE(*NAME##_iFuncPtr) DECLARGS_PARENTHESIZED;                                                                \
+                                                                                                                       \
+  ERTHINK_IFUNC_RESOLVER_API(API_VISIBILITY)                                                                           \
+  RESULT_TYPE(*RESOLVER(void)) DECLARGS_PARENTHESIZED;                                                                 \
+                                                                                                                       \
+  static __cold void __attribute__((__constructor__)) NAME##_iFunc_init(void) { NAME##_iFuncPtr = RESOLVER(); }
 
 #else /* __has_attribute(__constructor__) */
 
-#define ERTHINK_DEFINE_IFUNC(API_VISIBILITY, RESULT_TYPE, NAME,                \
-                             DECLARGS_PARENTHESIZED, CALLARGS_PARENTHESIZED,   \
-                             RESOLVER)                                         \
-                                                                               \
-  ERTHINK_IFUNC_RESOLVER_API(API_VISIBILITY)                                   \
-  RESULT_TYPE(*RESOLVER(void)) DECLARGS_PARENTHESIZED;                         \
-                                                                               \
-  static __cold RESULT_TYPE NAME##_proxy DECLARGS_PARENTHESIZED {              \
-    NAME##_iFuncPtr = RESOLVER();                                              \
-    return NAME##_iFuncPtr CALLARGS_PARENTHESIZED;                             \
-  }                                                                            \
-                                                                               \
+#define ERTHINK_DEFINE_IFUNC(API_VISIBILITY, RESULT_TYPE, NAME, DECLARGS_PARENTHESIZED, CALLARGS_PARENTHESIZED,        \
+                             RESOLVER)                                                                                 \
+                                                                                                                       \
+  ERTHINK_IFUNC_RESOLVER_API(API_VISIBILITY)                                                                           \
+  RESULT_TYPE(*RESOLVER(void)) DECLARGS_PARENTHESIZED;                                                                 \
+                                                                                                                       \
+  static __cold RESULT_TYPE NAME##_proxy DECLARGS_PARENTHESIZED {                                                      \
+    NAME##_iFuncPtr = RESOLVER();                                                                                      \
+    return NAME##_iFuncPtr CALLARGS_PARENTHESIZED;                                                                     \
+  }                                                                                                                    \
+                                                                                                                       \
   RESULT_TYPE(*NAME##_iFuncPtr) DECLARGS_PARENTHESIZED = NAME##_proxy;
 
 #endif /* __has_attribute(__constructor__) */

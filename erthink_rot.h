@@ -62,13 +62,11 @@ static cxx14_constexpr uint64_t rol64(uint64_t v, unsigned s) noexcept {
 
 #ifdef ERTHINK_NATIVE_U128_TYPE
 
-static cxx14_constexpr ERTHINK_NATIVE_U128_TYPE
-ror128(ERTHINK_NATIVE_U128_TYPE v, unsigned s) noexcept {
+static cxx14_constexpr ERTHINK_NATIVE_U128_TYPE ror128(ERTHINK_NATIVE_U128_TYPE v, unsigned s) noexcept {
   return (s &= 127) ? v >> s | v << (128 - s) : v;
 }
 
-static cxx14_constexpr ERTHINK_NATIVE_U128_TYPE
-rol128(ERTHINK_NATIVE_U128_TYPE v, unsigned s) noexcept {
+static cxx14_constexpr ERTHINK_NATIVE_U128_TYPE rol128(ERTHINK_NATIVE_U128_TYPE v, unsigned s) noexcept {
   return (s &= 127) ? v << s | v >> (128 - s) : v;
 }
 
@@ -81,37 +79,25 @@ rol128(ERTHINK_NATIVE_U128_TYPE v, unsigned s) noexcept {
 template <typename T> cxx14_constexpr T ror(T v, unsigned s) noexcept;
 template <typename T> cxx14_constexpr T rol(T v, unsigned s) noexcept;
 
-template <>
-cxx14_constexpr uint32_t ror<uint32_t>(uint32_t v, unsigned s) noexcept {
-  return ror32(v, s);
-}
+template <> cxx14_constexpr uint32_t ror<uint32_t>(uint32_t v, unsigned s) noexcept { return ror32(v, s); }
 
-template <>
-cxx14_constexpr uint32_t rol<uint32_t>(uint32_t v, unsigned s) noexcept {
-  return rol32(v, s);
-}
+template <> cxx14_constexpr uint32_t rol<uint32_t>(uint32_t v, unsigned s) noexcept { return rol32(v, s); }
 
-template <>
-cxx14_constexpr uint64_t ror<uint64_t>(uint64_t v, unsigned s) noexcept {
-  return ror64(v, s);
-}
+template <> cxx14_constexpr uint64_t ror<uint64_t>(uint64_t v, unsigned s) noexcept { return ror64(v, s); }
 
-template <>
-cxx14_constexpr uint64_t rol<uint64_t>(uint64_t v, unsigned s) noexcept {
-  return rol64(v, s);
-}
+template <> cxx14_constexpr uint64_t rol<uint64_t>(uint64_t v, unsigned s) noexcept { return rol64(v, s); }
 
 #ifdef ERTHINK_NATIVE_U128_TYPE
 
 template <>
-cxx14_constexpr ERTHINK_NATIVE_U128_TYPE
-ror<ERTHINK_NATIVE_U128_TYPE>(ERTHINK_NATIVE_U128_TYPE v, unsigned s) noexcept {
+cxx14_constexpr ERTHINK_NATIVE_U128_TYPE ror<ERTHINK_NATIVE_U128_TYPE>(ERTHINK_NATIVE_U128_TYPE v,
+                                                                       unsigned s) noexcept {
   return ror128(v, s);
 }
 
 template <>
-cxx14_constexpr ERTHINK_NATIVE_U128_TYPE
-rol<ERTHINK_NATIVE_U128_TYPE>(ERTHINK_NATIVE_U128_TYPE v, unsigned s) noexcept {
+cxx14_constexpr ERTHINK_NATIVE_U128_TYPE rol<ERTHINK_NATIVE_U128_TYPE>(ERTHINK_NATIVE_U128_TYPE v,
+                                                                       unsigned s) noexcept {
   return rol128(v, s);
 }
 
@@ -120,14 +106,14 @@ rol<ERTHINK_NATIVE_U128_TYPE>(ERTHINK_NATIVE_U128_TYPE v, unsigned s) noexcept {
 #ifdef ERTHINK_NATIVE_I128_TYPE
 
 template <>
-cxx14_constexpr ERTHINK_NATIVE_I128_TYPE
-ror<ERTHINK_NATIVE_I128_TYPE>(ERTHINK_NATIVE_I128_TYPE v, unsigned s) noexcept {
+cxx14_constexpr ERTHINK_NATIVE_I128_TYPE ror<ERTHINK_NATIVE_I128_TYPE>(ERTHINK_NATIVE_I128_TYPE v,
+                                                                       unsigned s) noexcept {
   return ror128(v, s);
 }
 
 template <>
-cxx14_constexpr ERTHINK_NATIVE_I128_TYPE
-rol<ERTHINK_NATIVE_I128_TYPE>(ERTHINK_NATIVE_I128_TYPE v, unsigned s) noexcept {
+cxx14_constexpr ERTHINK_NATIVE_I128_TYPE rol<ERTHINK_NATIVE_I128_TYPE>(ERTHINK_NATIVE_I128_TYPE v,
+                                                                       unsigned s) noexcept {
   return rol128(v, s);
 }
 

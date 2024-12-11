@@ -32,8 +32,7 @@
 #include <cstring>
 #endif /* ERTHINK_HAVE_std_bit_cast */
 
-#if defined(__cpp_lib_concepts) && __cpp_lib_concepts >= 202002L &&            \
-    (!defined(__clang__) || __clang_major__ >= 14)
+#if defined(__cpp_lib_concepts) && __cpp_lib_concepts >= 202002L && (!defined(__clang__) || __clang_major__ >= 14)
 #include <concepts>
 #define ERTHINK_HAVE_cxx_concepts 1
 #else
@@ -43,28 +42,21 @@
 namespace erthink {
 
 #if __cplusplus < 201402L
-template <bool B, class T = void>
-using enable_if_t = typename std::enable_if<B, T>::type;
+template <bool B, class T = void> using enable_if_t = typename std::enable_if<B, T>::type;
 #else
 using std::enable_if_t;
 #endif /* C++14 */
 
-template <typename TO, typename FROM,
-          typename erthink::enable_if_t<std::is_pointer<TO>::value, int> = 0,
+template <typename TO, typename FROM, typename erthink::enable_if_t<std::is_pointer<TO>::value, int> = 0,
           typename erthink::enable_if_t<std::is_pointer<FROM>::value, int> = 0,
-          typename erthink::enable_if_t<
-              std::is_const<typename std::remove_pointer<FROM>::type>::value,
-              int> = 0>
+          typename erthink::enable_if_t<std::is_const<typename std::remove_pointer<FROM>::type>::value, int> = 0>
 cxx11_constexpr TO constexpr_pointer_cast(FROM from) {
   return static_cast<TO>(static_cast<const void *>(from));
 }
 
-template <typename TO, typename FROM,
-          typename erthink::enable_if_t<std::is_pointer<TO>::value, int> = 0,
+template <typename TO, typename FROM, typename erthink::enable_if_t<std::is_pointer<TO>::value, int> = 0,
           typename erthink::enable_if_t<std::is_pointer<FROM>::value, int> = 0,
-          typename erthink::enable_if_t<
-              !std::is_const<typename std::remove_pointer<FROM>::type>::value,
-              int> = 0>
+          typename erthink::enable_if_t<!std::is_const<typename std::remove_pointer<FROM>::type>::value, int> = 0>
 cxx11_constexpr TO constexpr_pointer_cast(FROM from) {
   return static_cast<TO>(static_cast<void *>(from));
 }
@@ -73,8 +65,7 @@ cxx11_constexpr TO constexpr_pointer_cast(FROM from) {
 
 #if ERTHINK_HAVE_std_bit_cast
 
-template <class TO, class FROM>
-cxx11_constexpr TO bit_cast(const FROM &src) cxx11_noexcept {
+template <class TO, class FROM> cxx11_constexpr TO bit_cast(const FROM &src) cxx11_noexcept {
   return std::bit_cast<TO, FROM>(src);
 }
 
@@ -82,23 +73,17 @@ cxx11_constexpr TO bit_cast(const FROM &src) cxx11_noexcept {
 
 #if defined(__cpp_concepts) && __cpp_concepts >= 201507L
 template <typename TO, typename FROM>
-  requires(sizeof(TO) == sizeof(FROM)) &&
-          std::is_trivially_copyable<FROM>::value &&
+  requires(sizeof(TO) == sizeof(FROM)) && std::is_trivially_copyable<FROM>::value &&
           std::is_trivially_copyable<TO>::value
 #else
-template <typename TO, typename FROM,
-          typename erthink::enable_if_t<sizeof(TO) == sizeof(FROM), int> = 0,
+template <typename TO, typename FROM, typename erthink::enable_if_t<sizeof(TO) == sizeof(FROM), int> = 0,
           typename erthink::enable_if_t<std::is_trivial<FROM>::value, int> = 0,
           typename erthink::enable_if_t<std::is_trivial<TO>::value, int> = 0>
 #endif
 cxx14_constexpr TO bit_cast(const FROM &src) cxx11_noexcept {
-  static_assert(sizeof(TO) == sizeof(FROM),
-                "bit_cast requires source and destination to be the same size");
-  static_assert(std::is_trivial<FROM>::value,
-                "bit_cast requires the source type to be trivially copyable");
-  static_assert(
-      std::is_trivial<TO>::value,
-      "bit_cast requires the destination type to be trivially copyable");
+  static_assert(sizeof(TO) == sizeof(FROM), "bit_cast requires source and destination to be the same size");
+  static_assert(std::is_trivial<FROM>::value, "bit_cast requires the source type to be trivially copyable");
+  static_assert(std::is_trivial<TO>::value, "bit_cast requires the destination type to be trivially copyable");
 #if __has_builtin(__builtin_bit_cast)
   return __builtin_bit_cast(TO, src);
 #else
