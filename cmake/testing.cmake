@@ -1,17 +1,5 @@
-# Copyright (c) 2012-2024 Leonid Yuriev <leo@yuriev.ru>.
-#
-# Licensed under the Apache License, Version 2.0 (the "License"); you may not
-# use this file except in compliance with the License. You may obtain a copy of
-# the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-# License for the specific language governing permissions and limitations under
-# the License.
-#
+# Copyright (c) 2012-2024 Леонид Юрьев aka Leonid Yuriev <leo@yuriev.ru> ###############################################
+# SPDX-License-Identifier: Apache-2.0
 
 if(CMAKE_VERSION VERSION_LESS 3.8.2)
   cmake_minimum_required(VERSION 3.0.2)
@@ -48,15 +36,13 @@ if(BUILD_TESTING)
 
   if(CMAKE_CROSSCOMPILING AND NOT CMAKE_CROSSCOMPILING_EMULATOR)
     message(WARNING "No emulator to run cross-compiled tests")
-    add_test(NAME fake_since_no_crosscompiling_emulator
-             COMMAND ${CMAKE_COMMAND} -E echo
-                     "No emulator to run cross-compiled tests")
+    add_test(NAME fake_since_no_crosscompiling_emulator COMMAND ${CMAKE_COMMAND} -E echo
+                                                                "No emulator to run cross-compiled tests")
   endif()
 
   if(NOT GTEST_FOUND AND NOT (DEFINED BUILD_GTEST AND BUILD_GTEST))
-    # Expected GTest was already found and/or pointed via ${gtest_root},
-    # otherwise will search at ${gtest_paths} locations, if defined or default
-    # ones.
+    # Expected GTest was already found and/or pointed via ${gtest_root}, otherwise will search at ${gtest_paths}
+    # locations, if defined or default ones.
     if(DEFINED CONAN_RUNTIME_LIB_DIRS)
       message(STATUS "Peek GTest from \"${CONAN_RUNTIME_LIB_DIRS}\"")
       find_package(GTest REQUIRED)
@@ -110,10 +96,7 @@ if(BUILD_TESTING)
     if(gtest_root)
       message(STATUS "Found GoogleTest sources at ${gtest_root}")
     elseif(CMAKE_VERSION VERSION_LESS 3.5)
-      message(
-        STATUS
-          "GoogleTest not found, but to build it from source required CMake >= 3.5"
-      )
+      message(STATUS "GoogleTest not found, but to build it from source required CMake >= 3.5")
     else()
       if(NOT DEFINED GTEST_USE_VERSION
          OR GTEST_USE_VERSION STREQUAL "master"
@@ -154,8 +137,7 @@ if(BUILD_TESTING)
 
     if(gtest_root)
       get_filename_component(gtest_root "${gtest_root}" REALPATH)
-      if(EXISTS "${gtest_root}/../googlemock/CMakeLists.txt"
-         AND EXISTS "${gtest_root}/../CMakeLists.txt")
+      if(EXISTS "${gtest_root}/../googlemock/CMakeLists.txt" AND EXISTS "${gtest_root}/../CMakeLists.txt")
         get_filename_component(gtest_root "${gtest_root}/.." ABSOLUTE)
       endif()
 
@@ -165,8 +147,7 @@ if(BUILD_TESTING)
           if(GTEST_USE_VERSION STREQUAL "LAST_RELEASE")
             # get list of remote branches like 'v1.10.x'
             execute_process(
-              COMMAND "${GIT}" branch --remote --sort=-version:refname --list
-                      "origin/v[0-9.]*.x" --no-color
+              COMMAND "${GIT}" branch --remote --sort=-version:refname --list "origin/v[0-9.]*.x" --no-color
               WORKING_DIRECTORY "${gtest_root}"
               RESULT_VARIABLE result
               OUTPUT_VARIABLE branch_list
@@ -177,12 +158,8 @@ if(BUILD_TESTING)
               list(LENGTH branch_list length)
               if(length GREATER 0)
                 list(GET branch_list 0 branch_last_release)
-                string(REGEX REPLACE "^  " "" branch_last_release
-                                     "${branch_last_release}")
-                message(
-                  STATUS
-                    "GoogleTest last like-release branch: ${branch_last_release}"
-                )
+                string(REGEX REPLACE "^  " "" branch_last_release "${branch_last_release}")
+                message(STATUS "GoogleTest last like-release branch: ${branch_last_release}")
                 execute_process(
                   COMMAND "${GIT}" checkout --detach "${branch_last_release}"
                   WORKING_DIRECTORY "${gtest_root}"
@@ -203,19 +180,14 @@ if(BUILD_TESTING)
                 list(LENGTH tag_list length)
                 if(length GREATER 0)
                   list(GET tag_list 0 tag_last_release)
-                  message(
-                    STATUS
-                      "GoogleTest last like-release tag: ${tag_last_release}")
-                  execute_process(
-                    COMMAND "${GIT}" checkout --detach "${tag_last_release}"
-                    WORKING_DIRECTORY "${gtest_root}")
+                  message(STATUS "GoogleTest last like-release tag: ${tag_last_release}")
+                  execute_process(COMMAND "${GIT}" checkout --detach "${tag_last_release}"
+                                  WORKING_DIRECTORY "${gtest_root}")
                 endif()
               endif()
             endif()
           else()
-            execute_process(
-              COMMAND "${GIT}" checkout --detach "${GTEST_USE_VERSION}"
-              WORKING_DIRECTORY "${gtest_root}")
+            execute_process(COMMAND "${GIT}" checkout --detach "${GTEST_USE_VERSION}" WORKING_DIRECTORY "${gtest_root}")
           endif()
         endif(GIT)
       endif()
@@ -228,44 +200,34 @@ if(BUILD_TESTING)
       unset(GTEST_BOTH_LIBRARIES CACHE)
       unset(GTEST_FOUND CACHE)
 
-      # Prevent overriding the parent project's compiler/linker settings on
-      # Windows
+      # Prevent overriding the parent project's compiler/linker settings on Windows
       set(gtest_force_shared_crt
           ON
           CACHE BOOL "" FORCE)
 
-      # Add googletest directly to our build. This defines the gtest and
-      # gtest_main targets.
-      add_subdirectory(${gtest_root} ${CMAKE_BINARY_DIR}/googletest-build
-                       EXCLUDE_FROM_ALL)
-      if(CMAKE_INTERPROCEDURAL_OPTIMIZATION AND NOT CMAKE_VERSION VERSION_LESS
-                                                3.9)
+      # Add googletest directly to our build. This defines the gtest and gtest_main targets.
+      add_subdirectory(${gtest_root} ${CMAKE_BINARY_DIR}/googletest-build EXCLUDE_FROM_ALL)
+      if(CMAKE_INTERPROCEDURAL_OPTIMIZATION AND NOT CMAKE_VERSION VERSION_LESS 3.9)
         file(READ ${gtest_root}/CMakeLists.txt variable gtest_cmake_content)
         string(TOLOWER "${gtest_cmake_content}" gtest_cmake_content)
-        string(FIND "${gtest_cmake_content}" "check_ipo_supported"
-                    gtest_ipo_supported)
+        string(FIND "${gtest_cmake_content}" "check_ipo_supported" gtest_ipo_supported)
         if(NOT gtest_ipo_supported OR gtest_ipo_supported LESS 1)
           message(
             STATUS
-              "Disable INTERPROCEDURAL_OPTIMIZATION for GoogleTest (CMake-3.9's check_ipo_supported NOT FOUND inside)"
-          )
+              "Disable INTERPROCEDURAL_OPTIMIZATION for GoogleTest (CMake-3.9's check_ipo_supported NOT FOUND inside)")
           if(TARGET gtest)
-            set_property(TARGET gtest gtest_main
-                         PROPERTY INTERPROCEDURAL_OPTIMIZATION FALSE)
+            set_property(TARGET gtest gtest_main PROPERTY INTERPROCEDURAL_OPTIMIZATION FALSE)
           endif()
           if(TARGET gmock)
-            set_property(TARGET gmock gmock_main
-                         PROPERTY INTERPROCEDURAL_OPTIMIZATION FALSE)
+            set_property(TARGET gmock gmock_main PROPERTY INTERPROCEDURAL_OPTIMIZATION FALSE)
           endif()
         endif()
       endif()
       if(TARGET gtest)
-        set_target_properties(gtest gtest_main PROPERTIES SKIP_BUILD_RPATH FALSE
-                                                          MACOSX_RPATH TRUE)
+        set_target_properties(gtest gtest_main PROPERTIES SKIP_BUILD_RPATH FALSE MACOSX_RPATH TRUE)
       endif()
       if(TARGET gmock)
-        set_target_properties(gmock gmock_main PROPERTIES SKIP_BUILD_RPATH FALSE
-                                                          MACOSX_RPATH TRUE)
+        set_target_properties(gmock gmock_main PROPERTIES SKIP_BUILD_RPATH FALSE MACOSX_RPATH TRUE)
       endif()
 
       list(FIND CMAKE_CXX_COMPILE_FEATURES cxx_std_11 local_HAS_CXX11)
@@ -276,17 +238,14 @@ if(BUILD_TESTING)
       if(NOT DEFINED GTEST_CXX_STANDARD)
         if(DEFINED CMAKE_CXX_STANDARD)
           set(GTEST_CXX_STANDARD ${CMAKE_CXX_STANDARD})
-        elseif(NOT local_HAS_CXX23 LESS 0
-               AND NOT (CMAKE_COMPILER_IS_CLANG AND CMAKE_CXX_COMPILER_VERSION
-                                                    VERSION_LESS 12))
+        elseif(NOT local_HAS_CXX23 LESS 0 AND NOT (CMAKE_COMPILER_IS_CLANG AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS
+                                                                               12))
           set(GTEST_CXX_STANDARD 23)
-        elseif(NOT local_HAS_CXX20 LESS 0
-               AND NOT (CMAKE_COMPILER_IS_CLANG AND CMAKE_CXX_COMPILER_VERSION
-                                                    VERSION_LESS 10))
+        elseif(NOT local_HAS_CXX20 LESS 0 AND NOT (CMAKE_COMPILER_IS_CLANG AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS
+                                                                               10))
           set(GTEST_CXX_STANDARD 20)
-        elseif(NOT local_HAS_CXX17 LESS 0
-               AND NOT (CMAKE_COMPILER_IS_CLANG AND CMAKE_CXX_COMPILER_VERSION
-                                                    VERSION_LESS 5))
+        elseif(NOT local_HAS_CXX17 LESS 0 AND NOT (CMAKE_COMPILER_IS_CLANG AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5
+                                                  ))
           set(GTEST_CXX_STANDARD 17)
         elseif(NOT local_HAS_CXX14 LESS 0)
           set(GTEST_CXX_STANDARD 14)
@@ -301,20 +260,15 @@ if(BUILD_TESTING)
         message(STATUS "Use C++${GTEST_CXX_STANDARD} for GoogleTest")
         if(CMAKE_VERSION VERSION_LESS 3.1)
           if(CXX_FALLBACK_GNU11)
-            target_compile_options(gtest
-                                   PRIVATE "-std=gnu++${GTEST_CXX_STANDARD}")
-            target_compile_options(gtest_main
-                                   PRIVATE "-std=gnu++${GTEST_CXX_STANDARD}")
+            target_compile_options(gtest PRIVATE "-std=gnu++${GTEST_CXX_STANDARD}")
+            target_compile_options(gtest_main PRIVATE "-std=gnu++${GTEST_CXX_STANDARD}")
           else()
-            target_compile_options(gtest
-                                   PRIVATE "-std=c++${GTEST_CXX_STANDARD}")
-            target_compile_options(gtest_main
-                                   PRIVATE "-std=c++${GTEST_CXX_STANDARD}")
+            target_compile_options(gtest PRIVATE "-std=c++${GTEST_CXX_STANDARD}")
+            target_compile_options(gtest_main PRIVATE "-std=c++${GTEST_CXX_STANDARD}")
           endif()
         else()
           target_compile_features(gtest PRIVATE "cxx_std_${GTEST_CXX_STANDARD}")
-          target_compile_features(gtest_main
-                                  PRIVATE "cxx_std_${GTEST_CXX_STANDARD}")
+          target_compile_features(gtest_main PRIVATE "cxx_std_${GTEST_CXX_STANDARD}")
         endif()
       endif()
 
@@ -335,10 +289,8 @@ if(BUILD_TESTING)
             set(local_minimal_optimize "")
           endif()
         endif()
-        target_compile_options(gtest PRIVATE ${local_warn_no_error}
-                                             ${local_minimal_optimize})
-        target_compile_options(gtest_main PRIVATE ${local_warn_no_error}
-                                                  ${local_minimal_optimize})
+        target_compile_options(gtest PRIVATE ${local_warn_no_error} ${local_minimal_optimize})
+        target_compile_options(gtest_main PRIVATE ${local_warn_no_error} ${local_minimal_optimize})
         unset(local_warn_no_error)
         unset(local_minimal_optimize)
       endif()
@@ -359,14 +311,11 @@ if(BUILD_TESTING)
     if(MEMORYCHECK_COMMAND OR CMAKE_MEMORYCHECK_COMMAND)
       add_custom_target(
         test_memcheck
-        COMMAND ${CMAKE_CTEST_COMMAND} --force-new-ctest-process --test-action
-                memcheck
-        COMMAND ${CAT}
-                "${CMAKE_BINARY_DIR}/Testing/Temporary/MemoryChecker.*.log")
+        COMMAND ${CMAKE_CTEST_COMMAND} --force-new-ctest-process --test-action memcheck
+        COMMAND ${CAT} "${CMAKE_BINARY_DIR}/Testing/Temporary/MemoryChecker.*.log")
     endif()
     if(CMAKE_SYSTEM_NAME STREQUAL "Windows")
-      # Windows don't have RPATH feature, therefore we should prepare PATH or
-      # copy DLL(s)
+      # Windows don't have RPATH feature, therefore we should prepare PATH or copy DLL(s)
       set(UT_NEED_DLLCRUTCH "Crutch for ${CMAKE_SYSTEM_NAME}")
       if(NOT CMAKE_CONFIGURATION_TYPES AND NOT CMAKE_VERSION VERSION_LESS 3.0)
         # will use LOCATION property to compose DLLPATH
@@ -385,14 +334,10 @@ if(BUILD_TESTING)
     set(options DISABLED)
     set(oneValueArgs TIMEOUT PREFIX)
     set(multiValueArgs SOURCE LIBRARY INCLUDE_DIRECTORY DEPEND DLLPATH)
-    cmake_parse_arguments(params "${options}" "${oneValueArgs}"
-                          "${multiValueArgs}" ${ARGN})
+    cmake_parse_arguments(params "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
 
     if(params_UNPARSED_ARGUMENTS)
-      message(
-        FATAL_ERROR
-          "Unknown keywords given to add_gtest(): \"${params_UNPARSED_ARGUMENTS}\"."
-      )
+      message(FATAL_ERROR "Unknown keywords given to add_gtest(): \"${params_UNPARSED_ARGUMENTS}\".")
     endif()
 
     if(GTEST_FOUND)
@@ -406,8 +351,7 @@ if(BUILD_TESTING)
 
       set(target "${params_PREFIX}${name}")
       add_executable(${target} ${params_SOURCE})
-      set_target_properties(${target} PROPERTIES SKIP_BUILD_RPATH FALSE
-                                                 BUILD_WITH_INSTALL_RPATH FALSE)
+      set_target_properties(${target} PROPERTIES SKIP_BUILD_RPATH FALSE BUILD_WITH_INSTALL_RPATH FALSE)
 
       if(params_DEPEND)
         add_dependencies(${target} ${params_DEPEND})
@@ -420,8 +364,7 @@ if(BUILD_TESTING)
       endif()
 
       if(params_INCLUDE_DIRECTORY)
-        set_target_properties(${target} PROPERTIES INCLUDE_DIRECTORIES
-                                                   ${params_INCLUDE_DIRECTORY})
+        set_target_properties(${target} PROPERTIES INCLUDE_DIRECTORIES ${params_INCLUDE_DIRECTORY})
       endif()
 
       if(UT_NEED_DLLCRUTCH)
@@ -429,33 +372,25 @@ if(BUILD_TESTING)
         foreach(dep IN LISTS params_LIBRARY GTEST_BOTH_LIBRARIES)
           get_target_property(type ${dep} TYPE)
           if(type STREQUAL SHARED_LIBRARY)
-            # Windows don't have RPATH feature, therefore we should prepare PATH
-            # or copy DLL(s)...
+            # Windows don't have RPATH feature, therefore we should prepare PATH or copy DLL(s)...
             if(CMAKE_CONFIGURATION_TYPES)
-              # Could not provide static ENVIRONMENT property with
-              # configuration-depended path
+              # Could not provide static ENVIRONMENT property with configuration-depended path
               set(dir FALSE)
             else(CMAKE_CONFIGURATION_TYPES)
-              get_target_property(
-                filename ${dep} IMPORTED_LOCATION_${CMAKE_BUILD_TYPE_UPPERCASE})
+              get_target_property(filename ${dep} IMPORTED_LOCATION_${CMAKE_BUILD_TYPE_UPPERCASE})
               if(NOT filename)
                 get_target_property(filename ${dep} IMPORTED_LOCATION)
               endif()
-              get_target_property(filename ${dep}
-                                  LOCATION_${CMAKE_BUILD_TYPE_UPPERCASE})
+              get_target_property(filename ${dep} LOCATION_${CMAKE_BUILD_TYPE_UPPERCASE})
               if(NOT filename)
                 get_target_property(filename ${dep} LOCATION)
               endif()
               if(filename)
                 get_filename_component(dir ${filename} DIRECTORY)
               else(filename)
-                get_target_property(
-                  dir ${dep}
-                  LIBRARY_OUTPUT_DIRECTORY_${CMAKE_BUILD_TYPE_UPPERCASE})
+                get_target_property(dir ${dep} LIBRARY_OUTPUT_DIRECTORY_${CMAKE_BUILD_TYPE_UPPERCASE})
                 if(NOT dir)
-                  get_target_property(
-                    dir ${dep}
-                    RUNTIME_OUTPUT_DIRECTORY_${CMAKE_BUILD_TYPE_UPPERCASE})
+                  get_target_property(dir ${dep} RUNTIME_OUTPUT_DIRECTORY_${CMAKE_BUILD_TYPE_UPPERCASE})
                 endif()
                 if(NOT dir)
                   get_target_property(dir ${dep} LIBRARY_OUTPUT_DIRECTORY)
@@ -472,30 +407,23 @@ if(BUILD_TESTING)
               add_custom_command(
                 TARGET ${target}
                 POST_BUILD
-                COMMAND
-                  if exist "$<TARGET_PDB_FILE:${dep}>" ${CMAKE_COMMAND} -E
-                  copy_if_different "$<TARGET_PDB_FILE:${dep}>"
-                  "$<TARGET_FILE_DIR:${target}>")
+                COMMAND if exist "$<TARGET_PDB_FILE:${dep}>" ${CMAKE_COMMAND} -E copy_if_different
+                        "$<TARGET_PDB_FILE:${dep}>" "$<TARGET_FILE_DIR:${target}>")
               add_custom_command(
                 TARGET ${target}
                 POST_BUILD
-                COMMAND ${CMAKE_COMMAND} -E copy_if_different
-                        "$<TARGET_FILE:${dep}>" "$<TARGET_FILE_DIR:${target}>"
-                COMMENT
-                  "${UT_NEED_DLLCRUTCH}: Copy shared library ${dep} for test ${target}"
-              )
+                COMMAND ${CMAKE_COMMAND} -E copy_if_different "$<TARGET_FILE:${dep}>" "$<TARGET_FILE_DIR:${target}>"
+                COMMENT "${UT_NEED_DLLCRUTCH}: Copy shared library ${dep} for test ${target}")
             endif(dir)
           endif()
         endforeach(dep)
       endif(UT_NEED_DLLCRUTCH)
 
-      if(NOT params_DISABLED AND NOT (CMAKE_CROSSCOMPILING
-                                      AND NOT CMAKE_CROSSCOMPILING_EMULATOR))
+      if(NOT params_DISABLED AND NOT (CMAKE_CROSSCOMPILING AND NOT CMAKE_CROSSCOMPILING_EMULATOR))
         add_test(${name} ${target})
         if(params_TIMEOUT)
           if(MEMORYCHECK_COMMAND OR CMAKE_MEMORYCHECK_COMMAND)
-            # FIXME: unless there are any other ideas how to fix the timeouts
-            # problem when testing under Valgrind.
+            # FIXME: unless there are any other ideas how to fix the timeouts problem when testing under Valgrind.
             math(EXPR params_TIMEOUT "${params_TIMEOUT} * 42")
           endif()
           set_tests_properties(${name} PROPERTIES TIMEOUT ${params_TIMEOUT})
@@ -514,8 +442,7 @@ if(BUILD_TESTING)
           else()
             string(REPLACE ";" ":" params_DLLPATH_ENV "${params_DLLPATH_ENV}")
           endif()
-          set_tests_properties(${name} PROPERTIES ENVIRONMENT
-                                                  "PATH=${params_DLLPATH_ENV}")
+          set_tests_properties(${name} PROPERTIES ENVIRONMENT "PATH=${params_DLLPATH_ENV}")
         endif()
       endif()
     endif()

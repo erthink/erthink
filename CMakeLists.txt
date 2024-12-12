@@ -1,21 +1,7 @@
-# Copyright (c) 2012-2024 Leonid Yuriev <leo@yuriev.ru>.
+# Copyright (c) 2012-2024 Леонид Юрьев aka Leonid Yuriev <leo@yuriev.ru> ###############################################
+# SPDX-License-Identifier: Apache-2.0
 #
-# Licensed under the Apache License, Version 2.0 (the "License"); you may not
-# use this file except in compliance with the License. You may obtain a copy of
-# the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-# License for the specific language governing permissions and limitations under
-# the License.
-#
-
-#
-# This CMakeLists.txt required for testing, but most things are header-only.
-# https://gitflic.ru/project/erthink/erthink
+# This CMakeLists.txt required for testing, but most things are header-only. https://gitflic.ru/project/erthink/erthink
 #
 
 if(CMAKE_VERSION VERSION_LESS 3.8.2)
@@ -55,8 +41,7 @@ endif()
 if(DEFINED PROJECT_NAME)
   set(SUBPROJECT ON)
   if(CMAKE_VERSION VERSION_LESS 3.8.2)
-    # В старых версиях CMake большинство модулей (CheckFunctionExists,
-    # CheckIncludeFiles) не работает без включения C
+    # В старых версиях CMake большинство модулей (CheckFunctionExists, CheckIncludeFiles) не работает без включения C
     enable_language(C CXX)
   else()
     enable_language(CXX)
@@ -64,8 +49,7 @@ if(DEFINED PROJECT_NAME)
 else()
   set(SUBPROJECT OFF)
   if(CMAKE_VERSION VERSION_LESS 3.8.2)
-    # В старых версиях CMake большинство модулей (CheckFunctionExists,
-    # CheckIncludeFiles) не работает без включения C
+    # В старых версиях CMake большинство модулей (CheckFunctionExists, CheckIncludeFiles) не работает без включения C
     project(
       erthink
       VERSION 0.1
@@ -104,19 +88,14 @@ include(CMakeDependentOption)
 if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE
       Release
-      CACHE
-        STRING
-        "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel."
-        FORCE)
+      CACHE STRING "Choose the type of build, options are: Debug Release RelWithDebInfo MinSizeRel." FORCE)
 endif()
 string(TOUPPER ${CMAKE_BUILD_TYPE} CMAKE_BUILD_TYPE_UPPERCASE)
 
 if(MSVC)
   if(MSVC_VERSION LESS 1915)
     message(
-      FATAL_ERROR
-        "At least \"Microsoft C/C++ Compiler\" version 19.15.26730 (Visual Studio 2017 15.8) is required."
-    )
+      FATAL_ERROR "At least \"Microsoft C/C++ Compiler\" version 19.15.26730 (Visual Studio 2017 15.8) is required.")
   else()
     add_compile_options("/Zc:__cplusplus")
   endif()
@@ -138,17 +117,11 @@ if(NOT DEFINED ERTHINK_CXX_STANDARD)
   endif()
   if(DEFINED CMAKE_CXX_STANDARD)
     set(ERTHINK_CXX_STANDARD ${CMAKE_CXX_STANDARD})
-  elseif(NOT HAS_CXX23 LESS 0
-         AND NOT (CMAKE_COMPILER_IS_CLANG AND CMAKE_CXX_COMPILER_VERSION
-                                              VERSION_LESS 12))
+  elseif(NOT HAS_CXX23 LESS 0 AND NOT (CMAKE_COMPILER_IS_CLANG AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 12))
     set(ERTHINK_CXX_STANDARD 23)
-  elseif(NOT HAS_CXX20 LESS 0
-         AND NOT (CMAKE_COMPILER_IS_CLANG AND CMAKE_CXX_COMPILER_VERSION
-                                              VERSION_LESS 10))
+  elseif(NOT HAS_CXX20 LESS 0 AND NOT (CMAKE_COMPILER_IS_CLANG AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 10))
     set(ERTHINK_CXX_STANDARD 20)
-  elseif(NOT HAS_CXX17 LESS 0
-         AND NOT (CMAKE_COMPILER_IS_CLANG AND CMAKE_CXX_COMPILER_VERSION
-                                              VERSION_LESS 5))
+  elseif(NOT HAS_CXX17 LESS 0 AND NOT (CMAKE_COMPILER_IS_CLANG AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5))
     set(ERTHINK_CXX_STANDARD 17)
   elseif(NOT HAS_CXX14 LESS 0)
     set(ERTHINK_CXX_STANDARD 14)
@@ -168,29 +141,22 @@ endif()
 
 if(NOT SUBPROJECT)
   set(CMAKE_MACOSX_RPATH ON)
-  option(CMAKE_POSITION_INDEPENDENT_CODE "Generate position independed (PIC)."
-         ON)
+  option(CMAKE_POSITION_INDEPENDENT_CODE "Generate position independed (PIC)." ON)
   option(BUILD_SHARED_LIBS "Build shared libraries (DLLs)." OFF)
 
   if(CMAKE_INTERPROCEDURAL_OPTIMIZATION_AVAILABLE
      OR GCC_LTO_AVAILABLE
      OR MSVC_LTO_AVAILABLE
      OR CLANG_LTO_AVAILABLE)
-    if((CMAKE_CONFIGURATION_TYPES OR NOT CMAKE_BUILD_TYPE_UPPERCASE STREQUAL
-                                     "DEBUG")
-       AND ((MSVC_LTO_AVAILABLE AND NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS
-                                    19)
-            OR (GCC_LTO_AVAILABLE AND NOT CMAKE_CXX_COMPILER_VERSION
-                                      VERSION_LESS 7)
-            OR (CLANG_LTO_AVAILABLE AND NOT CMAKE_CXX_COMPILER_VERSION
-                                        VERSION_LESS 5)
-           ))
+    if((CMAKE_CONFIGURATION_TYPES OR NOT CMAKE_BUILD_TYPE_UPPERCASE STREQUAL "DEBUG")
+       AND ((MSVC_LTO_AVAILABLE AND NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 19)
+            OR (GCC_LTO_AVAILABLE AND NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 7)
+            OR (CLANG_LTO_AVAILABLE AND NOT CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5)))
       set(INTERPROCEDURAL_OPTIMIZATION_DEFAULT ON)
     else()
       set(INTERPROCEDURAL_OPTIMIZATION_DEFAULT OFF)
     endif()
-    option(INTERPROCEDURAL_OPTIMIZATION
-           "Enable interprocedural/LTO optimization."
+    option(INTERPROCEDURAL_OPTIMIZATION "Enable interprocedural/LTO optimization."
            ${INTERPROCEDURAL_OPTIMIZATION_DEFAULT})
   endif()
 
@@ -265,8 +231,8 @@ if(NOT SUBPROJECT)
 
   find_program(VALGRIND valgrind)
   if(VALGRIND)
-    # LY: cmake is ugly and nasty. - therefore memcheck-options should be
-    # defined before including ctest; - otherwise ctest may ignore it.
+    # LY: cmake is ugly and nasty. - therefore memcheck-options should be defined before including ctest; - otherwise
+    # ctest may ignore it.
     set(MEMORYCHECK_SUPPRESSIONS_FILE
         "${PROJECT_SOURCE_DIR}/test/valgrind_suppress.txt"
         CACHE FILEPATH "Suppressions file for Valgrind" FORCE)
@@ -291,19 +257,15 @@ if(NOT SUBPROJECT)
   if(UNIX)
     find_program(CLANG_FORMAT NAMES clang-format-13 clang-format)
     if(CLANG_FORMAT)
-      execute_process(COMMAND ${CLANG_FORMAT} "--version"
-                      OUTPUT_VARIABLE clang_format_version_info)
-      string(REGEX MATCH "version ([0-9]+)\\.([0-9]+)\\.([0-9]+)(.*)?"
-                   clang_format_version_info CLANG_FORMAT_VERSION)
-      if(clang_format_version_info AND NOT CLANG_FORMAT_VERSION VERSION_LESS
-                                       13.0)
+      execute_process(COMMAND ${CLANG_FORMAT} "--version" OUTPUT_VARIABLE clang_format_version_info)
+      string(REGEX MATCH "version ([0-9]+)\\.([0-9]+)\\.([0-9]+)(.*)?" clang_format_version_info CLANG_FORMAT_VERSION)
+      if(clang_format_version_info AND NOT CLANG_FORMAT_VERSION VERSION_LESS 13.0)
         # Enable 'make reformat' target.
         add_custom_target(
           reformat
           VERBATIM
-          COMMAND
-            git ls-files | grep -E \\.\(c|cxx|cc|cpp|h|hxx|hpp\)\(\\.in\)?\$ |
-            xargs ${CLANG_FORMAT} -i --style=file
+          COMMAND git ls-files | grep -E \\.\(c|cxx|cc|cpp|h|hxx|hpp\)\(\\.in\)?\$ | xargs ${CLANG_FORMAT} -i
+                  --style=file
           WORKING_DIRECTORY ${CMAKE_SOURCE_DIR})
       endif()
     endif()
@@ -332,7 +294,7 @@ if(NOT SUBPROJECT)
   include("${CMAKE_CURRENT_SOURCE_DIR}/cmake/testing.cmake")
 endif(NOT SUBPROJECT)
 
-# ##############################################################################
+# ######################################################################################################################
 
 set(erthink_HEADERS
     erthink.h
@@ -368,11 +330,9 @@ endif()
 if(ERTHINK_CXX_STANDARD)
   if(CMAKE_VERSION VERSION_LESS 3.1)
     if(CXX_FALLBACK_GNU11)
-      target_compile_options(erthink
-                             INTERFACE "-std=gnu++${ERTHINK_CXX_STANDARD}")
+      target_compile_options(erthink INTERFACE "-std=gnu++${ERTHINK_CXX_STANDARD}")
     else()
-      target_compile_options(erthink
-                             INTERFACE "-std=c++${ERTHINK_CXX_STANDARD}")
+      target_compile_options(erthink INTERFACE "-std=c++${ERTHINK_CXX_STANDARD}")
     endif()
   else()
     target_compile_features(erthink INTERFACE "cxx_std_${ERTHINK_CXX_STANDARD}")

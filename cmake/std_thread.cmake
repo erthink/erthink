@@ -1,17 +1,5 @@
-# Copyright (c) 2012-2024 Leonid Yuriev <leo@yuriev.ru>.
-#
-# Licensed under the Apache License, Version 2.0 (the "License"); you may not
-# use this file except in compliance with the License. You may obtain a copy of
-# the License at
-#
-# http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
-# License for the specific language governing permissions and limitations under
-# the License.
-#
+# Copyright (c) 2020-2024 Леонид Юрьев aka Leonid Yuriev <leo@yuriev.ru> ###############################################
+# SPDX-License-Identifier: Apache-2.0
 
 if(NOT DEFINED STDTHREAD_WORKS)
   if(CMAKE_VERSION VERSION_LESS 3.8.2)
@@ -34,9 +22,7 @@ if(NOT DEFINED STDTHREAD_WORKS)
     list(FIND CMAKE_CXX_COMPILE_FEATURES cxx_std_14 HAS_CXX14)
     list(FIND CMAKE_CXX_COMPILE_FEATURES cxx_std_17 HAS_CXX17)
     list(FIND CMAKE_CXX_COMPILE_FEATURES cxx_std_11 HAS_CXX11)
-    if(NOT HAS_CXX17 LESS 0
-       AND NOT (CMAKE_COMPILER_IS_CLANG AND CMAKE_CXX_COMPILER_VERSION
-                                            VERSION_LESS 5))
+    if(NOT HAS_CXX17 LESS 0 AND NOT (CMAKE_COMPILER_IS_CLANG AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 5))
       set(CMAKE_CXX_STANDARD 17)
     elseif(NOT HAS_CXX14 LESS 0)
       set(CMAKE_CXX_STANDARD 14)
@@ -56,8 +42,7 @@ if(NOT DEFINED STDTHREAD_WORKS)
   endif()
   find_package(Threads)
   if(CMAKE_VERSION VERSION_LESS 3.1)
-    set(CMAKE_REQUIRED_LIBRARIES ${CMAKE_THREAD_LIBS_INIT}
-                                 ${CMAKE_REQUIRED_LIBRARIES})
+    set(CMAKE_REQUIRED_LIBRARIES ${CMAKE_THREAD_LIBS_INIT} ${CMAKE_REQUIRED_LIBRARIES})
   else()
     set(CMAKE_REQUIRED_LIBRARIES Threads::Threads ${CMAKE_REQUIRED_LIBRARIES})
   endif()
@@ -77,10 +62,8 @@ if(NOT DEFINED STDTHREAD_WORKS)
     include(CheckCXXSourceCompiles)
     check_cxx_source_compiles("${stdthread_probe}" STDTHREAD_WORKS)
     if(STDTHREAD_WORKS)
-      message(
-        WARNING
-          "Cannot run probe in CrossCompiling mode to check whether `std::thread` works. "
-          "So assuming it will works because compiled successfully.")
+      message(WARNING "Cannot run probe in CrossCompiling mode to check whether `std::thread` works. "
+                      "So assuming it will works because compiled successfully.")
     endif()
   else()
     include(CheckCXXSourceRuns)

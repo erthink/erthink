@@ -1,3 +1,6 @@
+# Copyright (c) 2020-2024 Леонид Юрьев aka Leonid Yuriev <leo@yuriev.ru> ###############################################
+# SPDX-License-Identifier: Apache-2.0
+
 include_directories(${UT_INCLUDE_DIRECTORIES})
 
 if(BUILD_SHARED_LIBS)
